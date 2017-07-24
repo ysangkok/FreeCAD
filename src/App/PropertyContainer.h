@@ -201,23 +201,17 @@ private:
   PropertyContainer(const PropertyContainer&);
   PropertyContainer& operator = (const PropertyContainer&);
 
-private: 
+public: 
   static PropertyData propertyData; 
 };
 
 /// Property define 
 #define ADD_PROPERTY(_prop_, _defaultval_) \
   do { \
-    this->_prop_.setValue _defaultval_;\
-    this->_prop_.setContainer(this); \
-    propertyData.addProperty(static_cast<App::PropertyContainer*>(this), #_prop_, &this->_prop_); \
   } while (0)
 
 #define ADD_PROPERTY_TYPE(_prop_, _defaultval_, _group_,_type_,_Docu_) \
   do { \
-    this->_prop_.setValue _defaultval_;\
-    this->_prop_.setContainer(this); \
-    propertyData.addProperty(static_cast<App::PropertyContainer*>(this), #_prop_, &this->_prop_, (_group_),(_type_),(_Docu_)); \
   } while (0)
 
 
@@ -225,10 +219,8 @@ private:
 #define PROPERTY_HEADER(_class_) \
   TYPESYSTEM_HEADER(); \
 protected: \
-  static const App::PropertyData * getPropertyDataPtr(void); \
-  virtual const App::PropertyData &getPropertyData(void) const; \
-private: \
-  static App::PropertyData propertyData 
+  static const PropertyData * getPropertyDataPtr(void); \
+  virtual const PropertyData& getPropertyData(void) const; \
 
 /// Like PROPERTY_HEADER, but with overridden methods declared as such
 #define PROPERTY_HEADER_WITH_OVERRIDE(_class_) \
@@ -236,33 +228,33 @@ private: \
 protected: \
   static const App::PropertyData * getPropertyDataPtr(void); \
   virtual const App::PropertyData &getPropertyData(void) const override; \
-private: \
+public: \
   static App::PropertyData propertyData 
 /// 
 #define PROPERTY_SOURCE(_class_, _parentclass_) \
 TYPESYSTEM_SOURCE_P(_class_);\
-const App::PropertyData * _class_::getPropertyDataPtr(void){return &propertyData;} \
-const App::PropertyData & _class_::getPropertyData(void) const{return propertyData;} \
-App::PropertyData _class_::propertyData; \
+const ::App::PropertyData * _class_::getPropertyDataPtr(void){abort();} \
+const ::App::PropertyData & _class_::getPropertyData(void) const{abort();} \
+/*::App::PropertyData _class_::propertyData;*/ \
 void _class_::init(void){\
   initSubclass(_class_::classTypeId, #_class_ , #_parentclass_, &(_class_::create) ); \
-  _class_::propertyData.parentPropertyData = _parentclass_::getPropertyDataPtr(); \
+  /*_class_::propertyData.parentPropertyData = _parentclass_::getPropertyDataPtr();*/ \
 }
 
 #define PROPERTY_SOURCE_ABSTRACT(_class_, _parentclass_) \
 TYPESYSTEM_SOURCE_ABSTRACT_P(_class_);\
-const App::PropertyData * _class_::getPropertyDataPtr(void){return &propertyData;} \
-const App::PropertyData & _class_::getPropertyData(void) const{return propertyData;} \
-App::PropertyData _class_::propertyData; \
+const ::App::PropertyData * _class_::getPropertyDataPtr(void){abort();} \
+const ::App::PropertyData & _class_::getPropertyData(void) const{abort();} \
+/*::App::PropertyData _class_::propertyData;*/ \
 void _class_::init(void){\
   initSubclass(_class_::classTypeId, #_class_ , #_parentclass_, &(_class_::create) ); \
   _class_::propertyData.parentPropertyData = _parentclass_::getPropertyDataPtr(); \
 }
 
 #define TYPESYSTEM_SOURCE_TEMPLATE(_class_) \
-template<> Base::Type _class_::classTypeId = Base::Type::badType();  \
-template<> Base::Type _class_::getClassTypeId(void) { return _class_::classTypeId; } \
-template<> Base::Type _class_::getTypeId(void) const { return _class_::classTypeId; } \
+template<> ::Base::Type _class_::classTypeId = Base::Type::badType();  \
+template<> ::Base::Type _class_::getClassTypeId(void) { return _class_::classTypeId; } \
+template<> ::Base::Type _class_::getTypeId(void) const { return _class_::classTypeId; } \
 template<> void * _class_::create(void){\
    return new _class_ ();\
 }

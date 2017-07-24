@@ -35,11 +35,11 @@
 #include <Base/Reader.h>
 #include <Base/Writer.h>
 #include <Base/Stream.h>
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 
 #include "PropertyUnits.h"
-#include <Base/PyObjectBase.h>
-#include <Base/QuantityPy.h>
+//#include <Base/PyObjectBase.h>
+//#include <Base/QuantityPy.h>
 
 using namespace App;
 using namespace Base;
@@ -65,68 +65,6 @@ const char* PropertyQuantity::getEditorName(void) const
 {
     return "Gui::PropertyEditor::PropertyUnitItem";
 }
-
-PyObject *PropertyQuantity::getPyObject(void)
-{
-    return new QuantityPy (new Quantity(_dValue,_Unit));
-}
-
-Base::Quantity PropertyQuantity::createQuantityFromPy(PyObject *value)
-{
-    Base::Quantity quant;
-
-    if (PyUnicode_Check(value)){
-#if PY_MAJOR_VERSION >= 3
-        quant = Quantity::parse(QString::fromUtf8(PyUnicode_AsUTF8(value)));
-    }
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        std::string Str;
-        Str = PyString_AsString(unicode);
-        quant = Quantity::parse(QString::fromUtf8(Str.c_str()));
-        Py_DECREF(unicode);
-    }
-    else if (PyString_Check(value))
-        quant = Quantity::parse(QString::fromLatin1(PyString_AsString(value)));
-#endif
-    else if (PyFloat_Check(value))
-        quant = Quantity(PyFloat_AsDouble(value),_Unit);
-#if PY_MAJOR_VERSION < 3
-    else if (PyInt_Check(value))
-        quant = Quantity((double)PyInt_AsLong(value),_Unit);
-#endif
-    else if (PyLong_Check(value))
-        quant = Quantity((double)PyLong_AsLong(value),_Unit);
-    else if (PyObject_TypeCheck(value, &(QuantityPy::Type))) {
-        Base::QuantityPy  *pcObject = static_cast<Base::QuantityPy*>(value);
-        quant = *(pcObject->getQuantityPtr());
-    }
-    else {
-        std::string error = std::string("wrong type as quantity: ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-
-    return quant;
-}
-
-
-void PropertyQuantity::setPyObject(PyObject *value)
-{
-    Base::Quantity quant= createQuantityFromPy(value);
-
-    Unit unit = quant.getUnit();
-    if (unit.isEmpty()){
-        PropertyFloat::setValue(quant.getValue());
-        return;
-    }
-
-    if (unit != _Unit)
-        throw Base::UnitsMismatchError("Not matching Unit!");
-
-    PropertyFloat::setValue(quant.getValue());
-}
-
 void PropertyQuantity::setPathValue(const ObjectIdentifier & /*path*/, const boost::any &value)
 {
     if (value.type() == typeid(double))
@@ -165,31 +103,6 @@ const char* PropertyQuantityConstraint::getEditorName(void) const
 const PropertyQuantityConstraint::Constraints*  PropertyQuantityConstraint::getConstraints(void) const
 {
     return _ConstStruct;
-}
-
-void PropertyQuantityConstraint::setPyObject(PyObject *value)
-{
-    Base::Quantity quant= createQuantityFromPy(value);
-
-    Unit unit = quant.getUnit();
-    double temp = quant.getValue();
-    if (_ConstStruct) {
-        if (temp > _ConstStruct->UpperBound)
-            temp = _ConstStruct->UpperBound;
-        else if (temp < _ConstStruct->LowerBound)
-            temp = _ConstStruct->LowerBound;
-    }
-    quant.setValue(temp);
-
-    if (unit.isEmpty()){
-        PropertyFloat::setValue(quant.getValue());
-        return;
-    }
-
-    if (unit != _Unit)
-        throw Base::UnitsMismatchError("Not matching Unit!");
-
-    PropertyFloat::setValue(quant.getValue());
 }
 
 //**************************************************************************

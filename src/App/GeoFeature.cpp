@@ -28,7 +28,7 @@
 
 #include "GeoFeature.h"
 #include "GeoFeatureGroupExtension.h"
-#include <App/GeoFeaturePy.h>
+//#include <App/GeoFeaturePy.h>
 
 using namespace App;
 
@@ -71,11 +71,3 @@ const PropertyComplexGeoData* GeoFeature::getPropertyOfGeometry() const
     return nullptr;
 }
 
-PyObject* GeoFeature::getPyObject(void)
-{
-    if (PythonObject.is(Py::_None())) {
-        // ref counter is set to 1
-        PythonObject = Py::Object(new GeoFeaturePy(this),true);
-    }
-    return Py::new_reference_to(PythonObject);
-}

@@ -27,7 +27,7 @@
 #endif
 
 #include "InventorObject.h"
-#include "DocumentObjectPy.h"
+//#include "DocumentObjectPy.h"
 
 using namespace App;
 
@@ -47,13 +47,4 @@ InventorObject::~InventorObject()
 short InventorObject::mustExecute(void) const
 {
     return 0;
-}
-
-PyObject *InventorObject::getPyObject()
-{
-    if (PythonObject.is(Py::_None())){
-        // ref counter is set to 1
-        PythonObject = Py::Object(new DocumentObjectPy(this),true);
-    }
-    return Py::new_reference_to(PythonObject); 
 }

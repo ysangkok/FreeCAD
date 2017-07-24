@@ -30,12 +30,13 @@
 
 #include <stdlib.h>
 
+#include <fstream>
+
 /// Here the FreeCAD includes sorted by Base,App,Gui......
 #include "Builder3D.h"
 #include "Exception.h"
 #include "Vector3D.h"
 #include "Matrix.h"
-#include "Console.h"
 #include "Tools.h"
 
 using namespace Base;
@@ -300,13 +301,6 @@ void Builder3D::addTransformation(const Base::Vector3f& translation, const Base:
  */
 void Builder3D::saveToLog(void)
 {
-  result <<   "} ";
-  // Note: The string can become very long, so that ConsoleSingelton::Log() will internally 
-  // truncate the string which causes Inventor to fail to interpret the truncated string.
-  // So, we send the string directly to the observer that handles the Inventor stuff.
-  //Console().Log("Vdbg: %s \n",result.str().c_str());
-  ConsoleObserver* obs = Base::Console().Get("StatusBar");
-  if (obs) obs->Log(result.str().c_str());
 }
 
 /**

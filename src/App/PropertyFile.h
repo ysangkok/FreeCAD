@@ -84,8 +84,8 @@ public:
 
     virtual const char* getEditorName(void) const
     { return "Gui::PropertyEditor::PropertyTransientFileItem"; }
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);

@@ -24,11 +24,11 @@
 #ifndef APP_EXTENSIONCONTAINER_H
 #define APP_EXTENSIONCONTAINER_H
 
-#include "Extension.h"
+//#include "Extension.h"
 #include "PropertyContainer.h"
-#include "PropertyPythonObject.h"
+//#include "PropertyPythonObject.h"
 #include "DynamicProperty.h"
-#include <CXX/Objects.hxx>
+//#include <CXX/Objects.hxx>
 #include <Base/Writer.h>
 #include <Base/Reader.h>
 
@@ -133,7 +133,7 @@ public:
     //returns first of type (or derived from) and throws otherwise
     template<typename ExtensionT>
     ExtensionT* getExtensionByType() const {
-        return dynamic_cast<ExtensionT*>(getExtension(ExtensionT::getExtensionClassTypeId()));
+        abort();
     };
     
     //get all extensions which have the given base class

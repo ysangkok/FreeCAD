@@ -62,7 +62,6 @@
 
 #include "Parameter.h"
 #include "Exception.h"
-#include "Console.h"
 
 
 //#ifdef XERCES_HAS_CPP_NAMESPACE
@@ -851,9 +850,6 @@ void ParameterGrp::Clear(void)
 
     // checking on references
     std::map <std::string ,Base::Reference<ParameterGrp> >::iterator It1;
-    for (It1 = _GroupMap.begin();It1!=_GroupMap.end();++It1)
-        if (It1->second.getRefCount() > 1)
-            Console().Warning("ParameterGrp::Clear(): Group clear with active references");
     // remove group handles
     _GroupMap.clear();
 

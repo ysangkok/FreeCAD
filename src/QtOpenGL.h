@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (c) 2013 Jürgen Riegel (FreeCAD@juergen-riegel.net)         *
+ *   Copyright (c) 2017 Werner Mayer <wmayer[at]users.sourceforge.net>     *
  *                                                                         *
  *   This file is part of the FreeCAD CAx development system.              *
  *                                                                         *
@@ -21,37 +21,20 @@
  ***************************************************************************/
 
 
-#ifndef APP_MaterialObject_H
-#define APP_MaterialObject_H
+#ifndef QUARTER_QTOPENGL_H
+#define QUARTER_QTOPENGL_H
 
-#include "DocumentObject.h"
-#include "PropertyStandard.h"
-//#include "FeaturePython.h"
+#include <QGLContext>
+#include <QGLFormat>
+#include <QGLWidget>
+#include <QGLPixelBuffer>
+#include <QGLFramebufferObject>
 
+typedef QGLContext QtGLContext;
+typedef QGLFormat QtGLFormat;
+typedef QGLWidget QtGLWidget;
+typedef QGLPixelBuffer QtGLPixelBuffer;
+typedef QGLFramebufferObject QtGLFramebufferObject;
+typedef QGLFramebufferObjectFormat QtGLFramebufferObjectFormat;
 
-namespace App
-{
-
-class AppExport MaterialObject : public DocumentObject
-{
-    PROPERTY_HEADER(App::MaterialObject);
-
-public:
-    /// Constructor
-    MaterialObject(void);
-    virtual ~MaterialObject();
-
-    App::PropertyMap Material;
-
-
-    /// returns the type name of the ViewProvider
-    const char* getViewProviderName(void) const {
-        return "Gui::ViewProviderMaterialObject";
-    }
-
-};
-
-} //namespace App
-
-
-#endif // APP_MaterialObject_H
+#endif //QUARTER_QTOPENGL_H

@@ -39,7 +39,7 @@
 #include <Base/Quantity.h>
 
 #include "PropertyStandard.h"
-#include "MaterialPy.h"
+//#include "MaterialPy.h"
 #include "ObjectIdentifier.h"
 
 using namespace App;
@@ -85,31 +85,6 @@ void PropertyInteger::setValue(long lValue)
 long PropertyInteger::getValue(void) const
 {
     return _lValue;
-}
-
-PyObject *PropertyInteger::getPyObject(void)
-{
-    return Py_BuildValue("l", _lValue);
-}
-
-void PropertyInteger::setPyObject(PyObject *value)
-{ 
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_Check(value)) {
-        aboutToSetValue();
-        _lValue = PyInt_AsLong(value);
-#else    
-    if (PyLong_Check(value)) {
-        aboutToSetValue();
-        _lValue = PyLong_AsLong(value);
-#endif
-        hasSetValue();
-    } 
-    else {
-        std::string error = std::string("type must be int, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyInteger::Save (Base::Writer &writer) const
@@ -208,46 +183,6 @@ boost::filesystem::path PropertyPath::getValue(void) const
 {
     return _cValue;
 }
-
-PyObject *PropertyPath::getPyObject(void)
-{
-#if (BOOST_VERSION < 104600) || (BOOST_FILESYSTEM_VERSION == 2)
-    std::string str = _cValue.native_file_string();
-#else
-    std::string str = _cValue.string();
-#endif
-
-    // Returns a new reference, don't increment it!
-    PyObject *p = PyUnicode_DecodeUTF8(str.c_str(),str.size(),0);
-    if (!p) throw Base::UnicodeError("UTF8 conversion failure at PropertyPath::getPyObject()");
-    return p;
-}
-
-void PropertyPath::setPyObject(PyObject *value)
-{
-    std::string path;
-    if (PyUnicode_Check(value)) {
-#if PY_MAJOR_VERSION >= 3
-        path = PyUnicode_AsUTF8(value);
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        path = PyString_AsString(unicode);
-        Py_DECREF(unicode);
-    }
-    else if (PyString_Check(value)) {
-        path = PyString_AsString(value);
-#endif
-    }
-    else {
-        std::string error = std::string("type must be str or unicode, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-
-    // assign the path
-    setValue(path.c_str());
-}
-
 
 void PropertyPath::Save (Base::Writer &writer) const
 {
@@ -418,128 +353,6 @@ void PropertyEnumeration::Restore(Base::XMLReader &reader)
     setValue(val);
 }
 
-PyObject * PropertyEnumeration::getPyObject(void)
-{
-    if (!_enum.isValid()) {
-        PyErr_SetString(PyExc_AssertionError, "The enum is empty");
-        return 0;
-    }
-
-    return Py_BuildValue("s", getValueAsString());
-}
-
-void PropertyEnumeration::setPyObject(PyObject *value)
-{
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_Check(value)) {
-        long val = PyInt_AsLong(value);
-#else
-    if (PyLong_Check(value)) {
-        long val = PyLong_AsLong(value);
-#endif
-        if (_enum.isValid()) {
-            aboutToSetValue();
-            _enum.setValue(val, true);
-            hasSetValue();
-        }
-    }
-    else if (PyUnicode_Check(value)) {
-#if PY_MAJOR_VERSION >= 3
-        const char* str = PyUnicode_AsUTF8 (value);
-        if (_enum.contains(str)) {
-            aboutToSetValue();
-            _enum.setValue(PyUnicode_AsUTF8 (value));
-            hasSetValue();
-        }
-        else {
-            std::stringstream out;
-            out << "'" << str << "' is not part of the enumeration";
-            throw Base::ValueError(out.str());
-        }
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        const char* str = PyString_AsString (unicode);
-        if (_enum.contains(str)) {
-            aboutToSetValue();
-            _enum.setValue(PyString_AsString (unicode));
-            hasSetValue();
-        }
-        else {
-            std::stringstream out;
-            out << "'" << str << "' is not part of the enumeration";
-            throw Base::ValueError(out.str());
-        }
-        Py_DECREF(unicode);
-    }
-    else if (PyString_Check(value)) {
-        const char* str = PyString_AsString (value);
-        if (_enum.contains(str)) {
-            aboutToSetValue();
-            _enum.setValue(PyString_AsString (value));
-            hasSetValue();
-        }
-        else {
-            std::stringstream out;
-            out << "'" << str << "' is not part of the enumeration";
-            throw Base::ValueError(out.str());
-        }
-#endif
-    }
-    else if (PyUnicode_Check(value)) {
-#if PY_MAJOR_VERSION >=3
-        std::string str = PyUnicode_AsUTF8(value);
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        std::string str = PyString_AsString(unicode);
-        Py_DECREF(unicode);
-#endif
-        if (_enum.contains(str.c_str())) {
-            aboutToSetValue();
-            _enum.setValue(str);
-            hasSetValue();
-        }
-        else {
-            std::stringstream out;
-            out << "'" << str << "' is not part of the enumeration";
-            throw Base::ValueError(out.str());
-        }
-    }
-    else if (PySequence_Check(value)) {
-        Py_ssize_t nSize = PySequence_Size(value);
-        std::vector<std::string> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i = 0; i < nSize; ++i) {
-            PyObject *item = PySequence_GetItem(value, i);
-
-            if (PyUnicode_Check(item)) {
-#if PY_MAJOR_VERSION >= 3
-                values[i] = PyUnicode_AsUTF8(item);
-#else
-                PyObject* unicode = PyUnicode_AsUTF8String(item);
-                values[i] = PyString_AsString(unicode);
-                Py_DECREF(unicode);
-#endif
-            }
-#if PY_MAJOR_VERSION < 3
-            if (PyString_Check(item)) {
-                values[i] = PyString_AsString(item);
-            }
-#endif
-            else {
-                std::string error = std::string("type in list must be str or unicode, not ");
-                throw Base::TypeError(error + item->ob_type->tp_name);
-            }
-        }
-        _enum.setEnums(values);
-        setValue((long)0);
-    }
-    else {
-        std::string error = std::string("type must be int, str or unicode not ");
-        throw Base::TypeError(error + value->ob_type->tp_name);
-    }
-}
-
 Property * PropertyEnumeration::Copy(void) const
 {
     return new PropertyEnumeration(_enum);
@@ -614,64 +427,6 @@ const PropertyIntegerConstraint::Constraints*  PropertyIntegerConstraint::getCon
     return _ConstStruct;
 }
 
-void PropertyIntegerConstraint::setPyObject(PyObject *value)
-{
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_Check(value)) {
-        long temp = PyInt_AsLong(value);
-#else
-    if (PyLong_Check(value)) {
-        long temp = PyLong_AsLong(value);
-#endif
-        if (_ConstStruct) {
-            if (temp > _ConstStruct->UpperBound)
-                temp = _ConstStruct->UpperBound;
-            else if(temp < _ConstStruct->LowerBound)
-                temp = _ConstStruct->LowerBound;
-        }
-
-        aboutToSetValue();
-        _lValue = temp;
-        hasSetValue();
-    }
-    else if (PyTuple_Check(value) && PyTuple_Size(value) == 4) {
-        long values[4];
-        for (int i=0; i<4; i++) {
-            PyObject* item;
-            item = PyTuple_GetItem(value,i);
-#if PY_MAJOR_VERSION < 3
-            if (PyInt_Check(item))
-                values[i] = PyInt_AsLong(item);
-#else
-            if (PyLong_Check(item))
-                values[i] = PyLong_AsLong(item);
-#endif
-            else
-                throw Base::TypeError("Type in tuple must be int");
-        }
-
-        Constraints* c = new Constraints();
-        c->setDeletable(true);
-        c->LowerBound = values[1];
-        c->UpperBound = values[2];
-        c->StepSize = std::max<long>(1, values[3]);
-        if (values[0] > c->UpperBound)
-            values[0] = c->UpperBound;
-        else if (values[0] < c->LowerBound)
-            values[0] = c->LowerBound;
-        setConstraints(c);
-
-        aboutToSetValue();
-        _lValue = values[0];
-        hasSetValue();
-    }
-    else {
-        std::string error = std::string("type must be int, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 //**************************************************************************
 //**************************************************************************
 // PropertyPercent
@@ -741,61 +496,6 @@ void PropertyIntegerList::setValues(const std::vector<long>& values)
     aboutToSetValue();
     _lValueList = values;
     hasSetValue();
-}
-
-PyObject *PropertyIntegerList::getPyObject(void)
-{
-    PyObject* list = PyList_New(getSize());
-    for(int i = 0;i<getSize(); i++)
-#if PY_MAJOR_VERSION < 3
-        PyList_SetItem( list, i, PyInt_FromLong(_lValueList[i]));
-#else
-        PyList_SetItem( list, i, PyLong_FromLong(_lValueList[i]));
-#endif
-    return list;
-}
-
-void PropertyIntegerList::setPyObject(PyObject *value)
-{ 
-    if (PySequence_Check(value)) {
-        Py_ssize_t nSize = PySequence_Size(value);
-        std::vector<long> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item =  PySequence_GetItem(value, i);
-#if PY_MAJOR_VERSION < 3
-            if (!PyInt_Check(item)) {
-                std::string error = std::string("type in list must be int, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-            values[i] = PyInt_AsLong(item);
-#else
-            if (!PyLong_Check(item)) {
-                std::string error = std::string("type in list must be int, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-            values[i] = PyLong_AsLong(item);
-#endif
-        }
-
-        setValues(values);
-    }
-#if PY_MAJOR_VERSION < 3
-    else if (PyInt_Check(value)) {
-        setValue(PyInt_AsLong(value));
-#else
-    else if (PyLong_Check(value)) {
-        setValue(PyLong_AsLong(value));
-#endif
-    }
-    else {
-        std::string error = std::string("type must be int or a sequence of int, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyIntegerList::Save (Base::Writer &writer) const
@@ -889,61 +589,6 @@ void PropertyIntegerSet::setValues(const std::set<long>& values)
     hasSetValue();
 }
 
-PyObject *PropertyIntegerSet::getPyObject(void)
-{
-    PyObject* set = PySet_New(NULL);
-    for(std::set<long>::const_iterator it=_lValueSet.begin();it!=_lValueSet.end();++it)
-#if PY_MAJOR_VERSION < 3
-        PySet_Add(set,PyInt_FromLong(*it));
-#else
-        PySet_Add(set,PyLong_FromLong(*it));
-#endif
-    return set;
-}
-
-void PropertyIntegerSet::setPyObject(PyObject *value)
-{ 
-    if (PySequence_Check(value)) {
-        
-        Py_ssize_t nSize = PySequence_Length(value);
-        std::set<long> values;
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item = PySequence_GetItem(value, i);
-#if PY_MAJOR_VERSION < 3
-            if (!PyInt_Check(item)) {
-                std::string error = std::string("type in list must be int, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-            values.insert(PyInt_AsLong(item));
-#else
-            if (!PyLong_Check(item)) {
-                std::string error = std::string("type in list must be int, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-            values.insert(PyLong_AsLong(item));
-#endif
-        }
-
-        setValues(values);
-    }
-#if PY_MAJOR_VERSION < 3
-    else if (PyInt_Check(value)) {
-        setValue(PyInt_AsLong(value));
-#else
-    else if (PyLong_Check(value)) {
-        setValue(PyLong_AsLong(value));
-#endif
-    }
-    else {
-        std::string error = std::string("type must be int or list of int, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 void PropertyIntegerSet::Save (Base::Writer &writer) const
 {
     writer.Stream() << writer.ind() << "<IntegerSet count=\"" <<  _lValueSet.size() <<"\">" << endl;
@@ -1030,36 +675,6 @@ double PropertyFloat::getValue(void) const
     return _dValue;
 }
 
-PyObject *PropertyFloat::getPyObject(void)
-{
-    return Py_BuildValue("d", _dValue);
-}
-
-void PropertyFloat::setPyObject(PyObject *value)
-{
-    if (PyFloat_Check(value)) {
-        aboutToSetValue();
-        _dValue = PyFloat_AsDouble(value);
-        hasSetValue();
-    }
-#if PY_MAJOR_VERSION < 3
-    else if(PyInt_Check(value)) {
-        aboutToSetValue();
-        _dValue = PyInt_AsLong(value);
-#else
-    else if(PyLong_Check(value)) {
-        aboutToSetValue();
-        _dValue = PyLong_AsLong(value);
-#endif
-        hasSetValue();
-    }
-    else {
-        std::string error = std::string("type must be float or int, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 void PropertyFloat::Save (Base::Writer &writer) const
 {
     writer.Stream() << writer.ind() << "<Float value=\"" <<  _dValue <<"\"/>" << std::endl;
@@ -1142,83 +757,6 @@ const PropertyFloatConstraint::Constraints*  PropertyFloatConstraint::getConstra
     return _ConstStruct;
 }
 
-void PropertyFloatConstraint::setPyObject(PyObject *value)
-{ 
-    if (PyFloat_Check(value)) {
-        double temp = PyFloat_AsDouble(value);
-        if (_ConstStruct) {
-            if (temp > _ConstStruct->UpperBound)
-                temp = _ConstStruct->UpperBound;
-            else if (temp < _ConstStruct->LowerBound)
-                temp = _ConstStruct->LowerBound;
-        }
-    
-        aboutToSetValue();
-        _dValue = temp;
-        hasSetValue();
-    }
-#if PY_MAJOR_VERSION < 3
-    else if (PyInt_Check(value)) {
-        double temp = (double)PyInt_AsLong(value);
-#else
-    else if (PyLong_Check(value)) {
-        double temp = (double)PyLong_AsLong(value);
-#endif
-        if (_ConstStruct) {
-            if (temp > _ConstStruct->UpperBound)
-                temp = _ConstStruct->UpperBound;
-            else if (temp < _ConstStruct->LowerBound)
-                temp = _ConstStruct->LowerBound;
-        }
-    
-        aboutToSetValue();
-        _dValue = temp;
-        hasSetValue();
-    }
-    else if (PyTuple_Check(value) && PyTuple_Size(value) == 4) {
-        double values[4];
-        for (int i=0; i<4; i++) {
-            PyObject* item;
-            item = PyTuple_GetItem(value,i);
-            if (PyFloat_Check(item))
-                values[i] = PyFloat_AsDouble(item);
-#if PY_MAJOR_VERSION < 3
-            else if (PyInt_Check(item))
-                values[i] = PyInt_AsLong(item);
-#else
-            else if (PyLong_Check(item))
-                values[i] = PyLong_AsLong(item);
-#endif
-            else
-                throw Base::TypeError("Type in tuple must be float or int");
-        }
-
-        double stepSize = values[3];
-        // need a value > 0
-        if (stepSize < DBL_EPSILON)
-            throw Base::ValueError("Step size must be greater than zero");
-
-        Constraints* c = new Constraints();
-        c->setDeletable(true);
-        c->LowerBound = values[1];
-        c->UpperBound = values[2];
-        c->StepSize = stepSize;
-        if (values[0] > c->UpperBound)
-            values[0] = c->UpperBound;
-        else if (values[0] < c->LowerBound)
-            values[0] = c->LowerBound;
-        setConstraints(c);
-
-        aboutToSetValue();
-        _dValue = values[0];
-        hasSetValue();
-    }
-    else {
-        std::string error = std::string("type must be float, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
 
 //**************************************************************************
 // PropertyPrecision
@@ -1288,51 +826,6 @@ void PropertyFloatList::setValues(const std::vector<double>& values)
     aboutToSetValue();
     _lValueList = values;
     hasSetValue();
-}
-
-PyObject *PropertyFloatList::getPyObject(void)
-{
-    PyObject* list = PyList_New(getSize());
-    for (int i = 0;i<getSize(); i++)
-         PyList_SetItem( list, i, PyFloat_FromDouble(_lValueList[i]));
-    return list;
-}
-
-void PropertyFloatList::setPyObject(PyObject *value)
-{ 
-    if (PyList_Check(value)) {
-        Py_ssize_t nSize = PyList_Size(value);
-        std::vector<double> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item = PyList_GetItem(value, i);
-            if (PyFloat_Check(item)) {
-                values[i] = PyFloat_AsDouble(item);
-#if PY_MAJOR_VERSION >= 3
-            } else if (PyLong_Check(item)) {
-                values[i] = static_cast<double>(PyLong_AsLong(item));
-#else
-            } else if (PyInt_Check(item)) {
-                values[i] = static_cast<double>(PyInt_AsLong(item));
-#endif
-            } else {
-                std::string error = std::string("type in list must be float, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-        }
-
-        setValues(values);
-    }
-    else if (PyFloat_Check(value)) {
-        setValue(PyFloat_AsDouble(value));
-    } 
-    else {
-        std::string error = std::string("type must be float or list of float, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyFloatList::Save (Base::Writer &writer) const
@@ -1458,38 +951,6 @@ const char* PropertyString::getValue(void) const
     return _cValue.c_str();
 }
 
-PyObject *PropertyString::getPyObject(void)
-{
-    PyObject *p = PyUnicode_DecodeUTF8(_cValue.c_str(),_cValue.size(),0);
-    if (!p) throw Base::UnicodeError("UTF8 conversion failure at PropertyString::getPyObject()");
-    return p;
-}
-
-void PropertyString::setPyObject(PyObject *value)
-{
-    std::string string;
-    if (PyUnicode_Check(value)) {
-#if PY_MAJOR_VERSION >= 3
-        string = PyUnicode_AsUTF8(value);
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        string = PyString_AsString(unicode);
-        Py_DECREF(unicode);
-    }
-    else if (PyString_Check(value)) {
-        string = PyString_AsString(value);
-#endif
-    }
-    else {
-        std::string error = std::string("type must be str or unicode, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-
-    // assign the string
-    setValue(string);
-}
-
 void PropertyString::Save (Base::Writer &writer) const
 {
     std::string val = encodeAttribute(_cValue);
@@ -1582,48 +1043,6 @@ const std::string& PropertyUUID::getValueStr(void) const
 const Base::Uuid& PropertyUUID::getValue(void) const
 {
     return _uuid;
-}
-
-PyObject *PropertyUUID::getPyObject(void)
-{
-#if PY_MAJOR_VERSION >= 3
-    PyObject *p = PyUnicode_FromString(_uuid.getValue().c_str());
-#else
-    PyObject *p = PyString_FromString(_uuid.getValue().c_str());
-#endif
-    return p;
-}
-
-void PropertyUUID::setPyObject(PyObject *value)
-{
-    std::string string;
-    if (PyUnicode_Check(value)) {
-#if PY_MAJOR_VERSION >= 3
-        string = PyUnicode_AsUTF8(value);
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        string = PyString_AsString(unicode);
-        Py_DECREF(unicode);
-    }
-    else if (PyString_Check(value)) {
-        string = PyString_AsString(value);
-#endif
-    }
-    else {
-        std::string error = std::string("type must be unicode or str, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-
-    try {
-        // assign the string
-        Base::Uuid uid;
-        uid.setValue(string);
-        setValue(uid);
-    }
-    catch (const std::exception& e) {
-        throw Base::RuntimeError(e.what());
-    }
 }
 
 void PropertyUUID::Save (Base::Writer &writer) const
@@ -1724,78 +1143,6 @@ void PropertyStringList::setValues(const std::list<std::string>& lValue)
     _lValueList.resize(lValue.size());
     std::copy(lValue.begin(), lValue.end(), _lValueList.begin());
     hasSetValue();
-}
-
-PyObject *PropertyStringList::getPyObject(void)
-{
-    PyObject* list = PyList_New(getSize());
-
-    for (int i = 0;i<getSize(); i++) {
-        PyObject* item = PyUnicode_DecodeUTF8(_lValueList[i].c_str(), _lValueList[i].size(), 0);
-        if (!item) {
-            Py_DECREF(list);
-            throw Base::UnicodeError("UTF8 conversion failure at PropertyStringList::getPyObject()");
-        }
-        PyList_SetItem(list, i, item);
-    }
-
-    return list;
-}
-
-void PropertyStringList::setPyObject(PyObject *value)
-{
-#if PY_MAJOR_VERSION >=3
-    if (PyBytes_Check(value)) {
-        setValue(PyBytes_AsString(value));
-    }
-#else
-    if (PyString_Check(value)) {
-        setValue(PyString_AsString(value));
-    }
-#endif
-    else if (PySequence_Check(value)) {
-        Py_ssize_t nSize = PySequence_Size(value);
-        std::vector<std::string> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item = PySequence_GetItem(value, i);
-            if (PyUnicode_Check(item)) {
-#if PY_MAJOR_VERSION >= 3
-                values[i] = PyUnicode_AsUTF8(item);
-#else
-                PyObject* unicode = PyUnicode_AsUTF8String(item);
-                values[i] = PyString_AsString(unicode);
-                Py_DECREF(unicode);
-            }
-            else if (PyString_Check(item)) {
-                values[i] = PyString_AsString(item);
-#endif
-            }
-            else {
-                std::string error = std::string("type in list must be str or unicode, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-        }
-        
-        setValues(values);
-    }
-    else if (PyUnicode_Check(value)) {
-#if PY_MAJOR_VERSION >= 3
-        setValue(PyUnicode_AsUTF8(value));
-    }
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        setValue(PyString_AsString(unicode));
-        Py_DECREF(unicode);
-    }
-#endif
-    else {
-        std::string error = std::string("type must be str or unicode or list of str or list of unicodes, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 unsigned int PropertyStringList::getMemSize (void) const
@@ -1904,86 +1251,6 @@ const std::string& PropertyMap::operator[] (const std::string& key) const
 } 
 
 
-PyObject *PropertyMap::getPyObject(void)
-{
-    PyObject* dict = PyDict_New();
-
-    for (std::map<std::string,std::string>::const_iterator it = _lValueList.begin();it!= _lValueList.end(); ++it) {
-        PyObject* item = PyUnicode_DecodeUTF8(it->second.c_str(), it->second.size(), 0);
-        if (!item) {
-            Py_DECREF(dict);
-            throw Base::UnicodeError("UTF8 conversion failure at PropertyMap::getPyObject()");
-        }
-        PyDict_SetItemString(dict,it->first.c_str(),item);
-    }
-
-    return dict;
-}
-
-void PropertyMap::setPyObject(PyObject *value)
-{
-    if (PyDict_Check(value)) {
-
-        std::map<std::string,std::string> values;
-        // get key and item list
-        PyObject* keyList = PyDict_Keys(value);
-
-        PyObject* itemList = PyDict_Values(value);
-        Py_ssize_t nSize = PyList_Size(keyList);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-
-            // check on the key:
-            std::string keyStr;
-            PyObject* key = PyList_GetItem(keyList, i);
-            if (PyUnicode_Check(key)) {
-#if PY_MAJOR_VERSION >= 3
-                keyStr = PyUnicode_AsUTF8(key);
-#else
-                PyObject* unicode = PyUnicode_AsUTF8String(key);
-                keyStr = PyString_AsString(unicode);
-                Py_DECREF(unicode);
-            }
-            if (PyString_Check(key)) {
-                keyStr = PyString_AsString(key);
-#endif
-            }
-            else {
-                std::string error = std::string("type of the key need to be unicode or string, not");
-                error += key->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-
-            // check on the item:
-            PyObject* item = PyList_GetItem(itemList, i);
-            if (PyUnicode_Check(item)) {
-#if PY_MAJOR_VERSION >= 3
-                values[keyStr] = PyUnicode_AsUTF8(item);
-#else
-                PyObject* unicode = PyUnicode_AsUTF8String(item);
-                values[keyStr] = PyString_AsString(unicode);
-                Py_DECREF(unicode);
-            }
-            else if (PyString_Check(item)) {
-                values[keyStr] = PyString_AsString(item);
-#endif
-            }
-            else {
-                std::string error = std::string("type in list must be string or unicode, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-        }
-        
-        setValues(values);
-    }
-    else {
-        std::string error = std::string("type must be a dict object");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 unsigned int PropertyMap::getMemSize (void) const
 {
     size_t size=0;
@@ -2074,29 +1341,6 @@ void PropertyBool::setValue(bool lValue)
 bool PropertyBool::getValue(void) const
 {
     return _lValue;
-}
-
-PyObject *PropertyBool::getPyObject(void)
-{
-    return PyBool_FromLong(_lValue ? 1 : 0);
-}
-
-void PropertyBool::setPyObject(PyObject *value)
-{
-    if (PyBool_Check(value))
-        setValue(PyObject_IsTrue(value)!=0);
-#if PY_MAJOR_VERSION < 3
-    else if(PyInt_Check(value))
-        setValue(PyInt_AsLong(value)!=0);
-#else
-    else if(PyLong_Check(value))
-        setValue(PyLong_AsLong(value)!=0);
-#endif
-    else {
-        std::string error = std::string("type must be bool, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyBool::Save (Base::Writer &writer) const
@@ -2212,85 +1456,6 @@ void PropertyBoolList::setValues(const boost::dynamic_bitset<>& values)
     hasSetValue();
 }
 
-PyObject *PropertyBoolList::getPyObject(void)
-{
-    PyObject* tuple = PyTuple_New(getSize());
-    for(int i = 0;i<getSize(); i++) {
-        bool v = _lValueList[i];
-        if (v) {
-            PyTuple_SetItem(tuple, i, PyBool_FromLong(1));
-        }
-        else {
-            PyTuple_SetItem(tuple, i, PyBool_FromLong(0));
-        }
-    }
-    return tuple;
-}
-
-void PropertyBoolList::setPyObject(PyObject *value)
-{
-    // string is also a sequence and must be be treated differently
-    std::string str;
-    if (PyUnicode_Check(value)) {
-#if PY_MAJOR_VERSION >= 3
-        str = PyUnicode_AsUTF8(value);
-#else
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        str = PyString_AsString(unicode);
-        Py_DECREF(unicode);
-        boost::dynamic_bitset<> values(str);
-        setValues(values);
-    }
-    if (PyString_Check(value)) {
-        str = PyString_AsString(value);
-#endif
-        boost::dynamic_bitset<> values(str);
-        setValues(values);
-    }
-    else if (PySequence_Check(value)) {
-        Py_ssize_t nSize = PySequence_Size(value);
-        boost::dynamic_bitset<> values(nSize);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item =  PySequence_GetItem(value, i);
-            if (PyBool_Check(item)) {
-                values[i] = (PyObject_IsTrue(item) ? true : false);
-            }
-#if PY_MAJOR_VERSION < 3
-            else if (PyInt_Check(item)) {
-                values[i] = (PyInt_AsLong(item) ? true : false);
-#else
-            else if (PyLong_Check(item)) {
-                values[i] = (PyLong_AsLong(item) ? true : false);
-#endif
-            }
-            else {
-                std::string error = std::string("type in list must be bool or int, not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-        }
-
-        setValues(values);
-    }
-    else if (PyBool_Check(value)) {
-        setValue(PyObject_IsTrue(value) ? true : false);
-    }
-#if PY_MAJOR_VERSION < 3
-    else if (PyInt_Check(value)) {
-        setValue(PyInt_AsLong(value) ? true : false);
-#else
-    else if (PyLong_Check(value)) {
-        setValue(PyLong_AsLong(value) ? true : false);
-#endif
-    }
-    else {
-        std::string error = std::string("type must be bool or a sequence of bool, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 void PropertyBoolList::Save (Base::Writer &writer) const
 {
     writer.Stream() << writer.ind() << "<BoolList value=\"" ;
@@ -2378,78 +1543,6 @@ const Color& PropertyColor::getValue(void) const
     return _cCol;
 }
 
-PyObject *PropertyColor::getPyObject(void)
-{
-    PyObject* rgba = PyTuple_New(4);
-    PyObject* r = PyFloat_FromDouble(_cCol.r);
-    PyObject* g = PyFloat_FromDouble(_cCol.g);
-    PyObject* b = PyFloat_FromDouble(_cCol.b);
-    PyObject* a = PyFloat_FromDouble(_cCol.a);
-
-    PyTuple_SetItem(rgba, 0, r);
-    PyTuple_SetItem(rgba, 1, g);
-    PyTuple_SetItem(rgba, 2, b);
-    PyTuple_SetItem(rgba, 3, a);
-
-    return rgba;
-}
-
-void PropertyColor::setPyObject(PyObject *value)
-{
-    App::Color cCol;
-    if (PyTuple_Check(value) && PyTuple_Size(value) == 3) {
-        PyObject* item;
-        item = PyTuple_GetItem(value,0);
-        if (PyFloat_Check(item))
-            cCol.r = (float)PyFloat_AsDouble(item);
-        else
-            throw Base::TypeError("Type in tuple must be float");
-        item = PyTuple_GetItem(value,1);
-        if (PyFloat_Check(item))
-            cCol.g = (float)PyFloat_AsDouble(item);
-        else
-            throw Base::TypeError("Type in tuple must be float");
-        item = PyTuple_GetItem(value,2);
-        if (PyFloat_Check(item))
-            cCol.b = (float)PyFloat_AsDouble(item);
-        else
-            throw Base::TypeError("Type in tuple must be float");
-    }
-    else if (PyTuple_Check(value) && PyTuple_Size(value) == 4) {
-        PyObject* item;
-        item = PyTuple_GetItem(value,0);
-        if (PyFloat_Check(item))
-            cCol.r = (float)PyFloat_AsDouble(item);
-        else
-            throw Base::TypeError("Type in tuple must be float");
-        item = PyTuple_GetItem(value,1);
-        if (PyFloat_Check(item))
-            cCol.g = (float)PyFloat_AsDouble(item);
-        else
-            throw Base::TypeError("Type in tuple must be float");
-        item = PyTuple_GetItem(value,2);
-        if (PyFloat_Check(item))
-            cCol.b = (float)PyFloat_AsDouble(item);
-        else
-            throw Base::TypeError("Type in tuple must be float");
-        item = PyTuple_GetItem(value,3);
-        if (PyFloat_Check(item))
-            cCol.a = (float)PyFloat_AsDouble(item);
-        else
-            throw Base::TypeError("Type in tuple must be float");
-    }
-    else if (PyLong_Check(value)) {
-        cCol.setPackedValue(PyLong_AsUnsignedLong(value));
-    }
-    else {
-        std::string error = std::string("type must be int or tuple of float, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-
-    setValue( cCol );
-}
-
 void PropertyColor::Save (Base::Writer &writer) const
 {
     writer.Stream() << writer.ind() << "<PropertyColor value=\"" 
@@ -2525,62 +1618,6 @@ void PropertyColorList::setValues (const std::vector<Color>& values)
     _lValueList=values;
     hasSetValue();
 }
-
-PyObject *PropertyColorList::getPyObject(void)
-{
-    PyObject* list = PyList_New(getSize());
-
-    for(int i = 0;i<getSize(); i++) {
-        PyObject* rgba = PyTuple_New(4);
-        PyObject* r = PyFloat_FromDouble(_lValueList[i].r);
-        PyObject* g = PyFloat_FromDouble(_lValueList[i].g);
-        PyObject* b = PyFloat_FromDouble(_lValueList[i].b);
-        PyObject* a = PyFloat_FromDouble(_lValueList[i].a);
-
-        PyTuple_SetItem(rgba, 0, r);
-        PyTuple_SetItem(rgba, 1, g);
-        PyTuple_SetItem(rgba, 2, b);
-        PyTuple_SetItem(rgba, 3, a);
-
-        PyList_SetItem( list, i, rgba );
-    }
-
-    return list;
-}
-
-void PropertyColorList::setPyObject(PyObject *value)
-{
-    if (PyList_Check(value)) {
-        Py_ssize_t nSize = PyList_Size(value);
-        std::vector<Color> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item = PyList_GetItem(value, i);
-            PropertyColor col;
-            col.setPyObject(item);
-            values[i] = col.getValue();
-        }
-
-        setValues(values);
-    }
-    else if (PyTuple_Check(value) && PyTuple_Size(value) == 3) {
-        PropertyColor col;
-        col.setPyObject( value );
-        setValue( col.getValue() );
-    }
-    else if (PyTuple_Check(value) && PyTuple_Size(value) == 4) {
-        PropertyColor col;
-        col.setPyObject( value );
-        setValue( col.getValue() );
-    }
-    else {
-        std::string error = std::string("not allowed type, ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 void PropertyColorList::Save (Base::Writer &writer) const
 {
     if (!writer.isForceXML()) {
@@ -2714,24 +1751,6 @@ void PropertyMaterial::setTransparency(float val)
     _cMat.transparency = val;
     hasSetValue();
 }
-
-PyObject *PropertyMaterial::getPyObject(void)
-{
-    return new MaterialPy(new Material(_cMat));
-}
-
-void PropertyMaterial::setPyObject(PyObject *value)
-{
-    if (PyObject_TypeCheck(value, &(MaterialPy::Type))) {
-        setValue(*static_cast<MaterialPy*>(value)->getMaterialPtr());
-    }
-    else {
-        std::string error = std::string("type must be 'Material', not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 void PropertyMaterial::Save (Base::Writer &writer) const
 {
     writer.Stream() << writer.ind() << "<PropertyMaterial ambientColor=\"" 
@@ -2822,42 +1841,6 @@ void PropertyMaterialList::setValues(const std::vector<Material>& values)
     aboutToSetValue();
     _lValueList = values;
     hasSetValue();
-}
-
-PyObject *PropertyMaterialList::getPyObject(void)
-{
-    Py::Tuple tuple(getSize());
-
-    for (int i = 0; i<getSize(); i++) {
-        tuple.setItem(i, Py::asObject(new MaterialPy(new Material(_lValueList[i]))));
-    }
-
-    return Py::new_reference_to(tuple);
-}
-
-void PropertyMaterialList::setPyObject(PyObject *value)
-{
-    if (PyObject_TypeCheck(value, &(MaterialPy::Type))) {
-        setValue(*static_cast<MaterialPy*>(value)->getMaterialPtr());
-    }
-    else if (PyList_Check(value) || PyTuple_Check(value)) {
-        Py::Sequence list(value);
-        std::vector<Material> materials;
-
-        for (Py::Sequence::iterator it = list.begin(); it != list.end(); ++it) {
-            if (PyObject_TypeCheck((*it).ptr(), &(MaterialPy::Type))) {
-                Material mat = *static_cast<MaterialPy*>((*it).ptr())->getMaterialPtr();
-                materials.push_back(mat);
-            }
-        }
-
-        setValues(materials);
-    }
-    else {
-        std::string error = std::string("type must be 'Material', not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyMaterialList::Save(Base::Writer &writer) const

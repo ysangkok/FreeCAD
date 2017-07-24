@@ -25,10 +25,10 @@
 #define APP_EXTENSION_H
 
 #include "PropertyContainer.h"
-#include "PropertyPythonObject.h"
+//#include "PropertyPythonObject.h"
 #include "ExtensionContainer.h"
-#include "Base/Interpreter.h"
-#include <CXX/Objects.hxx>
+//#include "Base/Interpreter.h"
+//#include <CXX/Objects.hxx>
 
 namespace App {
     
@@ -37,22 +37,22 @@ class ExtensionContainer;
 /// define Extension types
 #define EXTENSION_TYPESYSTEM_HEADER() \
 public: \
-  static Base::Type getExtensionClassTypeId(void); \
-  virtual Base::Type getExtensionTypeId(void) const; \
+  static ::Base::Type getExtensionClassTypeId(void); \
+  virtual ::Base::Type getExtensionTypeId(void) const; \
   static void init(void);\
   static void *create(void);\
 private: \
-  static Base::Type classTypeId
+  static ::Base::Type classTypeId
 
 /// Like EXTENSION_TYPESYSTEM_HEADER, with getExtensionTypeId declared override
 #define EXTENSION_TYPESYSTEM_HEADER_WITH_OVERRIDE() \
 public: \
-  static Base::Type getExtensionClassTypeId(void); \
-  virtual Base::Type getExtensionTypeId(void) const override; \
+  static ::Base::Type getExtensionClassTypeId(void); \
+  virtual ::Base::Type getExtensionTypeId(void) const override; \
   static void init(void);\
   static void *create(void);\
 private: \
-  static Base::Type classTypeId
+  static ::Base::Type classTypeId
     
 /// define to implement a subclass of Base::BaseClass
 #define EXTENSION_TYPESYSTEM_SOURCE_P(_class_) \
@@ -89,25 +89,25 @@ template<> void * _class_::create(void){\
 #define EXTENSION_PROPERTY_HEADER(_class_) \
   EXTENSION_TYPESYSTEM_HEADER(); \
 protected: \
-  static const App::PropertyData * extensionGetPropertyDataPtr(void); \
-  virtual const App::PropertyData &extensionGetPropertyData(void) const; \
+  static const ::App::PropertyData * extensionGetPropertyDataPtr(void); \
+  virtual const ::App::PropertyData &extensionGetPropertyData(void) const; \
 private: \
-  static App::PropertyData propertyData
+  static ::App::PropertyData propertyData
 
 /// Like EXTENSION_PROPERTY_HEADER, but with override declarations.
 #define EXTENSION_PROPERTY_HEADER_WITH_OVERRIDE(_class_) \
   EXTENSION_TYPESYSTEM_HEADER_WITH_OVERRIDE(); \
 protected: \
-  static const App::PropertyData * extensionGetPropertyDataPtr(void); \
-  virtual const App::PropertyData &extensionGetPropertyData(void) const override; \
+  static const ::App::PropertyData * extensionGetPropertyDataPtr(void); \
+  virtual const ::App::PropertyData &extensionGetPropertyData(void) const ; \
 private: \
-  static App::PropertyData propertyData
+  static ::App::PropertyData propertyData
 
 #define EXTENSION_PROPERTY_SOURCE(_class_, _parentclass_) \
 EXTENSION_TYPESYSTEM_SOURCE_P(_class_);\
-const App::PropertyData * _class_::extensionGetPropertyDataPtr(void){return &propertyData;} \
-const App::PropertyData & _class_::extensionGetPropertyData(void) const{return propertyData;} \
-App::PropertyData _class_::propertyData; \
+const ::App::PropertyData * _class_::extensionGetPropertyDataPtr(void){return &propertyData;} \
+const ::App::PropertyData & _class_::extensionGetPropertyData(void) const{return propertyData;} \
+::App::PropertyData _class_::propertyData; \
 void _class_::init(void){\
   initExtensionSubclass(_class_::classTypeId, #_class_ , #_parentclass_, &(_class_::create) ); \
   _class_::propertyData.parentPropertyData = _parentclass_::extensionGetPropertyDataPtr();\
@@ -115,9 +115,9 @@ void _class_::init(void){\
 
 #define EXTENSION_PROPERTY_SOURCE_TEMPLATE(_class_, _parentclass_) \
 EXTENSION_TYPESYSTEM_SOURCE_TEMPLATE(_class_);\
-template<> App::PropertyData _class_::propertyData = App::PropertyData(); \
-template<> const App::PropertyData * _class_::extensionGetPropertyDataPtr(void){return &propertyData;} \
-template<> const App::PropertyData & _class_::extensionGetPropertyData(void) const{return propertyData;} \
+template<> ::App::PropertyData _class_::propertyData = App::PropertyData(); \
+template<> const ::App::PropertyData * _class_::extensionGetPropertyDataPtr(void){return &propertyData;} \
+template<> const ::App::PropertyData & _class_::extensionGetPropertyData(void) const{return propertyData;} \
 template<> void _class_::init(void){\
   initExtensionSubclass(_class_::classTypeId, #_class_ , #_parentclass_, &(_class_::create) ); \
   _class_::propertyData.parentPropertyData = _parentclass_::extensionGetPropertyDataPtr();\
@@ -244,7 +244,6 @@ public:
  
     bool isPythonExtension() {return m_isPythonExtension;}
   
-    virtual PyObject* getExtensionPyObject(void);
   
   
     /** @name Access properties */
@@ -280,7 +279,7 @@ public:
     
     /** @name TypeHandling */
     //@{
-    bool extensionIsDerivedFrom(const Base::Type type) const {return getExtensionTypeId().isDerivedFrom(type);}
+    bool extensionIsDerivedFrom(const Base::Type type) const {abort();}
 protected:
     static void initExtensionSubclass(Base::Type &toInit,const char* ClassName, const char *ParentName, 
                                       Base::Type::instantiationMethod method=0);
@@ -293,7 +292,6 @@ protected:
 protected:     
     void initExtensionType(Base::Type type);
     bool m_isPythonExtension = false;
-    Py::Object ExtensionPythonObject;
   
 private:
     Base::Type                    m_extensionType;
@@ -313,32 +311,6 @@ private:
     propertyData.addProperty(static_cast<App::Extension*>(this), #_prop_, &this->_prop_, (_group_),(_type_),(_Docu_)); \
   } while (0)
   
-
-/**
- * Generic Python extension class which allows to behave every extension
- * derived class as Python extension -- simply by subclassing.
- */
-template <class ExtensionT>
-class ExtensionPythonT : public ExtensionT
-{
-    EXTENSION_PROPERTY_HEADER(App::ExtensionPythonT<ExtensionT>);
-
-public:
-    typedef ExtensionT Inherited;
-    
-    ExtensionPythonT() {
-        ExtensionT::m_isPythonExtension = true;
-        ExtensionT::initExtensionType(ExtensionPythonT::getExtensionClassTypeId());
-        
-        EXTENSION_ADD_PROPERTY(ExtensionProxy,(Py::Object()));
-    }
-    virtual ~ExtensionPythonT() {
-    }
-
-    PropertyPythonObject ExtensionProxy;
-};
-
-typedef ExtensionPythonT<App::Extension> ExtensionPython;
 
 // Helper macros to define python extensions
 #define EXTENSION_PROXY_FIRST(function) \

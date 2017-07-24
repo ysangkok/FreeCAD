@@ -35,7 +35,7 @@
 #endif
 
 // Include files
-#include <Python.h>
+//#include <Python.h>
 
 #ifdef FC_OS_MACOSX
 #undef toupper
@@ -343,7 +343,7 @@ private:
 
 /** python wrapper function
 */
-BaseExport PyObject* GetPyObject( const Base::Reference<ParameterGrp> &hcParamGrp);
+BaseExport void* GetPyObject( const Base::Reference<ParameterGrp> &hcParamGrp);
 
 
 #endif // BASE__PARAMETER_H

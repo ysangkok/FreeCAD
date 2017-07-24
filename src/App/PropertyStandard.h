@@ -66,8 +66,8 @@ public:
     long getValue(void) const;
     virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyIntegerItem"; }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -110,8 +110,8 @@ public:
 
     virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyPathItem"; }
     
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -189,8 +189,8 @@ public:
 
     virtual const char * getEditorName(void) const { return "Gui::PropertyEditor::PropertyEnumItem"; }
     
-    virtual PyObject * getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject * getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save(Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -269,7 +269,7 @@ public:
     //@}
 
     virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyIntegerConstraintItem"; }
-    virtual void setPyObject(PyObject *);
+    //virtual void setPyObject(PyObject *);
 
 protected:
     const Constraints* _ConstStruct;
@@ -330,8 +330,8 @@ public:
     virtual const char* getEditorName(void) const
     { return "Gui::PropertyEditor::PropertyIntegerListItem"; }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -375,8 +375,8 @@ public:
 
     const std::set<long> &getValues(void) const{return _lValueSet;}
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -428,8 +428,8 @@ public:
     
     //virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyStringListItem"; }
     
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -475,8 +475,8 @@ public:
     
     virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyFloatItem"; }
     
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -566,7 +566,7 @@ public:
     virtual const char* getEditorName(void) const
     { return "Gui::PropertyEditor::PropertyFloatConstraintItem"; }
 
-    virtual void setPyObject(PyObject *);
+    //virtual void setPyObject(PyObject *);
 
 protected:
     const Constraints* _ConstStruct;
@@ -628,8 +628,8 @@ public:
     virtual const char* getEditorName(void) const
     { return "Gui::PropertyEditor::PropertyFloatListItem"; }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -675,8 +675,8 @@ public:
     bool isEmpty(void){return _cValue.empty();}
     
     virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyStringItem"; }
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -721,8 +721,8 @@ public:
     const Base::Uuid& getValue(void) const;
     
     //virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyStringItem"; }
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -786,8 +786,8 @@ public:
     virtual const char* getEditorName(void) const
     { return "Gui::PropertyEditor::PropertyStringListItem"; }
     
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -828,8 +828,8 @@ public:
     
     virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyBoolItem"; }
     
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -870,8 +870,8 @@ public:
 
     const boost::dynamic_bitset<> &getValues(void) const{return _lValueList;}
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -917,8 +917,8 @@ public:
 
     virtual const char* getEditorName(void) const { return "Gui::PropertyEditor::PropertyColorItem"; }
     
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -966,8 +966,8 @@ public:
     void setValues (const std::vector<Color>& values);
     const std::vector<Color> &getValues(void) const{return _lValueList;}
     
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -1018,8 +1018,8 @@ public:
      */
     const Material &getValue(void) const;
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
     
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -1070,8 +1070,8 @@ public:
     void setValues(const std::vector<Material>& values);
     const std::vector<Material> &getValues(void) const{ return _lValueList; }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save(Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);

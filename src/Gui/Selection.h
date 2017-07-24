@@ -30,7 +30,7 @@
 #include <vector>
 #include <list>
 #include <map>
-#include <CXX/Objects.hxx>
+//#include <CXX/Objects.hxx>
 
 #include <Base/Observer.h>
 #include <Base/Type.h>
@@ -145,38 +145,6 @@ private:
 private:
     typedef boost::signals::connection Connection;
     Connection connectSelection;
-};
-
-/**
- * The SelectionObserverPython class implements a mechanism to register
- * a Python class instance implementing the required interface in order
- * to be notified on selection changes.
- *
- * @author Werner Mayer
- */
-class GuiExport SelectionObserverPython : public SelectionObserver
-{
-
-public:
-    /// Constructor
-    SelectionObserverPython(const Py::Object& obj);
-    virtual ~SelectionObserverPython();
-
-    static void addObserver(const Py::Object& obj);
-    static void removeObserver(const Py::Object& obj);
-
-private:
-    void onSelectionChanged(const SelectionChanges& msg);
-    void addSelection(const SelectionChanges&);
-    void removeSelection(const SelectionChanges&);
-    void setSelection(const SelectionChanges&);
-    void clearSelection(const SelectionChanges&);
-    void setPreselection(const SelectionChanges&);
-    void removePreselection(const SelectionChanges&);
-
-private:
-    Py::Object inst;
-    static std::vector<SelectionObserverPython*> _instances;
 };
 
 /** SelectionGate
@@ -327,22 +295,22 @@ public:
     friend class SelectionFilter;
 
     // Python interface
-    static PyMethodDef    Methods[];
+    static void*    Methods[];
 
 protected:
-    static PyObject *sAddSelection        (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sRemoveSelection     (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sClearSelection      (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sIsSelected          (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sCountObjectsOfType  (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sGetSelection        (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sGetCompleteSelection(PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sGetSelectionEx      (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sGetSelectionObject  (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sAddSelObserver      (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sRemSelObserver      (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sAddSelectionGate    (PyObject *self,PyObject *args,PyObject *kwd);
-    static PyObject *sRemoveSelectionGate (PyObject *self,PyObject *args,PyObject *kwd);
+    static void *sAddSelection        (void *self,void *args,void *kwd);
+    static void *sRemoveSelection     (void *self,void *args,void *kwd);
+    static void *sClearSelection      (void *self,void *args,void *kwd);
+    static void *sIsSelected          (void *self,void *args,void *kwd);
+    static void *sCountObjectsOfType  (void *self,void *args,void *kwd);
+    static void *sGetSelection        (void *self,void *args,void *kwd);
+    static void *sGetCompleteSelection(void *self,void *args,void *kwd);
+    static void *sGetSelectionEx      (void *self,void *args,void *kwd);
+    static void *sGetSelectionObject  (void *self,void *args,void *kwd);
+    static void *sAddSelObserver      (void *self,void *args,void *kwd);
+    static void *sRemSelObserver      (void *self,void *args,void *kwd);
+    static void *sAddSelectionGate    (void *self,void *args,void *kwd);
+    static void *sRemoveSelectionGate (void *self,void *args,void *kwd);
 
 protected:
     /// Construction

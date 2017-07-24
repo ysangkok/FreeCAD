@@ -32,9 +32,7 @@
 /// Here the FreeCAD includes sorted by Base,App,Gui......
 #include "Uuid.h"
 #include "Exception.h"
-#include "Interpreter.h"
 #include <stdexcept>
-#include <CXX/Objects.hxx>
 
 
 using namespace Base;

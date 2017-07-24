@@ -273,7 +273,7 @@ void ZipWriter::writeFiles(void)
     while (index < FileList.size()) {
         FileEntry entry = FileList.begin()[index];
         ZipStream.putNextEntry(entry.FileName);
-        entry.Object->SaveDocFile(*this);
+        //entry.Object->SaveDocFile(*this);
         index++;
     }
 }
@@ -325,7 +325,7 @@ void FileWriter::writeFiles(void)
 
             std::string fileName = DirName + "/" + entry.FileName;
             this->FileStream.open(fileName.c_str(), std::ios::out | std::ios::binary);
-            entry.Object->SaveDocFile(*this);
+            //entry.Object->SaveDocFile(*this);
             this->FileStream.close();
         }
 

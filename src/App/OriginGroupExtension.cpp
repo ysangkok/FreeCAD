@@ -191,13 +191,3 @@ std::vector< DocumentObject* > OriginGroupExtension::addObjects(std::vector<Docu
     
     return App::GeoFeatureGroupExtension::addObjects(objs);
 }
-
-
-// Python feature ---------------------------------------------------------
-
-namespace App {
-EXTENSION_PROPERTY_SOURCE_TEMPLATE(App::OriginGroupExtensionPython, App::OriginGroupExtension)
-
-// explicit template instantiation
-template class AppExport ExtensionPythonT<GroupExtensionPythonT<OriginGroupExtension>>;
-}

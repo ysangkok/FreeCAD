@@ -304,12 +304,3 @@ void GeoFeatureGroupExtension::getCSRelevantLinks(DocumentObject* obj, std::vect
     std::sort(vec.begin(), vec.end());
     vec.erase(std::unique(vec.begin(), vec.end()), vec.end());
 }
-
-// Python feature ---------------------------------------------------------
-
-namespace App {
-EXTENSION_PROPERTY_SOURCE_TEMPLATE(App::GeoFeatureGroupExtensionPython, App::GeoFeatureGroupExtension)
-
-// explicit template instantiation
-template class AppExport ExtensionPythonT<GroupExtensionPythonT<GeoFeatureGroupExtension>>;
-}

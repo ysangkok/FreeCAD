@@ -82,11 +82,11 @@ public:
         return "Gui::PropertyEditor::PropertyVectorItem";
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(Base::XMLReader &reader);
+    virtual void Restore(::Base::XMLReader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -165,14 +165,14 @@ public:
         return _lValueList;
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(Base::XMLReader &reader);
+    virtual void Restore(::Base::XMLReader &reader);
 
     virtual void SaveDocFile (Base::Writer &writer) const;
-    virtual void RestoreDocFile(Base::Reader &reader);
+    virtual void RestoreDocFile(::Base::Reader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -215,11 +215,11 @@ public:
         return "Gui::PropertyEditor::PropertyMatrixItem";
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(Base::XMLReader &reader);
+    virtual void Restore(::Base::XMLReader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -271,11 +271,11 @@ public:
         return "Gui::PropertyEditor::PropertyPlacementItem";
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(Base::XMLReader &reader);
+    virtual void Restore(::Base::XMLReader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -355,14 +355,14 @@ public:
         return _lValueList;
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(Base::XMLReader &reader);
+    virtual void Restore(::Base::XMLReader &reader);
 
     virtual void SaveDocFile (Base::Writer &writer) const;
-    virtual void RestoreDocFile(Base::Reader &reader);
+    virtual void RestoreDocFile(::Base::Reader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -377,7 +377,7 @@ private:
 /** The base class for all basic geometry properties.
  * @author Werner Mayer
  */
-class AppExport PropertyGeometry : public App::Property
+class AppExport PropertyGeometry : public ::App::Property
 {
     TYPESYSTEM_HEADER();
 

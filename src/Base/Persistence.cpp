@@ -42,29 +42,3 @@ TYPESYSTEM_SOURCE_ABSTRACT(Base::Persistence,Base::BaseClass);
 //**************************************************************************
 // separator for other implemetation aspects
 
-unsigned int Persistence::getMemSize (void) const
-{
-    // you have to implement this method in all descending classes!
-    assert(0);
-    return 0;
-}
-
-void Persistence::Save (Writer &/*writer*/) const
-{
-    // you have to implement this method in all descending classes!
-    assert(0);
-}
-
-void Persistence::Restore(XMLReader &/*reader*/)
-{
-    // you have to implement this method in all descending classes!
-    assert(0);
-}
-
-void Persistence::SaveDocFile (Writer &/*writer*/) const
-{
-}
-
-void Persistence::RestoreDocFile(Reader &/*reader*/)
-{
-}

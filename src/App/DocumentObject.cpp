@@ -34,7 +34,7 @@
 #include "PropertyLinks.h"
 #include "PropertyExpressionEngine.h"
 #include "DocumentObjectExtension.h"
-#include <App/DocumentObjectPy.h>
+//#include <App/DocumentObjectPy.h>
 #include <boost/signals/connection.hpp>
 #include <boost/bind.hpp>
 
@@ -59,16 +59,16 @@ DocumentObject::DocumentObject(void)
 
 DocumentObject::~DocumentObject(void)
 {
-    if (!PythonObject.is(Py::_None())){
-        // Remark: The API of Py::Object has been changed to set whether the wrapper owns the passed
-        // Python object or not. In the constructor we forced the wrapper to own the object so we need
-        // not to dec'ref the Python object any more.
-        // But we must still invalidate the Python object because it need not to be
-        // destructed right now because the interpreter can own several references to it.
-        Base::PyObjectBase* obj = (Base::PyObjectBase*)PythonObject.ptr();
-        // Call before decrementing the reference counter, otherwise a heap error can occur
-        obj->setInvalid();
-    }
+    //if (!PythonObject.is(Py::_None())){
+    //    // Remark: The API of Py::Object has been changed to set whether the wrapper owns the passed
+    //    // Python object or not. In the constructor we forced the wrapper to own the object so we need
+    //    // not to dec'ref the Python object any more.
+    //    // But we must still invalidate the Python object because it need not to be
+    //    // destructed right now because the interpreter can own several references to it.
+    //    Base::PyObjectBase* obj = (Base::PyObjectBase*)PythonObject.ptr();
+    //    // Call before decrementing the reference counter, otherwise a heap error can occur
+    //    obj->setInvalid();
+    //}
 }
 
 App::DocumentObjectExecReturn *DocumentObject::recompute(void)
@@ -80,15 +80,16 @@ App::DocumentObjectExecReturn *DocumentObject::recompute(void)
 
 DocumentObjectExecReturn *DocumentObject::execute(void)
 {
-    //call all extensions
-    auto vector = getExtensionsDerivedFromType<App::DocumentObjectExtension>();
-    for(auto ext : vector) {
-        auto ret = ext->extensionExecute();
-        if (ret != StdReturn)
-            return ret;
-    }
-
     return StdReturn;
+    ////call all extensions
+    //auto vector = getExtensionsDerivedFromType<App::DocumentObjectExtension>();
+    //for(auto ext : vector) {
+    //    auto ret = ext->extensionExecute();
+    //    if (ret != StdReturn)
+    //        return ret;
+    //}
+
+    //return StdReturn;
 }
 
 bool DocumentObject::recomputeFeature()
@@ -428,21 +429,6 @@ void DocumentObject::onChanged(const Property* prop)
     
     //call the parent for appropriate handling
     TransactionalObject::onChanged(prop);
-}
-
-PyObject *DocumentObject::getPyObject(void)
-{
-    if (PythonObject.is(Py::_None())) {
-        // ref counter is set to 1
-        PythonObject = Py::Object(new DocumentObjectPy(this),true);
-    }
-    return Py::new_reference_to(PythonObject);
-}
-
-std::vector<PyObject *> DocumentObject::getPySubObjects(const std::vector<std::string>&) const
-{
-    // default implementation returns nothing
-    return std::vector<PyObject *>();
 }
 
 void DocumentObject::touch(void)

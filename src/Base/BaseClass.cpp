@@ -29,7 +29,7 @@
 
 /// Here the FreeCAD includes sorted by Base,App,Gui......
 #include "BaseClass.h"
-#include "PyObjectBase.h"
+//#include "PyObjectBase.h"
 
 using namespace Base;
 
@@ -98,25 +98,4 @@ void BaseClass::initSubclass(Base::Type &toInit,const char* ClassName, const cha
 
     // create the new type
     toInit = Base::Type::createType(parentType, ClassName, method);
-}
-
-/**
- * This method returns the Python wrapper for a C++ object. It's in the responsibility of 
- * the programmer to do the correct reference counting. Basically there are two ways how
- * to implement that: Either always return a new Python object then reference counting is
- * not a matter or return always the same Python object then the reference counter must be
- * incremented by one. However, it's absolutely forbidden to return always the same Python
- * object without incrementing the reference counter. 
- *
- * The default implementation returns 'None'.
- */
-PyObject *BaseClass::getPyObject(void)
-{
-    assert(0);
-    Py_Return;
-}
-
-void BaseClass::setPyObject(PyObject *)
-{
-    assert(0);
 }

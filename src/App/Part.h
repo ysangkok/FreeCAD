@@ -27,6 +27,7 @@
 #include "OriginGroupExtension.h"
 #include "PropertyLinks.h"
 
+#define AppExport
 
 
 namespace App
@@ -91,7 +92,7 @@ public:
      */
     static App::Part* getPartOfObject (const DocumentObject* obj);
 
-    virtual PyObject *getPyObject(void);
+    //virtual PyObject *getPyObject(void);
 };
 
 //typedef App::FeaturePythonT<Part> PartPython;

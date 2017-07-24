@@ -193,63 +193,12 @@ public:
     //@}
 
 public:
-    //---------------------------------------------------------------------
-    // python exports goes here +++++++++++++++++++++++++++++++++++++++++++	
-    //---------------------------------------------------------------------
-    // static python wrapper of the exported functions
-    PYFUNCDEF_S(sActivateWorkbenchHandler); // activates a workbench object
-    PYFUNCDEF_S(sAddWorkbenchHandler);      // adds a new workbench handler to a list
-    PYFUNCDEF_S(sRemoveWorkbenchHandler);   // removes a workbench handler from the list
-    PYFUNCDEF_S(sGetWorkbenchHandler);      // retrieves the workbench handler
-    PYFUNCDEF_S(sListWorkbenchHandlers);    // retrieves a list of all workbench handlers
-    PYFUNCDEF_S(sActiveWorkbenchHandler);   // retrieves the active workbench object
-    PYFUNCDEF_S(sAddResPath);               // adds a path where to find resources
-    PYFUNCDEF_S(sAddLangPath);              // adds a path to a qm file
-    PYFUNCDEF_S(sAddIconPath);              // adds a path to an icon file
-    PYFUNCDEF_S(sAddIcon);                  // adds an icon to the cache
-
-    PYFUNCDEF_S(sSendActiveView);
-
-    PYFUNCDEF_S(sGetMainWindow);
-    PYFUNCDEF_S(sUpdateGui);
-    PYFUNCDEF_S(sUpdateLocale);
-    PYFUNCDEF_S(sGetLocale);
-    PYFUNCDEF_S(sCreateDialog);
-    PYFUNCDEF_S(sAddPreferencePage);
-
-    PYFUNCDEF_S(sRunCommand);
-    PYFUNCDEF_S(sAddCommand);
-    PYFUNCDEF_S(sListCommands);
-
-    PYFUNCDEF_S(sHide);                     // deprecated
-    PYFUNCDEF_S(sShow);                     // deprecated
-    PYFUNCDEF_S(sHideObject);               // hide view provider object
-    PYFUNCDEF_S(sShowObject);               // show view provider object
-
-    PYFUNCDEF_S(sOpen);                     // open Python scripts
-    PYFUNCDEF_S(sInsert);                   // open Python scripts
-    PYFUNCDEF_S(sExport);
-
-    PYFUNCDEF_S(sActiveDocument);
-    PYFUNCDEF_S(sSetActiveDocument);
-    PYFUNCDEF_S(sActiveView);
-    PYFUNCDEF_S(sGetDocument);
-
-    PYFUNCDEF_S(sDoCommand);
-    PYFUNCDEF_S(sDoCommandGui);
-    PYFUNCDEF_S(sAddModule);
-
-    PYFUNCDEF_S(sShowDownloads);
-    PYFUNCDEF_S(sShowPreferences);
-
-    PYFUNCDEF_S(sCreateViewer);
-
-    static PyMethodDef    Methods[]; 
+    static void*    Methods[]; 
 
 private:
     struct ApplicationP* d;
     /// workbench python dictionary
-    PyObject*             _pcWorkbenchDictionary;
+    void*             _pcWorkbenchDictionary;
 };
 
 } //namespace Gui

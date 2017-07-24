@@ -1,4 +1,4 @@
-#! python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # (c) 2006 Jürgen Riegel  GPL
 

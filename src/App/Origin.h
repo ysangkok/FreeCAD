@@ -35,7 +35,7 @@ namespace App
 
 /** Base class of all geometric document objects.
  */
-class AppExport Origin : public App::DocumentObject
+class AppExport Origin : public ::App::DocumentObject
 {
     PROPERTY_HEADER(App::Origin);
 
@@ -125,7 +125,7 @@ public:
 
 protected:
     /// Checks integrity of the Origin
-    virtual App::DocumentObjectExecReturn *execute(void);
+    virtual ::App::DocumentObjectExecReturn *execute(void);
     /// Creates all corresponding Axises and Planes objects for the origin if they not linked yet
     virtual void setupObject ();
     /// Removes all planes and axis if they are still linked to the document
@@ -133,7 +133,7 @@ protected:
 
 private:
     struct SetupData;
-    void setupOriginFeature (App::PropertyLink &featProp, const SetupData &data);
+    void setupOriginFeature (::App::PropertyLink &featProp, const SetupData &data);
 
 };
 

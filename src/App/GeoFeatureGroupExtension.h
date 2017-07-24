@@ -25,7 +25,7 @@
 #ifndef APP_GeoFeatureGroup_H
 #define APP_GeoFeatureGroup_H
 
-#include <App/FeaturePython.h>
+//#include <App/FeaturePython.h>
 
 #include "DocumentObjectGroup.h"
 #include "PropertyGeo.h"
@@ -100,22 +100,22 @@ public:
     /// Collects GeoFeatureGroup relevant objects that are linked from the given one. That means all linked objects
     /// including their links (recursively) except GeoFeatureGroups, where the recursion stops. Expressions
     /// links are ignored. An exception is thrown when there are dependency loops.
-    static void getCSOutList(App::DocumentObject* obj, std::vector<App::DocumentObject*>& vec);
+    static void getCSOutList(::App::DocumentObject* obj, std::vector<::App::DocumentObject*>& vec);
     /// Collects GeoFeatureGroup relevant objects that link to the given one. That means all objects
     /// including their parents (recursively) except GeoFeatureGroups, where the recursion stops. Expression 
     /// links are ignored. An exception is thrown when there are dependency loops.
-    static void getCSInList(App::DocumentObject* obj, std::vector<App::DocumentObject*>& vec);
+    static void getCSInList(::App::DocumentObject* obj, std::vector<::App::DocumentObject*>& vec);
     /// Collects all links that are relevant for the coordinate system, meaning all recursive links to 
     /// obj and from obj excluding expressions and stopping the recursion at other geofeaturegroups. 
     /// The result is the combination of CSOutList and CSInList.
-    static void getCSRelevantLinks(App::DocumentObject* obj, std::vector<App::DocumentObject*>& vec);
+    static void getCSRelevantLinks(::App::DocumentObject* obj, std::vector<::App::DocumentObject*>& vec);
     
 private:
     Base::Placement recursiveGroupPlacement(GeoFeatureGroupExtension* group);
-    static std::vector<App::DocumentObject*> getObjectsFromLinks(App::DocumentObject*);
+    static std::vector<::App::DocumentObject*> getObjectsFromLinks(::App::DocumentObject*);
 };
 
-typedef ExtensionPythonT<GroupExtensionPythonT<GeoFeatureGroupExtension>> GeoFeatureGroupExtensionPython;
+//typedef ExtensionPythonT<GroupExtensionPythonT<GeoFeatureGroupExtension>> GeoFeatureGroupExtensionPython;
 
 
 } //namespace App

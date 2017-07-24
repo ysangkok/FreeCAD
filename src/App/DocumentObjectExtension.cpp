@@ -29,7 +29,7 @@
 #endif
 
 #include "DocumentObjectExtension.h"
-#include "DocumentObjectExtensionPy.h"
+//#include "DocumentObjectExtensionPy.h"
 
 using namespace App;
 
@@ -65,15 +65,6 @@ void DocumentObjectExtension::onExtendedSetupObject() {
 
 void DocumentObjectExtension::onExtendedUnsetupObject() {
     
-}
-
-PyObject* DocumentObjectExtension::getExtensionPyObject(void) {
-    
-    if (ExtensionPythonObject.is(Py::_None())){
-        // ref counter is set to 1
-        ExtensionPythonObject = Py::Object(new DocumentObjectExtensionPy(this),true);
-    }
-    return Py::new_reference_to(ExtensionPythonObject);
 }
 
 const DocumentObject* DocumentObjectExtension::getExtendedObject() const {

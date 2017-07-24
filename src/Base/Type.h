@@ -31,6 +31,10 @@
 #include <set>
 #include <vector>
 
+#define BaseExport
+#define AppExport
+#define GuiExport
+
 namespace Base
 {
 

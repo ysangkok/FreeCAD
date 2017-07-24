@@ -25,10 +25,10 @@
 #define GUI_VIEW3DINVENTOR_H
 
 #include "MDIView.h"
+#include "QtOpenGL.h"
 
 #include <Base/Parameter.h>
 #include <QImage>
-#include <QtOpenGL.h>
 
 class SoNode;
 class QPrinter;

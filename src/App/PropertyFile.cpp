@@ -34,8 +34,8 @@
 #include <Base/Reader.h>
 #include <Base/Writer.h>
 #include <Base/Stream.h>
-#include <Base/Console.h>
-#include <Base/PyObjectBase.h>
+//#include <Base/Console.h>
+//#include <Base/PyObjectBase.h>
 #include <Base/Uuid.h>
 
 #include "PropertyFile.h"
@@ -244,156 +244,6 @@ const char* PropertyFileIncluded::getValue(void) const
      return _cValue.c_str();
 }
 
-PyObject *PropertyFileIncluded::getPyObject(void)
-{
-    PyObject *p = PyUnicode_DecodeUTF8(_cValue.c_str(),_cValue.size(),0);
-    if (!p) {
-        throw Base::UnicodeError("PropertyFileIncluded: UTF-8 conversion failure");
-    }
-    return p;
-}
-
-#if PY_MAJOR_VERSION >= 3
-namespace App {
-const char* getNameFromFile(PyObject* value)
-{
-    const char* string = 0;
-    PyObject *oname = PyObject_GetAttrString (value, "name");
-    if (oname) {
-        if (PyUnicode_Check (oname)) {
-            string = PyUnicode_AsUTF8 (oname);
-        }
-        else if (PyBytes_Check (oname)) {
-            string = PyBytes_AsString (oname);
-        }
-        Py_DECREF (oname);
-    }
-
-    if (!string)
-        throw Base::TypeError("Unable to get filename");
-    return string;
-}
-
-
-
-bool isIOFile(PyObject* file)
-{
-    PyObject* io = PyImport_ImportModule("io");
-    PyObject* IOBase_Class = PyObject_GetAttrString(io, "IOBase");
-    bool isFile = PyObject_IsInstance(file, IOBase_Class);
-    Py_DECREF(IOBase_Class);
-    Py_DECREF(io);
-    return isFile;
-}
-}
-#endif
-
-void PropertyFileIncluded::setPyObject(PyObject *value)
-{
-#if PY_MAJOR_VERSION >= 3
-    std::string string;
-    if (PyUnicode_Check(value)) {
-        string = PyUnicode_AsUTF8(value);
-    }
-    else if (PyBytes_Check(value)) {
-        string = PyBytes_AsString(value);
-    }
-    else if (isIOFile(value)){
-        string = getNameFromFile(value);
-    }
-#else
-    std::string string;
-    if (PyUnicode_Check(value)) {
-        PyObject* unicode = PyUnicode_AsUTF8String(value);
-        string = PyString_AsString(unicode);
-        Py_DECREF(unicode);
-    }
-    else if (PyString_Check(value)) {
-        string = PyString_AsString(value);
-    }
-    else if (PyFile_Check(value)) {
-        PyObject* FileName = PyFile_Name(value);
-        string = PyString_AsString(FileName);
-    }
-#endif
-    else if (PyTuple_Check(value)) {
-        if (PyTuple_Size(value) != 2)
-            throw Base::TypeError("Tuple needs size of (filePath,newFileName)"); 
-        PyObject* file = PyTuple_GetItem(value,0);
-        PyObject* name = PyTuple_GetItem(value,1);
-
-        // decoding file
-        std::string fileStr;
-#if PY_MAJOR_VERSION >= 3
-        if (PyUnicode_Check(file)) {
-            fileStr = PyUnicode_AsUTF8(file);
-        }
-        else if (PyBytes_Check(file)) {
-            fileStr = PyBytes_AsString(file);
-        }
-        else if (isIOFile(value)) {
-            fileStr = getNameFromFile(file);
-        }
-#else
-        if (PyUnicode_Check(file)) {
-            PyObject* unicode = PyUnicode_AsUTF8String(file);
-            fileStr = PyString_AsString(unicode);
-            Py_DECREF(unicode);
-        }
-        else if (PyString_Check(file)) {
-            fileStr = PyString_AsString(file);
-        }
-        else if (PyFile_Check(file)) {
-            PyObject* FileName = PyFile_Name(file);
-            fileStr = PyString_AsString(FileName);
-        }
-#endif
-        else {
-            std::string error = std::string("First item in tuple must be a file or string, not ");
-            error += file->ob_type->tp_name;
-            throw Base::TypeError(error);
-        }
-
-        // decoding name
-        std::string nameStr;
-#if PY_MAJOR_VERSION >= 3
-        if (PyUnicode_Check(name)) {
-            nameStr = PyUnicode_AsUTF8(name);
-        }
-        else if (PyBytes_Check(name)) {
-            nameStr = PyBytes_AsString(name);
-        }
-        else if (isIOFile(value)) {
-            nameStr = getNameFromFile(name);
-        }
-#else
-        if (PyString_Check(name)) {
-            nameStr = PyString_AsString(name);
-        }
-        else if (PyFile_Check(name)) {
-            PyObject* FileName = PyFile_Name(name);
-            nameStr = PyString_AsString(FileName);
-        }
-#endif
-        else {
-            std::string error = std::string("Second item in tuple must be a string, not ");
-            error += name->ob_type->tp_name;
-            throw Base::TypeError(error);
-        }
-
-        setValue(fileStr.c_str(),nameStr.c_str());
-        return;
-    }
-    else {
-        std::string error = std::string("Type must be string or file, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-
-    // assign the string
-    setValue(string.c_str());
-}
-
 void PropertyFileIncluded::Save (Base::Writer &writer) const
 {
     // when saving a document under a new file name the transient directory
@@ -547,7 +397,7 @@ Property *PropertyFileIncluded::Copy(void) const
         }
 
         // remember the new name for the Undo
-        Base::Console().Log("Copy '%s' to '%s'\n",_cValue.c_str(),newName.filePath().c_str());
+        printf("Copy '%s' to '%s'\n",_cValue.c_str(),newName.filePath().c_str());
         prop->_cValue = newName.filePath().c_str();
 
         // make backup files writable to avoid copying them again on undo/redo

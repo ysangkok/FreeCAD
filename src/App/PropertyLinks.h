@@ -79,8 +79,8 @@ public:
         return _pcLink ? dynamic_cast<_type>(_pcLink) : 0;
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -137,8 +137,8 @@ public:
         return _lValueList;
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save(Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -200,8 +200,8 @@ public:
         return _pcLinkSub ? dynamic_cast<_type>(_pcLinkSub) : 0;
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
@@ -257,7 +257,7 @@ public:
         return _lValueList;
     }
 
-    const std::string getPyReprString();
+    //const std::string getPyReprString();
 
     /**
      * @brief getValue emulates the action of a single-object link.
@@ -274,8 +274,8 @@ public:
     void setSubListValues(const std::vector<SubSet>&);
     std::vector<SubSet> getSubListValues() const;
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
+    //virtual PyObject *getPyObject(void);
+    //virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);

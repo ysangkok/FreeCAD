@@ -128,8 +128,8 @@ public:
     void onDocumentRestored();
 
     /* Python interface */
-    PyObject *getPyObject(void);
-    void setPyObject(PyObject *);
+    //PyObject *getPyObject(void);
+    //void setPyObject(PyObject *);
 
 private:
 

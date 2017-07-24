@@ -33,7 +33,7 @@
 #include "ExtensionContainer.h"
 #include <Base/Reader.h>
 #include <Base/Writer.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/Tools.h>
 
@@ -367,21 +367,21 @@ void DynamicProperty::Save (Base::Writer &writer) const
             // means to proceed instead of aborting the write operation.
 
             // Don't write transient properties 
-            if (!(getPropertyType(it->second) & Prop_Transient))
-                it->second->Save(writer);
+//            if (!(getPropertyType(it->second) & Prop_Transient))
+//                it->second->Save(writer);
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("DynamicProperty::Save: Unknown C++ exception thrown. Try to continue...\n");
+            printf("DynamicProperty::Save: Unknown C++ exception thrown. Try to continue...\n");
         }
 #endif
         writer.decInd(); // indentation for the actual property
@@ -432,7 +432,7 @@ void DynamicProperty::Restore(Base::XMLReader &reader)
         }
         catch(const Base::Exception& e) {
             // only handle this exception type
-            Base::Console().Warning(e.what());
+            printf(e.what());
         }
 
         //NOTE: We must also check the type of the current property because a subclass of
@@ -443,30 +443,30 @@ void DynamicProperty::Restore(Base::XMLReader &reader)
         // Don't read transient properties
         if (!(getPropertyType(prop) & Prop_Transient)) {
             if (prop && strcmp(prop->getTypeId().getName(), TypeName) == 0) {
-                try {
-                    prop->Restore(reader);
-                }
-                catch (const Base::XMLParseException&) {
-                    throw; // re-throw
-                }
-                catch (const Base::Exception &e) {
-                    Base::Console().Error("%s\n", e.what());
-                }
-                catch (const std::exception &e) {
-                    Base::Console().Error("%s\n", e.what());
-                }
-#ifndef FC_DEBUG
-                catch (...) {
-                    Base::Console().Error("DynamicProperty::Restore: Unknown C++ exception thrown");
-                }
-#endif
+//                try {
+//                    prop->Restore(reader);
+//                }
+//                catch (const Base::XMLParseException&) {
+//                    throw; // re-throw
+//                }
+//                catch (const Base::Exception &e) {
+//                    printf("%s\n", e.what());
+//                }
+//                catch (const std::exception &e) {
+//                    printf("%s\n", e.what());
+//                }
+//#ifndef FC_DEBUG
+//                catch (...) {
+//                    printf("DynamicProperty::Restore: Unknown C++ exception thrown");
+//                }
+//#endif
             }
             else if (prop) {
-                Base::Console().Warning("%s: Overread data for property %s of type %s, expected type is %s\n",
+                printf("%s: Overread data for property %s of type %s, expected type is %s\n",
                     pc->getTypeId().getName(), prop->getName(), prop->getTypeId().getName(), TypeName);
             }
             else {
-                Base::Console().Warning("%s: No property found with name %s and type %s\n",
+                printf("%s: No property found with name %s and type %s\n",
                     pc->getTypeId().getName(), PropName, TypeName);
             }
         }

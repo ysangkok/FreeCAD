@@ -31,7 +31,7 @@
 /// Here the FreeCAD includes sorted by Base,App,Gui......
 #include <Base/Reader.h>
 #include <Base/Writer.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Exception.h>
 
 #include "Property.h"
@@ -190,26 +190,26 @@ void PropertyContainer::Save (Base::Writer &writer) const
             writer.Stream() << writer.ind() << "<Property name=\"" << it->first << "\" type=\"" 
                             << it->second->getTypeId().getName() << "\">" << endl;;
             writer.incInd(); // indentation for the actual property
-            try {
-                // We must make sure to handle all exceptions accordingly so that
-                // the project file doesn't get invalidated. In the error case this
-                // means to proceed instead of aborting the write operation.
-                it->second->Save(writer);
-            }
-            catch (const Base::Exception &e) {
-                Base::Console().Error("%s\n", e.what());
-            }
-            catch (const std::exception &e) {
-                Base::Console().Error("%s\n", e.what());
-            }
-            catch (const char* e) {
-                Base::Console().Error("%s\n", e);
-            }
-#ifndef FC_DEBUG
-            catch (...) {
-                Base::Console().Error("PropertyContainer::Save: Unknown C++ exception thrown. Try to continue...\n");
-            }
-#endif
+//            try {
+//                // We must make sure to handle all exceptions accordingly so that
+//                // the project file doesn't get invalidated. In the error case this
+//                // means to proceed instead of aborting the write operation.
+//                it->second->Save(writer);
+//            }
+//            catch (const Base::Exception &e) {
+//                printf("%s\n", e.what());
+//            }
+//            catch (const std::exception &e) {
+//                printf("%s\n", e.what());
+//            }
+//            catch (const char* e) {
+//                printf("%s\n", e);
+//            }
+//#ifndef FC_DEBUG
+//            catch (...) {
+//                printf("PropertyContainer::Save: Unknown C++ exception thrown. Try to continue...\n");
+//            }
+//#endif
             writer.decInd(); // indentation for the actual property
             writer.Stream() << writer.ind() << "</Property>" << endl;    
             writer.decInd(); // indentation for 'Property name'
@@ -233,27 +233,27 @@ void PropertyContainer::Restore(Base::XMLReader &reader)
         // subclass of PropertyContainer might change the type of a property but
         // not its name. In this case we would force to read-in a wrong property
         // type and the behaviour would be undefined.
-        try {
-            if (prop && strcmp(prop->getTypeId().getName(), TypeName) == 0)
-                prop->Restore(reader);
-        }
-        catch (const Base::XMLParseException&) {
-            throw; // re-throw
-        }
-        catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
-        }
-        catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
-        }
-        catch (const char* e) {
-            Base::Console().Error("%s\n", e);
-        }
-#ifndef FC_DEBUG
-        catch (...) {
-            Base::Console().Error("PropertyContainer::Restore: Unknown C++ exception thrown");
-        }
-#endif
+//        try {
+//            if (prop && strcmp(prop->getTypeId().getName(), TypeName) == 0)
+//                prop->Restore(reader);
+//        }
+//        catch (const Base::XMLParseException&) {
+//            throw; // re-throw
+//        }
+//        catch (const Base::Exception &e) {
+//            printf("%s\n", e.what());
+//        }
+//        catch (const std::exception &e) {
+//            printf("%s\n", e.what());
+//        }
+//        catch (const char* e) {
+//            printf("%s\n", e);
+//        }
+//#ifndef FC_DEBUG
+//        catch (...) {
+//            printf("PropertyContainer::Restore: Unknown C++ exception thrown");
+//        }
+//#endif
 
         reader.readEndElement("Property");
     }

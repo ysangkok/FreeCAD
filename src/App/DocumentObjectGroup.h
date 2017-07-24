@@ -24,7 +24,7 @@
 #ifndef APP_DOCUMENTOBJECTGROUP_H
 #define APP_DOCUMENTOBJECTGROUP_H
 
-#include "FeaturePython.h"
+//#include "FeaturePython.h"
 #include "DocumentObject.h"
 #include "PropertyLinks.h"
 #include "GroupExtension.h"
@@ -48,10 +48,10 @@ public:
         return "Gui::ViewProviderDocumentObjectGroup";
     }
     
-    virtual PyObject *getPyObject(void);
+    //virtual PyObject *getPyObject(void);
 };
 
-typedef App::FeaturePythonT<DocumentObjectGroup> DocumentObjectGroupPython;
+//typedef App::FeaturePythonT<DocumentObjectGroup> DocumentObjectGroupPython;
 
 
 } //namespace App

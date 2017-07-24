@@ -29,7 +29,6 @@
 #include <QString>
 #include <QLocale>
 #include "Exception.h"
-#include "UnitsApi.h"
 #include "UnitsSchemaInternal.h"
 #include <cmath>
 

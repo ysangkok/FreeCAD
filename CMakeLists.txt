@@ -1,4 +1,6 @@
 project(FreeCAD_trunk)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fmax-errors=5 -ggdb3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fmax-errors=5 -ggdb3")
 
 set(PACKAGE_NAME "FreeCAD")
 set(PACKAGE_VERSION_NAME "Vulcan")
@@ -527,28 +529,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
-    find_package(PythonInterp REQUIRED)
-    set(Python_ADDITIONAL_VERSIONS ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
-    IF (NOT DEFINED PYTHON_VERSION_STRING)
-        find_package(PythonLibs REQUIRED)
-    ELSE (NOT DEFINED PYTHON_VERSION_STRING)
-        find_package(PythonLibs ${PYTHON_VERSION_STRING} EXACT)
-    ENDIF(NOT DEFINED PYTHON_VERSION_STRING)
-
-
-    IF(NOT PYTHONLIBS_FOUND)
-        MESSAGE(FATAL_ERROR "=================================\n"
-                            "Python not found, install Python!\n"
-                            "=================================\n")
-    ELSE(NOT PYTHONLIBS_FOUND)
-        # prevent python3 lower than 3.3 (not enough utf8<->unicode tools)
-        IF(PYTHON_VERSION_MAJOR EQUAL 3)
-            IF(PYTHON_VERSION_MINOR LESS 4)
-                MESSAGE(FATAL_ERROR "To build FreeCAD with Python3, you need at least version 3.4\n")
-            ENDIF(PYTHON_VERSION_MINOR LESS 4)
-        ENDIF(PYTHON_VERSION_MAJOR EQUAL 3)
-    ENDIF(NOT PYTHONLIBS_FOUND)
-
 # -------------------------------- pcl ----------------------------------
     #PCL needs to be found before boost because the PCLConfig also calls find_package(Boost ...),
     #but with different components
@@ -588,9 +568,6 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
     find_package(ZLIB REQUIRED)
 
-# -------------------------------- PyCXX --------------------------------
-
-    find_package(PyCXX REQUIRED)
 
 # -------------------------------- OpenCasCade --------------------------------
 

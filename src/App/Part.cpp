@@ -27,9 +27,10 @@
 #endif
 
 #include <App/Document.h>
+#include <App/GeoFeature.h>
 
 #include "Part.h"
-#include "PartPy.h"
+//#include "PartPy.h"
 
 
 using namespace App;
@@ -78,16 +79,6 @@ App::Part *Part::getPartOfObject (const DocumentObject* obj) {
     }
 
     return nullptr;
-}
-
-
-PyObject *Part::getPyObject()
-{
-    if (PythonObject.is(Py::_None())){
-        // ref counter is set to 1
-        PythonObject = Py::Object(new PartPy(this),true);
-    }
-    return Py::new_reference_to(PythonObject);
 }
 
 // Python feature ---------------------------------------------------------

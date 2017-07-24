@@ -38,7 +38,6 @@
 #include "Exception.h"
 #include "Persistence.h"
 #include "InputSource.h"
-#include "Console.h"
 #include "Sequencer.h"
 
 #ifdef _MSC_VER
@@ -275,8 +274,7 @@ void Base::XMLReader::readCharacters(void)
 
 void Base::XMLReader::readBinFile(const char* filename)
 {
-    Base::FileInfo fi(filename);
-    Base::ofstream to(fi, std::ios::out | std::ios::binary);
+    std::ofstream to(filename, std::ios::out | std::ios::binary);
     if (!to)
         throw Base::FileException("XMLReader::readBinFile() Could not open file!");
 
@@ -321,7 +319,7 @@ void Base::XMLReader::readFiles(zipios::ZipInputStream &zipstream) const
         if (jt != FileList.end()) {
             try {
                 Base::Reader reader(zipstream, jt->FileName, FileVersion);
-                jt->Object->RestoreDocFile(reader);
+                //jt->Object->RestoreDocFile(reader);
             }
             catch(...) {
                 // For any exception we just continue with the next file.
@@ -329,7 +327,6 @@ void Base::XMLReader::readFiles(zipios::ZipInputStream &zipstream) const
                 // less data than the file size would allow.
                 // All what we need to do is to notify the user about the
                 // failure.
-                Base::Console().Error("Reading failed from embedded file: %s\n", entry->toString().c_str());
             }
             // Go to the next registered file name
             it = jt + 1;

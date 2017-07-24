@@ -30,7 +30,7 @@
 #include <App/PropertyExpressionEngine.h>
 
 #include <Base/TimeInfo.h>
-#include <CXX/Objects.hxx>
+//#include <CXX/Objects.hxx>
 
 #include <bitset>
 #include <boost/signals.hpp>
@@ -199,9 +199,9 @@ public:
      * additional or different behavior.
      */
     virtual void onLostLinkToObject(DocumentObject*);
-    virtual PyObject *getPyObject(void);
-    /// its used to get the python sub objects by name (e.g. by the selection)
-    virtual std::vector<PyObject *> getPySubObjects(const std::vector<std::string>&) const;
+    //virtual PyObject *getPyObject(void);
+    /////// its used to get the python sub objects by name (e.g. by the selection)
+    //virtual std::vector<PyObject *> getPySubObjects(const std::vector<std::string>&) const;
 
     friend class Document;
     friend class Transaction;
@@ -270,7 +270,7 @@ protected:
 
      /// python object of this class and all descendend
 protected: // attributes
-    Py::Object PythonObject;
+    void* PythonObject;
     /// pointer to the document this object belongs to
     App::Document* _pDoc;
 

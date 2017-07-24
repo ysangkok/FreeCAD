@@ -28,7 +28,6 @@
 #include <cmath>
 #include "Quantity.h"
 #include "Exception.h"
-#include "UnitsApi.h"
 
 // suppress annoying warnings from generated source files
 #ifdef _MSC_VER
@@ -44,7 +43,7 @@ using namespace Base;
 QuantityFormat::QuantityFormat()
   : option(static_cast<NumberOption>(OmitGroupSeparator | RejectGroupSeparator))
   , format(Fixed)
-  , precision(UnitsApi::getDecimals())
+  , precision(10)
 {
 }
 
@@ -194,7 +193,7 @@ Quantity& Quantity::operator = (const Quantity &New)
 
 QString Quantity::getUserString(double& factor, QString& unitString) const
 {
-    return Base::UnitsApi::schemaTranslate(*this, factor, unitString);
+    return QString::fromStdString(std::to_string(factor) + " " + unitString.toStdString());
 }
 
 /// true if it has a number without a unit

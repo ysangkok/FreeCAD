@@ -27,6 +27,8 @@
 #include <Base/Factory.h>
 #include <Base/Persistence.h>
 
+#include <list>
+
 namespace App
 {
 
@@ -131,37 +133,15 @@ public:
     static void destruct ();
 
     TransactionObject* createTransaction (const Base::Type& type) const;
-    void addProducer (const Base::Type& type, Base::AbstractProducer *producer);
 
 private:
     static TransactionFactory* self;
-    std::map<Base::Type, Base::AbstractProducer*> producers;
 
     TransactionFactory(){}
     ~TransactionFactory(){}
 };
 
-template <class CLASS>
-class TransactionProducer : public Base::AbstractProducer
-{
-public:
-    TransactionProducer (const Base::Type& type)
-    {
-        TransactionFactory::instance().addProducer(type, this);
-    }
-
-    virtual ~TransactionProducer (){}
-
-    /**
-     * Creates an instance of the specified transaction object.
-     */
-    virtual void* Produce () const
-    {
-        return (void*)(new CLASS);
-    }
-};
-
-} //namespace App
+}
 
 #endif // APP_TRANSACTION_H
 

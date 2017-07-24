@@ -35,7 +35,7 @@ namespace App
 
 /** Base class of all geometric document objects.
  */
-class AppExport GeoFeature : public App::DocumentObject
+class AppExport GeoFeature : public ::App::DocumentObject
 {
     PROPERTY_HEADER(App::GeoFeature);
 
@@ -65,7 +65,7 @@ public:
      * @brief getPyObject returns the Python binding object
      * @return the Python binding object
      */
-    virtual PyObject* getPyObject(void);
+    //virtual PyObject* getPyObject(void);
        
     /**
      * @brief Calculates the placement in the global reference coordinate system

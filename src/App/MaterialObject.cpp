@@ -27,7 +27,7 @@
 #endif
 
 #include "MaterialObject.h"
-#include "DocumentObjectPy.h"
+//#include "DocumentObjectPy.h"
 
 using namespace App;
 
@@ -42,18 +42,4 @@ MaterialObject::MaterialObject()
 
 MaterialObject::~MaterialObject()
 {
-}
-
-// Python feature ---------------------------------------------------------
-
-namespace App {
-/// @cond DOXERR
-PROPERTY_SOURCE_TEMPLATE(App::MaterialObjectPython, App::MaterialObject)
-template<> const char* App::MaterialObjectPython::getViewProviderName(void) const {
-    return "Gui::ViewProviderMaterialObjectPython";
-}
-/// @endcond
-
-// explicit template instantiation
-template class AppExport FeaturePythonT<App::MaterialObject>;
 }

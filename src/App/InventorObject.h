@@ -48,7 +48,7 @@ public:
         return DocumentObject::StdReturn;
     }
     virtual short mustExecute(void) const;
-    virtual PyObject *getPyObject(void);
+    //virtual PyObject *getPyObject(void);
 
     PropertyString Buffer;
     PropertyString FileName;

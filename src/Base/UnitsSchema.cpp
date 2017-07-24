@@ -30,7 +30,6 @@
 #include <QLocale>
 
 #include "Exception.h"
-#include "UnitsApi.h"
 #include "UnitsSchema.h"
 
 using namespace Base;

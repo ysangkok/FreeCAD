@@ -355,22 +355,11 @@ void TransactionFactory::destruct()
     self = nullptr;
 }
 
-void TransactionFactory::addProducer (const Base::Type& type, Base::AbstractProducer *producer)
-{
-    producers[type] = producer;
-}
-
 /**
  * Creates a transaction object for the given type id.
  */
 TransactionObject* TransactionFactory::createTransaction (const Base::Type& type) const
 {
-    std::map<Base::Type, Base::AbstractProducer*>::const_iterator it;
-    for (it = producers.begin(); it != producers.end(); ++it) {
-        if (type.isDerivedFrom(it->first)) {
-            return static_cast<TransactionObject*>(it->second->Produce());
-        }
-    }
 
     assert(0);
     return nullptr;

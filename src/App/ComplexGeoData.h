@@ -24,6 +24,7 @@
 #ifndef _AppComplexGeoData_h_
 #define _AppComplexGeoData_h_
 
+#include <Base/BaseClass.h>
 #include <Base/Placement.h>
 #include <Base/Persistence.h>
 #include <Base/Handle.h>
@@ -35,7 +36,6 @@
 # include <stdint.h>
 #endif
 
-
 namespace Data
 {
 
@@ -43,8 +43,7 @@ namespace Data
  *  Subelement type of the ComplexGeoData type
  *  It is used to split an object in further sub-parts.
  */
-class AppExport Segment: public Base::BaseClass
-{
+class AppExport Segment: public ::Base::BaseClass {
     TYPESYSTEM_HEADER();
 
 public:
@@ -55,7 +54,7 @@ public:
 
 /** ComplexGeoData Object
  */
-class AppExport ComplexGeoData: public Base::Persistence, public Base::Handled
+class AppExport ComplexGeoData: public ::Base::Persistence, public ::Base::Handled
 {
     TYPESYSTEM_HEADER();
  

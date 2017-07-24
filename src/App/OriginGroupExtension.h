@@ -62,20 +62,20 @@ public:
     PropertyLink Origin;
     
     //changes all links of obj to a origin to point to this groupes origin
-    void relinkToOrigin(App::DocumentObject* obj);
+    void relinkToOrigin(::App::DocumentObject* obj);
     
     virtual std::vector<DocumentObject*> addObjects(std::vector<DocumentObject*> obj) override;
 
 protected:
     /// Checks integrity of the Origin
-    virtual App::DocumentObjectExecReturn *extensionExecute () override;
+    virtual ::App::DocumentObjectExecReturn *extensionExecute () ;
     /// Creates the corresponding Origin object
     virtual void onExtendedSetupObject () override;
     /// Removes all planes and axis if they are still linked to the document
     virtual void onExtendedUnsetupObject () override;
 };
 
-typedef ExtensionPythonT<GroupExtensionPythonT<OriginGroupExtension>> OriginGroupExtensionPython;
+//typedef ExtensionPythonT<GroupExtensionPythonT<OriginGroupExtension>> OriginGroupExtensionPython;
 
 } /* App */
 

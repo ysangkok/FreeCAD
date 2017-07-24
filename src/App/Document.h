@@ -23,7 +23,7 @@
 #ifndef APP_DOCUMENT_H
 #define APP_DOCUMENT_H
 
-#include <CXX/Objects.hxx>
+//#include <CXX/Objects.hxx>
 #include <Base/Observer.h>
 #include <Base/Persistence.h>
 #include <Base/Type.h>
@@ -38,6 +38,8 @@
 
 #include <boost/signals.hpp>
 
+//#include "Mod/Path/App/Area.h"
+
 namespace Base {
     class Writer;
 }
@@ -48,26 +50,63 @@ namespace App
     class DocumentObject;
     class DocumentObjectExecReturn;
     class Document;
-    class DocumentPy; // the python document class
+    //class DocumentPy; // the python document class
     class Application;
     class Transaction;
 }
 
-namespace App
-{
+namespace App {
 
-/// The document class
-class AppExport Document : public App::PropertyContainer
-{
-    PROPERTY_HEADER(App::Document);
-
-public:
     enum Status {
         SkipRecompute = 0,
         KeepTrailingDigits = 1,
         Closable = 2,
         Restoring = 3
     };
+
+// Pimpl class
+struct DocumentP
+{
+    // Array to preserve the creation order of created objects
+    std::vector<DocumentObject*> objectArray;
+    std::map<std::string,DocumentObject*> objectMap;
+    DocumentObject* activeObject;
+    Transaction *activeUndoTransaction;
+    int iTransactionMode;
+    bool rollback;
+    bool undoing; ///< document in the middle of undo or redo
+    std::bitset<32> StatusBits;
+    int iUndoMode;
+    unsigned int UndoMemSize;
+    unsigned int UndoMaxStackSize;
+
+    DocumentP() {
+        activeObject = 0;
+        activeUndoTransaction = 0;
+        iTransactionMode = 0;
+        rollback = false;
+        undoing = false;
+        StatusBits.set((size_t)Status::Closable, true);
+        StatusBits.set((size_t)Status::KeepTrailingDigits, true);
+        StatusBits.set((size_t)Status::Restoring, false);
+        iUndoMode = 0;
+        UndoMemSize = 0;
+        UndoMaxStackSize = 20;
+    }
+};
+
+} // namespace App
+
+
+namespace App
+{
+
+/// The document class
+class AppExport Document final : public App::PropertyContainer
+{
+    PROPERTY_HEADER(App::Document);
+
+public:
 
     /** @name Properties */
     //@{
@@ -334,7 +373,7 @@ public:
     /// Function called to signal that an object identifier has been renamed
     void renameObjectIdentifiers(const std::map<App::ObjectIdentifier, App::ObjectIdentifier> & paths);
 
-    virtual PyObject *getPyObject(void);
+    //virtual PyObject *getPyObject(void);
 
     friend class Application;
     /// because of transaction handling
@@ -344,7 +383,7 @@ public:
     friend class TransactionDocumentObject;
 
     /// Destruction
-    virtual ~Document();
+    virtual ~Document() final;
 
 protected:
     /// Construction
@@ -381,8 +420,8 @@ private:
     std::vector<App::DocumentObjectExecReturn*> _RecomputeLog;
 
     // pointer to the python class
-    Py::Object DocumentPythonObject;
-    struct DocumentP* d;
+    void* DocumentPythonObject;
+    struct ::App::DocumentP* d;
 };
 
 template<typename T>

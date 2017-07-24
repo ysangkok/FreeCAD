@@ -27,12 +27,9 @@
 #endif
 
 #include "DocumentObjectGroup.h"
-#include "DocumentObjectGroupPy.h"
-#include "GroupExtensionPy.h"
 #include "Document.h"
-#include "FeaturePythonPyImp.h"
 #include "GeoFeatureGroupExtension.h"
-#include <Base/Console.h>
+//#include <Base/Console.h>
 
 using namespace App;
 
@@ -51,13 +48,7 @@ GroupExtension::~GroupExtension()
 
 DocumentObject* GroupExtension::addObject(const char* sType, const char* pObjectName)
 {
-    DocumentObject* obj = getExtendedObject()->getDocument()->addObject(sType, pObjectName);
-    if(!allowObject(obj)) {
-        getExtendedObject()->getDocument()->remObject(obj->getNameInDocument());
-        return nullptr;
-    }
-    if (obj) addObject(obj);
-    return obj;
+    return nullptr;
 }
 
 std::vector<DocumentObject*> GroupExtension::addObject(DocumentObject* obj)
@@ -154,15 +145,16 @@ void GroupExtension::removeObjectFromDocument(DocumentObject* obj)
         grp->removeObjectsFromDocument();
     }
 
-    getExtendedObject()->getDocument()->remObject(obj->getNameInDocument());
+    //getExtendedObject()->getDocument()->remObject(obj->getNameInDocument());
 }
 
 DocumentObject *GroupExtension::getObject(const char *Name) const
 {
-    DocumentObject* obj = getExtendedObject()->getDocument()->getObject(Name);
-    if (obj && hasObject(obj))
-        return obj;
-    return 0;
+    return nullptr;
+    //DocumentObject* obj = getExtendedObject()->getDocument()->getObject(Name);
+    //if (obj && hasObject(obj))
+    //    return obj;
+    //return 0;
 }
 
 bool GroupExtension::hasObject(const DocumentObject* obj, bool recursive) const
@@ -243,16 +235,6 @@ DocumentObject* GroupExtension::getGroupOfObject(const DocumentObject* obj)
     return nullptr;
 }
 
-PyObject* GroupExtension::getExtensionPyObject(void) {
-    
-    if (ExtensionPythonObject.is(Py::_None())){
-        // ref counter is set to 1
-        auto grp = new GroupExtensionPy(this);
-        ExtensionPythonObject = Py::Object(grp,true);
-    }
-    return Py::new_reference_to(ExtensionPythonObject);
-}
-
 void GroupExtension::extensionOnChanged(const Property* p) {
     
     //objects are only allowed in a single group. Note that this check must only be done for normal
@@ -285,12 +267,4 @@ void GroupExtension::extensionOnChanged(const Property* p) {
     }
     
     App::Extension::extensionOnChanged(p);
-}
-
-
-namespace App {
-EXTENSION_PROPERTY_SOURCE_TEMPLATE(App::GroupExtensionPython, App::GroupExtension)
-
-// explicit template instantiation
-template class AppExport ExtensionPythonT<GroupExtensionPythonT<GroupExtension>>;
 }

@@ -24,7 +24,7 @@
 #ifndef APP_GROUPEXTENSION_H
 #define APP_GROUPEXTENSION_H
 
-#include "FeaturePython.h"
+//#include "FeaturePython.h"
 #include "DocumentObject.h"
 #include "PropertyLinks.h"
 #include "DocumentObjectExtension.h"
@@ -33,7 +33,7 @@
 namespace App
 {
 class DocumentObjectGroup;
-class GroupExtensionPy;
+//class GroupExtensionPy;
 
 class AppExport GroupExtension : public DocumentObjectExtension
 {
@@ -101,7 +101,7 @@ public:
     static DocumentObject* getGroupOfObject(const DocumentObject* obj);
     //@}
     
-    virtual PyObject* getExtensionPyObject(void);
+    //virtual PyObject* getExtensionPyObject(void);
 
     virtual void extensionOnChanged(const Property* p) override;
     
@@ -111,32 +111,6 @@ public:
 private:
     void removeObjectFromDocument(DocumentObject*);
 };
-
-
-template<typename ExtensionT>
-class GroupExtensionPythonT : public ExtensionT {
-         
-public:
-    
-    GroupExtensionPythonT() {}
-    virtual ~GroupExtensionPythonT() {}
- 
-    //override the documentobjectextension functions to make them available in python 
-    virtual bool allowObject(DocumentObject* obj)  override {
-        Py::Object pyobj = Py::asObject(obj->getPyObject());
-        EXTENSION_PROXY_ONEARG(allowObject, pyobj);
-                
-        if(result.isNone())
-            return ExtensionT::allowObject(obj);
-        
-        if(result.isBoolean())
-            return result.isTrue();
-        
-        return false;
-    };
-};
-
-typedef ExtensionPythonT<GroupExtensionPythonT<GroupExtension>> GroupExtensionPython;
 
 } //namespace App
 

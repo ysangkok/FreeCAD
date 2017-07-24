@@ -36,9 +36,9 @@
 #include <Base/Rotation.h>
 #include <Base/Quantity.h>
 #include <Base/Tools.h>
-#include <Base/VectorPy.h>
-#include <Base/MatrixPy.h>
-#include <Base/PlacementPy.h>
+//#include <Base/VectorPy.h>
+//#include <Base/MatrixPy.h>
+//#include <Base/PlacementPy.h>
 
 #include "Placement.h"
 #include "PropertyGeo.h"
@@ -94,69 +94,6 @@ void PropertyVector::setValue(double x, double y, double z)
 const Base::Vector3d & PropertyVector::getValue(void)const
 {
     return _cVec;
-}
-
-PyObject *PropertyVector::getPyObject(void)
-{
-    return new Base::VectorPy(_cVec);
-}
-
-void PropertyVector::setPyObject(PyObject *value)
-{
-    if (PyObject_TypeCheck(value, &(Base::VectorPy::Type))) {
-        Base::VectorPy  *pcObject = static_cast<Base::VectorPy*>(value);
-        Base::Vector3d* val = pcObject->getVectorPtr();
-        setValue(*val);
-    }
-    else if (PyTuple_Check(value)&&PyTuple_Size(value)==3) {
-        PyObject* item;
-        Base::Vector3d cVec;
-        // x
-        item = PyTuple_GetItem(value,0);
-        if (PyFloat_Check(item))
-            cVec.x = PyFloat_AsDouble(item);
-#if PY_MAJOR_VERSION < 3
-        else if (PyInt_Check(item))
-            cVec.x = (double)PyInt_AsLong(item);
-#else
-        else if (PyLong_Check(item))
-            cVec.x = (double)PyLong_AsLong(item);
-#endif
-        else
-            throw Base::TypeError("Not allowed type used in tuple (float expected)...");
-        // y
-        item = PyTuple_GetItem(value,1);
-        if (PyFloat_Check(item))
-            cVec.y = PyFloat_AsDouble(item);
-#if PY_MAJOR_VERSION < 3
-        else if (PyInt_Check(item))
-            cVec.y = (double)PyInt_AsLong(item);
-#else
-        else if (PyLong_Check(item))
-            cVec.y = (double)PyLong_AsLong(item);
-#endif
-        else
-            throw Base::TypeError("Not allowed type used in tuple (float expected)...");
-        // z
-        item = PyTuple_GetItem(value,2);
-        if (PyFloat_Check(item))
-            cVec.z = PyFloat_AsDouble(item);
-#if PY_MAJOR_VERSION < 3
-        else if (PyInt_Check(item))
-            cVec.z = (double)PyInt_AsLong(item);
-#else
-        else if (PyLong_Check(item))
-            cVec.z = (double)PyLong_AsLong(item);
-#endif
-        else
-            throw Base::TypeError("Not allowed type used in tuple (float expected)...");
-        setValue( cVec );
-    }
-    else {
-        std::string error = std::string("type must be 'Vector' or tuple of three floats, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyVector::Save (Base::Writer &writer) const
@@ -266,49 +203,6 @@ void PropertyVectorList::setValues(const std::vector<Base::Vector3d>& values)
     aboutToSetValue();
     _lValueList = values;
     hasSetValue();
-}
-
-PyObject *PropertyVectorList::getPyObject(void)
-{
-    PyObject* list = PyList_New(	getSize() );
-
-    for (int i = 0;i<getSize(); i++)
-        PyList_SetItem( list, i, new VectorPy(	_lValueList[i]));
-
-    return list;
-}
-
-void PropertyVectorList::setPyObject(PyObject *value)
-{
-    if (PySequence_Check(value)) {
-        Py_ssize_t nSize = PySequence_Size(value);
-        std::vector<Base::Vector3d> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item = PySequence_GetItem(value, i);
-            PropertyVector val;
-            val.setPyObject( item );
-            values[i] = val.getValue();
-        }
-
-        setValues(values);
-    }
-    else if (PyObject_TypeCheck(value, &(VectorPy::Type))) {
-        Base::VectorPy  *pcObject = static_cast<Base::VectorPy*>(value);
-        Base::Vector3d* val = pcObject->getVectorPtr();
-        setValue(*val);
-    }
-    else if (PyTuple_Check(value) && PyTuple_Size(value) == 3) {
-        PropertyVector val;
-        val.setPyObject( value );
-        setValue( val.getValue() );
-    }
-    else {
-        std::string error = std::string("type must be 'Vector' or list of 'Vector', not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyVectorList::Save (Base::Writer &writer) const
@@ -426,47 +320,6 @@ void PropertyMatrix::setValue(const Base::Matrix4D &mat)
 const Base::Matrix4D & PropertyMatrix::getValue(void)const
 {
     return _cMat;
-}
-
-PyObject *PropertyMatrix::getPyObject(void)
-{
-    return new Base::MatrixPy(_cMat);
-}
-
-void PropertyMatrix::setPyObject(PyObject *value)
-{
-    if (PyObject_TypeCheck(value, &(Base::MatrixPy::Type))) {
-        Base::MatrixPy  *pcObject = (Base::MatrixPy*)value;
-        setValue( pcObject->value() );
-    }
-    else if (PyTuple_Check(value)&&PyTuple_Size(value)==16) {
-        PyObject* item;
-        Base::Matrix4D cMatrix;
-
-        for (int x=0; x<4;x++) {
-            for (int y=0; y<4;y++) {
-                item = PyTuple_GetItem(value,x+y*4);
-                if (PyFloat_Check(item))
-                    cMatrix[x][y] = PyFloat_AsDouble(item);
-#if PY_MAJOR_VERSION < 3
-                else if (PyInt_Check(item))
-                    cMatrix[x][y] = (double)PyInt_AsLong(item);
-#else
-                else if (PyLong_Check(item))
-                    cMatrix[x][y] = (double)PyLong_AsLong(item);
-#endif
-                else
-                    throw Base::TypeError("Not allowed type used in matrix tuple (a number expected)...");
-            }
-        }
-
-        setValue( cMatrix );
-    }
-    else {
-        std::string error = std::string("type must be 'Matrix' or tuple of 16 float or int, not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyMatrix::Save (Base::Writer &writer) const
@@ -626,30 +479,6 @@ const boost::any PropertyPlacement::getPathValue(const ObjectIdentifier &path) c
         return Property::getPathValue(path);
 }
 
-PyObject *PropertyPlacement::getPyObject(void)
-{
-    return new Base::PlacementPy(new Base::Placement(_cPos));
-}
-
-void PropertyPlacement::setPyObject(PyObject *value)
-{
-    if (PyObject_TypeCheck(value, &(Base::MatrixPy::Type))) {
-        Base::MatrixPy  *pcObject = (Base::MatrixPy*)value;
-        Base::Matrix4D mat = pcObject->value();
-        Base::Placement p;
-        p.fromMatrix(mat);
-        setValue(p);
-    }
-    else if (PyObject_TypeCheck(value, &(Base::PlacementPy::Type))) {
-        setValue(*static_cast<Base::PlacementPy*>(value)->getPlacementPtr());
-    }
-    else {
-        std::string error = std::string("type must be 'Matrix' or 'Placement', not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
-}
-
 void PropertyPlacement::Save (Base::Writer &writer) const
 {
     writer.Stream() << writer.ind() << "<PropertyPlacement";
@@ -740,49 +569,6 @@ void PropertyPlacementList::setValues(const std::vector<Base::Placement>& values
     aboutToSetValue();
     _lValueList = values;
     hasSetValue();
-}
-
-PyObject *PropertyPlacementList::getPyObject(void)
-{
-    PyObject* list = PyList_New( getSize() );
-
-    for (int i = 0;i<getSize(); i++)
-        PyList_SetItem( list, i, new Base::PlacementPy(new Base::Placement(_lValueList[i])));
-
-    return list;
-}
-
-void PropertyPlacementList::setPyObject(PyObject *value)
-{
-    if (PySequence_Check(value)) {
-        Py_ssize_t nSize = PySequence_Size(value);
-        std::vector<Base::Placement> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i=0; i<nSize;++i) {
-            PyObject* item = PySequence_GetItem(value, i);
-            PropertyPlacement val;
-            val.setPyObject( item );
-            values[i] = val.getValue();
-        }
-
-        setValues(values);
-    }
-    else if (PyObject_TypeCheck(value, &(PlacementPy::Type))) {
-        Base::PlacementPy  *pcObject = static_cast<Base::PlacementPy*>(value);
-        Base::Placement* val = pcObject->getPlacementPtr();
-        setValue(*val);
-    }
-    else if (PyTuple_Check(value) && PyTuple_Size(value) == 3) {
-        PropertyPlacement val;
-        val.setPyObject( value );
-        setValue( val.getValue() );
-    }
-    else {
-        std::string error = std::string("type must be 'Placement' or list of 'Placement', not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyPlacementList::Save (Base::Writer &writer) const

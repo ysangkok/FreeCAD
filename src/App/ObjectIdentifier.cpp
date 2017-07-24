@@ -37,8 +37,8 @@
 #include "ObjectIdentifier.h"
 #include "Expression.h"
 #include <Base/Tools.h>
-#include <Base/Interpreter.h>
-#include <Base/QuantityPy.h>
+//#include <Base/Interpreter.h>
+//#include <Base/QuantityPy.h>
 
 using namespace App;
 using namespace Base;
@@ -1020,53 +1020,7 @@ std::string ObjectIdentifier::getPythonAccessor() const
 
 boost::any ObjectIdentifier::getValue() const
 {
-    std::string s = "_path_value_temp_ = " + getPythonAccessor();
-    PyObject * pyvalue = Base::Interpreter().getValue(s.c_str(), "_path_value_temp_");
-
-    class destructor {
-    public:
-        destructor(PyObject * _p) : p(_p) { }
-        ~destructor() { Py_DECREF(p); }
-    private:
-        PyObject * p;
-    };
-
-    destructor d1(pyvalue);
-
-    if (!pyvalue)
-        throw Base::RuntimeError("Failed to get property value.");
-#if PY_MAJOR_VERSION < 3
-    if (PyInt_Check(pyvalue))
-        return boost::any(PyInt_AsLong(pyvalue));
-#else
-    if (PyLong_Check(pyvalue))
-        return boost::any(PyLong_AsLong(pyvalue));
-#endif
-    else if (PyFloat_Check(pyvalue))
-        return boost::any(PyFloat_AsDouble(pyvalue));
-#if PY_MAJOR_VERSION < 3
-    else if (PyString_Check(pyvalue))
-        return boost::any(PyString_AsString(pyvalue));
-#endif
-    else if (PyUnicode_Check(pyvalue)) {
-        PyObject * s = PyUnicode_AsUTF8String(pyvalue);
-        destructor d2(s);
-
-#if PY_MAJOR_VERSION >= 3
-        return boost::any(PyUnicode_AsUTF8(s));
-#else
-        return boost::any(PyString_AsString(s));
-#endif
-    }
-    else if (PyObject_TypeCheck(pyvalue, &Base::QuantityPy::Type)) {
-        Base::QuantityPy * qp = static_cast<Base::QuantityPy*>(pyvalue);
-        Base::Quantity * q = qp->getQuantityPtr();
-
-        return boost::any(*q);
-    }
-    else {
-        throw Base::TypeError("Invalid property type.");
-    }
+    abort();
 }
 
 /**
@@ -1110,7 +1064,7 @@ void ObjectIdentifier::setValue(const boost::any &value) const
     else
         throw std::bad_cast();
 
-    Base::Interpreter().runString(ss.str().c_str());
+    std::cerr << "would run" << ss.str() << std::endl;
 }
 
 /** Construct and initialize a ResolveResults object, given an ObjectIdentifier instance.

@@ -31,7 +31,6 @@
 #include "Extension.h"
 #include "DocumentObject.h"
 #include "Base/Exception.h"
-#include <Base/Console.h>
  
 using namespace App;
 
@@ -325,17 +324,17 @@ void ExtensionContainer::saveExtensions(Base::Writer& writer) const {
             ext->extensionSave(writer);
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("ExtensionContainer::Save: Unknown C++ exception thrown. Try to continue...\n");
+            printf("ExtensionContainer::Save: Unknown C++ exception thrown. Try to continue...\n");
         }
 #endif
         writer.decInd(); // indentation for the actual extension
@@ -392,17 +391,17 @@ void ExtensionContainer::restoreExtensions(Base::XMLReader& reader) {
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("ExtensionContainer::Restore: Unknown C++ exception thrown");
+            printf("ExtensionContainer::Restore: Unknown C++ exception thrown");
         }
 #endif
 
