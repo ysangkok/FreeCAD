@@ -63,7 +63,6 @@
 #endif
 
 #include <Base/Exception.h>
-#include <Base/Console.h>
 #include <Base/FileInfo.h>
 
 #include <App/DocumentObject.h>
@@ -85,7 +84,6 @@
 
 #include "View3DInventorExamples.h"
 #include "SoFCSelectionAction.h"
-#include "View3DPy.h"
 #include "SoFCDB.h"
 #include "NavigationStyle.h"
 #include "PropertyView.h"
@@ -109,7 +107,7 @@ TYPESYSTEM_SOURCE_ABSTRACT(Gui::View3DInventor,Gui::MDIView);
 
 View3DInventor::View3DInventor(Gui::Document* pcDocument, QWidget* parent,
                                const QtGLWidget* sharewidget, Qt::WindowFlags wflags)
-    : MDIView(pcDocument, parent, wflags), _viewerPy(0)
+    : MDIView(pcDocument, parent, wflags)
 {
     stack = new QStackedWidget(this);
     // important for highlighting 
@@ -229,11 +227,6 @@ View3DInventor::~View3DInventor()
         }
     }
 
-    if (_viewerPy) {
-        static_cast<View3DInventorPy*>(_viewerPy)->_view = 0;
-        Py_DECREF(_viewerPy);
-    }
-
     // here is from time to time trouble!!!
     delete _viewer;
 }
@@ -242,15 +235,6 @@ void View3DInventor::deleteSelf()
 {
     _viewer->setDocument(0);
     MDIView::deleteSelf();
-}
-
-PyObject *View3DInventor::getPyObject(void)
-{
-    if (!_viewerPy)
-        _viewerPy = new View3DInventorPy(this);
-
-    Py_INCREF(_viewerPy);
-    return _viewerPy;
 }
 
 void View3DInventor::OnChange(ParameterGrp::SubjectType &rCaller,ParameterGrp::MessageType Reason)
@@ -442,7 +426,7 @@ void View3DInventor::onRename(Gui::Document *pDoc)
 void View3DInventor::onUpdate(void)
 {
 #ifdef FC_LOGUPDATECHAIN
-    Base::Console().Log("Acti: Gui::View3DInventor::onUpdate()");
+    printf("Acti: Gui::View3DInventor::onUpdate()");
 #endif
     update();  
     _viewer->redraw();

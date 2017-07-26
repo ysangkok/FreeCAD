@@ -219,8 +219,8 @@ public:
 #define PROPERTY_HEADER(_class_) \
   TYPESYSTEM_HEADER(); \
 protected: \
-  static const PropertyData * getPropertyDataPtr(void); \
-  virtual const PropertyData& getPropertyData(void) const; \
+  static const App::PropertyData * getPropertyDataPtr(void); \
+  virtual const App::PropertyData& getPropertyData(void) const; \
 
 /// Like PROPERTY_HEADER, but with overridden methods declared as such
 #define PROPERTY_HEADER_WITH_OVERRIDE(_class_) \

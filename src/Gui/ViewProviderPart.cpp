@@ -110,13 +110,3 @@ QIcon ViewProviderPart::getIcon() const
     return groupIcon;
 }
 
-// Python feature -----------------------------------------------------------------------
-
-namespace Gui {
-/// @cond DOXERR
-PROPERTY_SOURCE_TEMPLATE(Gui::ViewProviderPartPython, Gui::ViewProviderPart)
-/// @endcond
-
-// explicit template instantiation
-template class GuiExport ViewProviderPythonFeatureT<ViewProviderPart>;
-}

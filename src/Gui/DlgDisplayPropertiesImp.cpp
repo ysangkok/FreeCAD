@@ -42,7 +42,7 @@
 #include "WaitCursor.h"
 #include "SpinBox.h"
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <App/Application.h>
 #include <App/DocumentObject.h>
 #include <App/Material.h>
@@ -281,7 +281,7 @@ void DlgDisplayPropertiesImp::on_changeMode_activated(const QString& s)
 
 void DlgDisplayPropertiesImp::on_changePlot_activated(const QString&s)
 {
-    Base::Console().Log("Plot = %s\n",(const char*)s.toLatin1());
+    printf("Plot = %s\n",(const char*)s.toLatin1());
 }
 
 /**

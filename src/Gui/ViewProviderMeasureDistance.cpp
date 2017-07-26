@@ -48,7 +48,6 @@
 #include <App/PropertyGeo.h>
 #include <App/PropertyStandard.h>
 #include <App/MeasureDistance.h>
-#include <Base/Console.h>
 #include <Base/Quantity.h>
 
 using namespace Gui;
@@ -316,7 +315,7 @@ void ViewProviderMeasureDistance::measureDistanceCallback(void * ud, SoEventCall
     if (mbe->getButton() == SoMouseButtonEvent::BUTTON1 && mbe->getState() == SoButtonEvent::DOWN) {
         const SoPickedPoint * point = n->getPickedPoint();
         if (point == NULL) {
-            Base::Console().Message("No point picked.\n");
+            printf("No point picked.\n");
             return;
         }
 

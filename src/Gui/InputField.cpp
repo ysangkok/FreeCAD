@@ -28,7 +28,7 @@
 # include <QPixmapCache>
 #endif
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Quantity.h>
 #include <Base/Exception.h>
 #include <Base/Tools.h>

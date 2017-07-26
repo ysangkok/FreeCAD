@@ -26,7 +26,7 @@
 
 
 #include "ViewProviderOriginGroup.h"
-#include "ViewProviderPythonFeature.h"
+//#include "ViewProviderPythonFeature.h"
 
 
 namespace Gui {
@@ -49,8 +49,6 @@ protected:
     /// get called by the container whenever a property has been changed
     virtual void onChanged(const App::Property* prop);
 };
-
-typedef ViewProviderPythonFeatureT<ViewProviderPart> ViewProviderPartPython;
 
 } // namespace Gui
 

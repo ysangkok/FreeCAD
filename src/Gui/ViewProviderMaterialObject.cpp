@@ -78,13 +78,3 @@ QIcon ViewProviderMaterialObject::getIcon() const
 }
 
 
-// Python feature -----------------------------------------------------------------------
-
-namespace Gui {
-/// @cond DOXERR
-PROPERTY_SOURCE_TEMPLATE(Gui::ViewProviderMaterialObjectPython, Gui::ViewProviderMaterialObject)
-/// @endcond
-
-// explicit template instantiation
-template class GuiExport ViewProviderPythonFeatureT<ViewProviderMaterialObject>;
-}

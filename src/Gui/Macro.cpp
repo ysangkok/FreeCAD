@@ -34,15 +34,15 @@
 /// Here the FreeCAD includes sorted by Base,App,Gui......
 #include "Macro.h"
 
-#include <Base/Interpreter.h>
-#include <Base/Console.h>
+//#include <Base/Interpreter.h>
+//#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <App/Application.h>
 
 #include "MainWindow.h"
-#include "PythonConsole.h"
-#include "PythonConsolePy.h"
-#include "PythonDebugger.h"
+//#include "PythonConsole.h"
+//#include "PythonConsolePy.h"
+//#include "PythonDebugger.h"
 
 using namespace Gui;
 
@@ -51,10 +51,7 @@ MacroManager::MacroManager()
   : openMacro(false),
     recordGui(true),
     guiAsComment(true),
-    scriptToPyConsole(true),
-    localEnv(true),
-    pyConsole(0),
-    pyDebugger(new PythonDebugger())
+    localEnv(true)
 {
     // Attach to the Parametergroup regarding macros
     this->params = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Macro");
@@ -64,7 +61,7 @@ MacroManager::MacroManager()
 
 MacroManager::~MacroManager()
 {
-    delete pyDebugger;
+    //delete pyDebugger;
     this->params->Detach(this);
 }
 
@@ -74,7 +71,6 @@ void MacroManager::OnChange(Base::Subject<const char*> &rCaller, const char * sR
     (void)sReason;
     this->recordGui         = this->params->GetBool("RecordGui", true);
     this->guiAsComment      = this->params->GetBool("GuiAsComment", true);
-    this->scriptToPyConsole = this->params->GetBool("ScriptToPyConsole", true);
     this->localEnv          = this->params->GetBool("LocalEnvironment", true);
 }
 
@@ -96,7 +92,7 @@ void MacroManager::open(MacroType eType, const char *sName)
     this->macroInProgress.clear();
     this->openMacro = true;
 
-    Base::Console().Log("CmdM: Open macro: %s\n", sName);
+    printf("CmdM: Open macro: %s\n", sName);
 }
 
 void MacroManager::commit(void)
@@ -144,14 +140,14 @@ void MacroManager::commit(void)
             str << (*it) << QLatin1Char('\n');
         str << footer;
 
-        Base::Console().Log("Commit macro: %s\n",(const char*)this->macroName.toUtf8());
+        printf("Commit macro: %s\n",(const char*)this->macroName.toUtf8());
 
         this->macroInProgress.clear();
         this->macroName.clear();
         this->openMacro = false;
     }
     else {
-        Base::Console().Error("Cannot open file to write macro: %s\n",
+        printf("Cannot open file to write macro: %s\n",
             (const char*)this->macroName.toUtf8());
         cancel();
     }
@@ -159,7 +155,7 @@ void MacroManager::commit(void)
 
 void MacroManager::cancel(void)
 {
-    Base::Console().Log("Cancel macro: %s\n",(const char*)this->macroName.toUtf8());
+    printf("Cancel macro: %s\n",(const char*)this->macroName.toUtf8());
 
     this->macroInProgress.clear();
     this->macroName.clear();
@@ -188,14 +184,6 @@ void MacroManager::addLine(LineType Type, const char* sLine)
         this->macroInProgress.append(lines);
     }
 
-    if (this->scriptToPyConsole) {
-        // search for the Python console
-        if (!this->pyConsole)
-            this->pyConsole = Gui::getMainWindow()->findChild<Gui::PythonConsole*>();
-        // Python console found?
-        if (this->pyConsole)
-            this->pyConsole->printStatement(QString::fromUtf8(sLine));
-    }
 }
 
 void MacroManager::setModule(const char* sModule)
@@ -206,33 +194,6 @@ void MacroManager::setModule(const char* sModule)
     }
 }
 
-namespace Gui {
-    class PythonRedirector
-    {
-    public:
-        PythonRedirector(const char* type, PyObject* obj) : std_out(type), out(obj), old(0)
-        {
-            if (out) {
-                Base::PyGILStateLocker lock;
-                old = PySys_GetObject(const_cast<char*>(std_out));
-                PySys_SetObject(const_cast<char*>(std_out), out);
-            }
-        }
-        ~PythonRedirector()
-        {
-            if (out) {
-                Base::PyGILStateLocker lock;
-                PySys_SetObject(const_cast<char*>(std_out), old);
-                Py_DECREF(out);
-            }
-        }
-    private:
-        const char* std_out;
-        PyObject* out;
-        PyObject* old;
-    };
-}
-
 void MacroManager::run(MacroType eType, const char *sName)
 {
     Q_UNUSED(eType); 
@@ -240,25 +201,26 @@ void MacroManager::run(MacroType eType, const char *sName)
     try {
         ParameterGrp::handle hGrp = App::GetApplication().GetUserParameter()
             .GetGroup("BaseApp")->GetGroup("Preferences")->GetGroup("OutputWindow");
-        PyObject* pyout = hGrp->GetBool("RedirectPythonOutput",true) ? new OutputStdout : 0;
-        PyObject* pyerr = hGrp->GetBool("RedirectPythonErrors",true) ? new OutputStderr : 0;
-        PythonRedirector std_out("stdout",pyout);
-        PythonRedirector std_err("stderr",pyerr);
+        //PyObject* pyout = hGrp->GetBool("RedirectPythonOutput",true) ? new OutputStdout : 0;
+        //PyObject* pyerr = hGrp->GetBool("RedirectPythonErrors",true) ? new OutputStderr : 0;
+        //PythonRedirector std_out("stdout",pyout);
+        //PythonRedirector std_err("stderr",pyerr);
         //The given path name is expected to be Utf-8
-        Base::Interpreter().runFile(sName, this->localEnv);
+        //Base::Interpreter().runFile(sName, this->localEnv);
     }
-    catch (const Base::SystemExitException&) {
-        throw;
-    }
-    catch (const Base::PyException& e) {
-        e.ReportException();
-    }
-    catch (const Base::Exception& e) {
-        qWarning("%s",e.what());
-    }
+    //catch (const Base::SystemExitException&) {
+    //    throw;
+    //}
+    //catch (const Base::PyException& e) {
+    //    e.ReportException();
+    //}
+    //catch (const Base::Exception& e) {
+    //    qWarning("%s",e.what());
+    //}
+    catch (...) {abort();}
 }
 
-PythonDebugger* MacroManager::debugger() const
-{
-    return pyDebugger;
-}
+//PythonDebugger* MacroManager::debugger() const
+//{
+//    return pyDebugger;
+//}

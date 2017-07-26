@@ -29,13 +29,14 @@
 # include <QContextMenuEvent>
 # include <QTextCursor>
 # include <QTextStream>
+#include <QTabWidget>
 #endif
 
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 #include "ReportView.h"
 #include "FileDialog.h"
-#include "PythonConsole.h"
-#include "PythonConsolePy.h"
+//#include "PythonConsole.h"
+//#include "PythonConsolePy.h"
 #include "BitmapFactory.h"
 
 using namespace Gui;
@@ -72,13 +73,13 @@ ReportView::ReportView( QWidget* parent )
     tabWidget->setTabIcon(output, tabOutput->windowIcon());
 
     // create the python console
-    tabPython = new PythonConsole();
-    tabPython->setWordWrapMode(QTextOption::NoWrap);
-    tabPython->setWindowTitle(trUtf8("Python console"));
-    tabPython->setWindowIcon(BitmapFactory().iconFromTheme("applications-python"));
-    int python = tabWidget->addTab(tabPython, tabPython->windowTitle());
-    tabWidget->setTabIcon(python, tabPython->windowIcon());
-    tabWidget->setCurrentIndex(0);
+    //tabPython = new PythonConsole();
+    //tabPython->setWordWrapMode(QTextOption::NoWrap);
+    //tabPython->setWindowTitle(trUtf8("Python console"));
+    //tabPython->setWindowIcon(BitmapFactory().iconFromTheme("applications-python"));
+    //int python = tabWidget->addTab(tabPython, tabPython->windowTitle());
+    //tabWidget->setTabIcon(python, tabPython->windowIcon());
+    //tabWidget->setCurrentIndex(0);
 
     // raise the tab page set in the preferences
     ParameterGrp::handle hGrp = WindowParameter::getDefaultParameter()->GetGroup("General");
@@ -99,7 +100,7 @@ void ReportView::changeEvent(QEvent *e)
     QWidget::changeEvent(e);
     if (e->type() == QEvent::LanguageChange) {
         tabOutput->setWindowTitle(trUtf8("Output"));
-        tabPython->setWindowTitle(trUtf8("Python console"));
+        //tabPython->setWindowTitle(trUtf8("Python console"));
         for (int i=0; i<tabWidget->count();i++)
             tabWidget->setTabText(i, tabWidget->widget(i)->windowTitle());
     }
@@ -231,50 +232,24 @@ class ReportOutput::Data
 public:
     Data()
     {
-        if (!default_stdout) {
-            Base::PyGILStateLocker lock;
-            default_stdout = PySys_GetObject(const_cast<char*>("stdout"));
-            replace_stdout = new OutputStdout();
-            redirected_stdout = false;
-        }
-
-        if (!default_stderr) {
-            Base::PyGILStateLocker lock;
-            default_stderr = PySys_GetObject(const_cast<char*>("stderr"));
-            replace_stderr = new OutputStderr();
-            redirected_stderr = false;
-        }
     }
     ~Data()
     {
-        if (replace_stdout) {
-            Py_DECREF(replace_stdout);
-            replace_stdout = 0;
-        }
-
-        if (replace_stderr) {
-            Py_DECREF(replace_stderr);
-            replace_stderr = 0;
-        }
     }
 
     // make them static because redirection should done only once
     static bool redirected_stdout;
-    static PyObject* default_stdout;
-    static PyObject* replace_stdout;
+    //static PyObject* default_stdout;
+    //static PyObject* replace_stdout;
 
     static bool redirected_stderr;
-    static PyObject* default_stderr;
-    static PyObject* replace_stderr;
+    //static PyObject* default_stderr;
+    //static PyObject* replace_stderr;
 };
 
 bool ReportOutput::Data::redirected_stdout = false;
-PyObject* ReportOutput::Data::default_stdout = 0;
-PyObject* ReportOutput::Data::replace_stdout = 0;
 
 bool ReportOutput::Data::redirected_stderr = false;
-PyObject* ReportOutput::Data::default_stderr = 0;
-PyObject* ReportOutput::Data::replace_stderr = 0;
 
 /* TRANSLATOR Gui::DockWnd::ReportOutput */
 
@@ -285,7 +260,6 @@ PyObject* ReportOutput::Data::replace_stderr = 0;
 ReportOutput::ReportOutput(QWidget* parent)
   : QTextEdit(parent), WindowParameter("OutputWindow"), d(new Data), gotoEnd(false)
 {
-    bLog = false;
     reportHl = new ReportHighlighter(this);
 
     restoreFont();
@@ -293,7 +267,6 @@ ReportOutput::ReportOutput(QWidget* parent)
     clear();
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    Base::Console().AttachObserver(this);
     getWindowParameter()->Attach(this);
 
     getWindowParameter()->NotifyAll();
@@ -312,7 +285,6 @@ ReportOutput::~ReportOutput()
 {
     getWindowParameter()->Detach(this);
     _prefs->Detach(this);
-    Base::Console().DetachObserver(this);
     delete reportHl;
     delete d;
 }
@@ -394,15 +366,12 @@ void ReportOutput::contextMenuEvent ( QContextMenuEvent * e )
     QMenu* submenu = new QMenu( menu );
     QAction* logAct = submenu->addAction(tr("Logging"), this, SLOT(onToggleLogging()));
     logAct->setCheckable(true);
-    logAct->setChecked(bLog);
 
     QAction* wrnAct = submenu->addAction(tr("Warning"), this, SLOT(onToggleWarning()));
     wrnAct->setCheckable(true);
-    wrnAct->setChecked(bWrn);
 
     QAction* errAct = submenu->addAction(tr("Error"), this, SLOT(onToggleError()));
     errAct->setCheckable(true);
-    errAct->setChecked(bErr);
 
     submenu->addSeparator();
 
@@ -450,48 +419,38 @@ void ReportOutput::onSaveAs()
 
 bool ReportOutput::isError() const
 {
-    return bErr;
+    return false;
 }
 
 bool ReportOutput::isWarning() const
 {
-    return bWrn;
+    return false;
 }
 
 bool ReportOutput::isLogging() const
 {
-    return bLog;
+    return false;
 }
 
 void ReportOutput::onToggleError()
 {
-    bErr = bErr ? false : true;
-    getWindowParameter()->SetBool( "checkError", bErr );
 }
 
 void ReportOutput::onToggleWarning()
 {
-    bWrn = bWrn ? false : true;
-    getWindowParameter()->SetBool( "checkWarning", bWrn );
 }
 
 void ReportOutput::onToggleLogging()
 {
-    bLog = bLog ? false : true;
-    getWindowParameter()->SetBool( "checkLogging", bLog );
 }
 
 void ReportOutput::onToggleRedirectPythonStdout()
 {
     if (d->redirected_stdout) {
         d->redirected_stdout = false;
-        Base::PyGILStateLocker lock;
-        PySys_SetObject(const_cast<char*>("stdout"), d->default_stdout);
     }
     else {
         d->redirected_stdout = true;
-        Base::PyGILStateLocker lock;
-        PySys_SetObject(const_cast<char*>("stdout"), d->replace_stdout);
     }
 
     getWindowParameter()->SetBool("RedirectPythonOutput", d->redirected_stdout);
@@ -501,13 +460,9 @@ void ReportOutput::onToggleRedirectPythonStderr()
 {
     if (d->redirected_stderr) {
         d->redirected_stderr = false;
-        Base::PyGILStateLocker lock;
-        PySys_SetObject(const_cast<char*>("stderr"), d->default_stderr);
     }
     else {
         d->redirected_stderr = true;
-        Base::PyGILStateLocker lock;
-        PySys_SetObject(const_cast<char*>("stderr"), d->replace_stderr);
     }
 
     getWindowParameter()->SetBool("RedirectPythonErrors", d->redirected_stderr);
@@ -523,13 +478,10 @@ void ReportOutput::OnChange(Base::Subject<const char*> &rCaller, const char * sR
 {
     ParameterGrp& rclGrp = ((ParameterGrp&)rCaller);
     if (strcmp(sReason, "checkLogging") == 0) {
-        bLog = rclGrp.GetBool( sReason, bLog );
     }
     else if (strcmp(sReason, "checkWarning") == 0) {
-        bWrn = rclGrp.GetBool( sReason, bWrn );
     }
     else if (strcmp(sReason, "checkError") == 0) {
-        bErr = rclGrp.GetBool( sReason, bErr );
     }
     else if (strcmp(sReason, "colorText") == 0) {
         unsigned long col = rclGrp.GetUnsigned( sReason );

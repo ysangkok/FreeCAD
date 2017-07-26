@@ -38,8 +38,8 @@
 #endif
 
 #include <Base/Tools.h>
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
+//#include <Base/Console.h>
+//#include <Base/Interpreter.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/DocumentObject.h>
@@ -79,8 +79,9 @@ void PropertyItemFactory::destruct ()
 
 PropertyItem* PropertyItemFactory::createPropertyItem (const char* sName) const
 {
-    PropertyItem* w = static_cast<PropertyItem*>(Produce(sName));
-    return w;
+    //PropertyItem* w = static_cast<PropertyItem*>(Produce(sName));
+    //return w;
+    abort();
 }
 
 // ----------------------------------------------------
@@ -89,7 +90,7 @@ PROPERTYITEM_SOURCE(Gui::PropertyEditor::PropertyItem)
 
 PropertyItem::PropertyItem() : parentItem(0), readonly(false), cleared(false)
 {
-    precision = Base::UnitsApi::getDecimals();
+    precision = 2;
     setAutoApply(true);
 }
 
@@ -376,15 +377,11 @@ void PropertyItem::setPropertyValue(const QString& value)
             try {
                 Gui::Command::runCommand(Gui::Command::App, cmd.toUtf8());
             }
-            catch (Base::PyException &e) {
-                e.ReportException();
-                Base::Console().Error("Stack Trace: %s\n",e.getStackTrace().c_str());
-            }
             catch (Base::Exception &e) {
                 e.ReportException();
             }
             catch (...) {
-                Base::Console().Error("Unknown C++ exception in PropertyItem::setPropertyValue thrown\n");
+                printf("Unknown C++ exception in PropertyItem::setPropertyValue thrown\n");
             }
         }
     }

@@ -349,7 +349,7 @@ public:
     void setDocument(Gui::Document *pcDocument);
     Gui::Document* getDocument();
 
-    virtual PyObject *getPyObject(void);
+    //virtual PyObject *getPyObject(void);
 
 protected:
     void renderScene();
@@ -436,7 +436,7 @@ private:
     
     ViewerEventFilter* viewerEventFilter;
     
-    PyObject *_viewerPy;
+    //PyObject *_viewerPy;
 
     // friends
     friend class NavigationStyle;

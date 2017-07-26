@@ -34,7 +34,7 @@
 #include <Base/Matrix.h>
 #include <Base/Placement.h>
 #include <Base/Quantity.h>
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 #include <App/PropertyStandard.h>
 #include <Gui/Widgets.h>
 #include <Gui/ExpressionBinding.h>
@@ -59,7 +59,7 @@ void * _class_::create(void) { \
    return new _class_ ();\
 } \
 void _class_::init(void) { \
-    (void)new Gui::PropertyEditor::PropertyItemProducer<_class_>(#_class_); \
+abort();\
 }
 
 namespace Gui {
@@ -72,7 +72,7 @@ class PropertyItem;
  * The PropertyItemFactory provides methods for the dynamic creation of property items.
  * \author Werner Mayer
  */
-class GuiExport PropertyItemFactory : public Base::Factory
+class GuiExport PropertyItemFactory 
 {
 public:
     static PropertyItemFactory& instance();
@@ -85,20 +85,6 @@ private:
 
     PropertyItemFactory(){}
     ~PropertyItemFactory(){}
-};
-
-template <class CLASS>
-class PropertyItemProducer : public Base::AbstractProducer
-{
-public:
-    PropertyItemProducer(const char* className) {
-        PropertyItemFactory::instance().AddProducer(className, this);
-    }
-    virtual ~PropertyItemProducer() {
-    }
-    virtual void* Produce () const {
-        return CLASS::create();
-    }
 };
 
 class GuiExport PropertyItem : public QObject, public ExpressionBinding

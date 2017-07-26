@@ -39,7 +39,7 @@
 
 #include <Base/Exception.h>
 #include <Base/FileInfo.h>
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 #include <Base/Sequencer.h>
 #include <App/Document.h>
 #include <App/DocumentObjectGroup.h>
@@ -345,7 +345,7 @@ void StdCmdMergeProjects::activated(int iMsg)
 
         doc->openTransaction("Merge project");
         Base::FileInfo fi((const char*)project.toUtf8());
-        Base::ifstream str(fi, std::ios::in | std::ios::binary);
+        std::ifstream str(fi.filePath(), std::ios::in | std::ios::binary);
         MergeDocuments md(doc);
         md.importObjects(str);
         str.close();
@@ -988,7 +988,7 @@ void StdCmdDuplicateSelection::activated(int iMsg)
         }
 
         // save stuff to file
-        Base::ofstream str(fi, std::ios::out | std::ios::binary);
+        std::ofstream str(fi.filePath(), std::ios::out | std::ios::binary);
         App::Document* doc = sel.front()->getDocument();
         MergeDocuments mimeView(doc);
         doc->exportObjects(sel, str);
@@ -998,7 +998,7 @@ void StdCmdDuplicateSelection::activated(int iMsg)
     if (doc) {
         doc->openTransaction("Duplicate");
         // restore objects from file and add to active document
-        Base::ifstream str(fi, std::ios::in | std::ios::binary);
+        std::ifstream str(fi.filePath(), std::ios::in | std::ios::binary);
         MergeDocuments mimeView(doc);
         mimeView.importObjects(str);
         str.close();
@@ -1195,7 +1195,7 @@ void StdCmdRefresh::activated(int iMsg)
         //Note: Don't add the recompute to undo/redo because it complicates
         //testing the changes of properties.
         //openCommand("Refresh active document");
-        this->getDocument()->setStatus(App::Document::SkipRecompute, false);
+        this->getDocument()->setStatus(App::Status::SkipRecompute, false);
         doCommand(Doc,"App.activeDocument().recompute()");
         //commitCommand();
     }

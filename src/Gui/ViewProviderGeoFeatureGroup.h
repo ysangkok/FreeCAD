@@ -28,7 +28,7 @@
 
 #include "ViewProviderDocumentObject.h"
 #include "ViewProviderGeoFeatureGroupExtension.h"
-#include "ViewProviderPythonFeature.h"
+//#include "ViewProviderPythonFeature.h"
 
 namespace Gui {
 
@@ -44,7 +44,7 @@ public:
     virtual ~ViewProviderGeoFeatureGroup();
 };
 
-typedef ViewProviderPythonFeatureT<ViewProviderGeoFeatureGroup> ViewProviderGeoFeatureGroupPython;
+//typedef ViewProviderPythonFeatureT<ViewProviderGeoFeatureGroup> ViewProviderGeoFeatureGroupPython;
 
 } // namespace Gui
 

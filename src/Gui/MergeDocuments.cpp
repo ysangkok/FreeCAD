@@ -26,7 +26,7 @@
 # include <boost/bind.hpp>
 #endif
 #include "MergeDocuments.h"
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Reader.h>
 #include <Base/Writer.h>
 #include <App/Document.h>

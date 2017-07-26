@@ -37,7 +37,6 @@
 
 #include <Base/Exception.h>
 #include <Base/FileInfo.h>
-#include <Base/Interpreter.h>
 #include <Base/Sequencer.h>
 #include <App/Document.h>
 #include "Action.h"
@@ -62,7 +61,7 @@
 #include "Selection.h"
 #include "DlgUnitsCalculatorImp.h"
 
-using Base::Console;
+//using Base::Console;
 using Base::Sequencer;
 using namespace Gui;
 
@@ -97,16 +96,6 @@ void StdCmdWorkbench::activated(int i)
                 return;
         }
         doCommand(Gui, "Gui.activateWorkbench(\"%s\")", switch_to.c_str());
-    }
-    catch(const Base::PyException& e) {
-        QString msg(QLatin1String(e.what()));
-        // ignore '<type 'exceptions.*Error'>' prefixes
-        QRegExp rx;
-        rx.setPattern(QLatin1String("^\\s*<type 'exceptions.\\w*'>:\\s*"));
-        int pos = rx.indexIn(msg);
-        if (pos != -1)
-            msg = msg.mid(rx.matchedLength());
-        QMessageBox::critical(getMainWindow(), QObject::tr("Cannot load workbench"), msg); 
     }
     catch(...) {
         QMessageBox::critical(getMainWindow(), QObject::tr("Cannot load workbench"), 
@@ -400,7 +389,7 @@ void StdCmdCommandLine::activated(int iMsg)
     // create temporary console sequencer
     {
           Base::ConsoleSequencer seq;
-          Base::Interpreter().runCommandLine("Console mode");
+          //Base::Interpreter().runCommandLine("Console mode");
     }
 
 #ifdef Q_WS_X11

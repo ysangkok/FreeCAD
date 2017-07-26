@@ -34,7 +34,7 @@
 #endif
 
 #include "AutoSaver.h"
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/FileInfo.h>
 #include <Base/Stream.h>
 #include <Base/Tools.h>
@@ -200,7 +200,7 @@ void AutoSaver::saveDocument(const std::string& name, AutoSaveProperty& saver)
         }
 
         std::string str = watch.toString(watch.elapsed());
-        Base::Console().Log("Save AutoRecovery file: %s\n", str.c_str());
+        printf("Save AutoRecovery file: %s\n", str.c_str());
         hGrp->SetBool("SaveThumbnail",save);
     }
 }
@@ -216,7 +216,7 @@ void AutoSaver::timerEvent(QTimerEvent * event)
                 break;
             }
             catch (...) {
-                Base::Console().Error("Failed to auto-save document '%s'\n", it->first.c_str());
+                printf("Failed to auto-save document '%s'\n", it->first.c_str());
             }
         }
     }
@@ -321,7 +321,7 @@ public:
     }
     virtual void run()
     {
-        prop->SaveDocFile(writer);
+        //prop->SaveDocFile(writer);
     }
 
 private:
@@ -361,7 +361,7 @@ void RecoveryWriter::writeFiles(void)
             else {
                 std::string fileName = DirName + "/" + entry.FileName;
                 this->FileStream.open(fileName.c_str(), std::ios::out | std::ios::binary);
-                entry.Object->SaveDocFile(*this);
+                //entry.Object->SaveDocFile(*this);
                 this->FileStream.close();
             }
         }

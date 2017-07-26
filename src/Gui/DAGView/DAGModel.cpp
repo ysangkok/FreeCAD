@@ -50,7 +50,7 @@
 #include <unordered_set>
 
 #include <Base/TimeInfo.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Gui/Application.h>
 #include <Gui/Document.h>
 #include <Gui/ViewProviderDocumentObject.h>
@@ -549,7 +549,7 @@ void Model::updateSlot()
   }
   catch(const boost::not_a_dag &)
   {
-    Base::Console().Error("not a dag exception in DAGView::Model::updateSlot()\n");
+    //Base::Console().Error("not a dag exception in DAGView::Model::updateSlot()\n");
     return;
   }
   //index the vertices in sort order.

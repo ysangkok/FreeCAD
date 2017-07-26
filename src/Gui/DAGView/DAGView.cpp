@@ -28,7 +28,6 @@
 
 #include <sstream>
 
-#include <Base/Console.h>
 
 #include <App/Document.h>
 #include <Gui/Document.h>

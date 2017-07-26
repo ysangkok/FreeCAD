@@ -58,50 +58,12 @@ using namespace Gui::Dialog;
  */
 WidgetFactorySupplier::WidgetFactorySupplier()
 {
-    // ADD YOUR PREFERENCE PAGES HERE 
-    //
-    //
-    new PrefPageProducer<DlgGeneralImp>         ( QT_TRANSLATE_NOOP("QObject","General") );
-  //new PrefPageProducer<DlgOnlineHelpImp>      ( QT_TRANSLATE_NOOP("QObject","General") );
-    new PrefPageProducer<DlgSettingsDocumentImp>( QT_TRANSLATE_NOOP("QObject","General") );
-    new PrefPageProducer<DlgSettingsEditorImp>  ( QT_TRANSLATE_NOOP("QObject","General") );
-    new PrefPageProducer<DlgReportViewImp>      ( QT_TRANSLATE_NOOP("QObject","General") );
-    new PrefPageProducer<DlgSettingsMacroImp>   ( QT_TRANSLATE_NOOP("QObject","General") );
-    new PrefPageProducer<DlgSettingsUnitsImp>   ( QT_TRANSLATE_NOOP("QObject","General") );
-    new PrefPageProducer<DlgSettings3DViewImp>  ( QT_TRANSLATE_NOOP("QObject","Display") );
-    new PrefPageProducer<DlgSettingsViewColor>  ( QT_TRANSLATE_NOOP("QObject","Display") );
 
     // ADD YOUR CUSTOMIZE PAGES HERE
     //
     //
-    new CustomPageProducer<DlgCustomCommandsImp>;
-    new CustomPageProducer<DlgCustomKeyboardImp>;
-    new CustomPageProducer<DlgWorkbenchesImp>;
-    new CustomPageProducer<DlgCustomToolbarsImp>;
-  //new CustomPageProducer<DlgCustomToolBoxbarsImp>;
-    new CustomPageProducer<DlgCustomActionsImp>;
-    new CustomPageProducer<DlgCustomizeSpNavSettings>;
-    new CustomPageProducer<DlgCustomizeSpaceball>;
 
     // ADD YOUR PREFERENCE WIDGETS HERE
     //
     //
-    new WidgetProducer<Gui::InputField>;
-    new WidgetProducer<Gui::PrefSpinBox>;
-    new WidgetProducer<Gui::PrefDoubleSpinBox>;
-    new WidgetProducer<Gui::PrefLineEdit>;
-    new WidgetProducer<Gui::PrefComboBox>;
-    new WidgetProducer<Gui::PrefCheckBox>;
-    new WidgetProducer<Gui::PrefRadioButton>;
-    new WidgetProducer<Gui::PrefSlider>;
-    new WidgetProducer<Gui::PrefFileChooser>;
-    new WidgetProducer<Gui::PrefColorButton>;
-    new WidgetProducer<Gui::CommandIconView>;
-    new WidgetProducer<Gui::AccelLineEdit>;
-    new WidgetProducer<Gui::ActionSelector>;
-    new WidgetProducer<Gui::ColorButton>;
-    new WidgetProducer<Gui::UrlLabel>;
-    new WidgetProducer<Gui::FileChooser>;
-    new WidgetProducer<Gui::UIntSpinBox>;
-    new WidgetProducer<Gui::QuantitySpinBox>;
 }

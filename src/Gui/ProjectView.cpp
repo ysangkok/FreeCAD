@@ -39,7 +39,6 @@
 #endif
 
 #include <QDirModel>
-#include <Base/Console.h>
 #include <App/Document.h>
 
 #include "ProjectView.h"

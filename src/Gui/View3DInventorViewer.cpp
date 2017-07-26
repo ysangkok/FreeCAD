@@ -85,12 +85,10 @@
 #endif
 
 #include <sstream>
-#include <Base/Console.h>
 #include <Base/Stream.h>
 #include <Base/FileInfo.h>
 #include <Base/Sequencer.h>
 #include <Base/Tools.h>
-#include <Base/UnitsApi.h>
 
 #include "View3DInventorViewer.h"
 #include "ViewProviderDocumentObject.h"
@@ -119,7 +117,6 @@
 #include "GLPainter.h"
 #include <Quarter/eventhandlers/EventFilter.h>
 #include <Quarter/devices/InputDevice.h>
-#include "View3DViewerPy.h"
 
 #include <Inventor/draggers/SoCenterballDragger.h>
 #include <Inventor/annex/Profiler/SoProfiler.h>
@@ -232,10 +229,10 @@ public:
                         WinNativeGestureRecognizerPinch::TuneWindowsGestures(v);
                         v->winGestureTuneState = View3DInventorViewer::ewgtsTuned;
                     } catch (Base::Exception &e) {
-                        Base::Console().Warning("Failed to TuneWindowsGestures. Error: %s\n",e.what());
+                        printf("Failed to TuneWindowsGestures. Error: %s\n",e.what());
                         v->winGestureTuneState = View3DInventorViewer::ewgtsDisabled;
                     } catch (...) {
-                        Base::Console().Warning("Failed to TuneWindowsGestures. Unknown error.\n");
+                        printf("Failed to TuneWindowsGestures. Unknown error.\n");
                         v->winGestureTuneState = View3DInventorViewer::ewgtsDisabled;
                     }
                 }
@@ -267,14 +264,14 @@ public:
         if (event->type() == Spaceball::ButtonEvent::ButtonEventType) {
             Spaceball::ButtonEvent* buttonEvent = static_cast<Spaceball::ButtonEvent*>(event);
             if (!buttonEvent) {
-                Base::Console().Log("invalid spaceball button event\n");
+                printf("invalid spaceball button event\n");
                 return true;
             }
         }
         else if (event->type() == Spaceball::MotionEvent::MotionEventType) {
             Spaceball::MotionEvent* motionEvent = static_cast<Spaceball::MotionEvent*>(event);
             if (!motionEvent) {
-                Base::Console().Log("invalid spaceball motion event\n");
+                printf("invalid spaceball motion event\n");
                 return true;
             }
         }
@@ -292,7 +289,7 @@ public:
         if (event->type() == Spaceball::MotionEvent::MotionEventType) {
             Spaceball::MotionEvent* motionEvent = static_cast<Spaceball::MotionEvent*>(event);
             if (!motionEvent) {
-                Base::Console().Log("invalid spaceball motion event\n");
+                printf("invalid spaceball motion event\n");
                 return NULL;
             }
 
@@ -336,7 +333,7 @@ public:
 View3DInventorViewer::View3DInventorViewer(QWidget* parent, const QtGLWidget* sharewidget)
     : Quarter::SoQTQuarterAdaptor(parent, sharewidget), editViewProvider(0), navigation(0),
       renderType(Native), framebuffer(0), axisCross(0), axisGroup(0), editing(false), redirected(false),
-      allowredir(false), overrideMode("As Is"), _viewerPy(0)
+      allowredir(false), overrideMode("As Is")
 {
     init();
 }
@@ -344,7 +341,7 @@ View3DInventorViewer::View3DInventorViewer(QWidget* parent, const QtGLWidget* sh
 View3DInventorViewer::View3DInventorViewer(const QtGLFormat& format, QWidget* parent, const QtGLWidget* sharewidget)
     : Quarter::SoQTQuarterAdaptor(format, parent, sharewidget), editViewProvider(0), navigation(0),
       renderType(Native), framebuffer(0), axisCross(0), axisGroup(0), editing(false), redirected(false),
-      allowredir(false), overrideMode("As Is"), _viewerPy(0)
+      allowredir(false), overrideMode("As Is")
 {
     init();
 }
@@ -516,9 +513,9 @@ void View3DInventorViewer::init()
         this->winGestureTuneState = View3DInventorViewer::ewgtsNeedTuning;
     #endif
     } catch (Base::Exception &e) {
-        Base::Console().Warning("Failed to set up gestures. Error: %s\n", e.what());
+        printf("Failed to set up gestures. Error: %s\n", e.what());
     } catch (...) {
-        Base::Console().Warning("Failed to set up gestures. Unknown error.\n");
+        printf("Failed to set up gestures. Unknown error.\n");
     }
 
     //create the cursors
@@ -564,10 +561,6 @@ View3DInventorViewer::~View3DInventorViewer()
     removeEventFilter(viewerEventFilter);
     delete viewerEventFilter;
 
-    if (_viewerPy) {
-        static_cast<View3DInventorViewerPy*>(_viewerPy)->_viewer = 0;
-        Py_DECREF(_viewerPy);
-    }
 }
 
 void View3DInventorViewer::setDocument(Gui::Document* pcDocument)
@@ -1256,7 +1249,7 @@ void View3DInventorViewer::interactionFinishCB(void*, SoQTQuarterAdaptor* viewer
  */
 void View3DInventorViewer::interactionLoggerCB(void*, SoAction* action)
 {
-    Base::Console().Log("%s\n", action->getTypeId().getName().getString());
+    printf("%s\n", action->getTypeId().getName().getString());
 }
 
 void View3DInventorViewer::addGraphicsItem(GLGraphicsItem* item)
@@ -1697,8 +1690,8 @@ void View3DInventorViewer::printDimension()
         Base::Quantity qHeight(Base::Quantity::MilliMetre);
         qWidth.setValue(fWidth);
         qHeight.setValue(fHeight);
-        QString wStr = Base::UnitsApi::schemaTranslate(qWidth);
-        QString hStr = Base::UnitsApi::schemaTranslate(qHeight);
+        QString wStr = QString::fromStdString(std::to_string(fWidth));
+        QString hStr = QString::fromStdString(std::to_string(fHeight));
 
         // Create final string and update window
         QString dim = QString::fromLatin1("%1 x %2")
@@ -2890,14 +2883,6 @@ void View3DInventorViewer::turnDeltaDimensionsOff()
     static_cast<SoSwitch*>(dimensionRoot->getChild(1))->whichChild = SO_SWITCH_NONE;
 }
 
-PyObject *View3DInventorViewer::getPyObject(void)
-{
-    if (!_viewerPy)
-        _viewerPy = new View3DInventorViewerPy(this);
-
-    Py_INCREF(_viewerPy);
-    return _viewerPy;
-}
 /**
  * Drops the event \a e and loads the files into the given document.
  */

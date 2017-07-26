@@ -30,7 +30,6 @@
 
 #include "ui_TaskSelectLinkProperty.h"
 #include "TaskSelectLinkProperty.h"
-#include <Base/Console.h>
 #include <App/DocumentObject.h>
 #include <Gui/Application.h>
 #include <Gui/Document.h>
@@ -77,7 +76,7 @@ TaskSelectLinkProperty::TaskSelectLinkProperty(const char *sFilter,App::Property
         LinkList = dynamic_cast<App::PropertyLinkList *>(prop);
     }
     else {
-        Base::Console().Warning("Unknown Link property type in "
+        printf("Unknown Link property type in "
             "Gui::TaskView::TaskSelectLinkProperty::TaskSelectLinkProperty()");
     }
 

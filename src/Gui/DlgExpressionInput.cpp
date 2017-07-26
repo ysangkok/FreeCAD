@@ -31,7 +31,7 @@
 #include "ui_DlgExpressionInput.h"
 #include "ExpressionCompleter.h"
 #include <Base/Tools.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <App/Application.h>
 #include <App/Expression.h>
 #include <App/DocumentObject.h>

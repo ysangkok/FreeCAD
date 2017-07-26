@@ -22,6 +22,7 @@
 
 
 #include "PreCompiled.h"
+#include <iostream>
 #include <stdio.h>
 #include <cmath>
 

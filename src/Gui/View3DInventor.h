@@ -38,7 +38,6 @@ namespace Gui {
 
 class Document;
 class View3DInventorViewer;
-class View3DPy;
 
 class GuiExport GLOverlayWidget : public QWidget
 {
@@ -89,7 +88,7 @@ public:
     virtual void printPreview();
     virtual void print(QPrinter*);
 
-    virtual PyObject *getPyObject(void);
+    //virtual PyObject *getPyObject(void);
     /**
      * If \a b is set to \a FullScreen the MDI view is displayed in full screen mode, if \a b
      * is set to \a TopLevel then it is displayed as an own top-level window, otherwise (\a Normal)
@@ -136,12 +135,12 @@ protected:
 
 private:
     View3DInventorViewer * _viewer;
-    PyObject *_viewerPy;
+    //PyObject *_viewerPy;
     QTimer * stopSpinTimer;
     QStackedWidget* stack;
 
     // friends
-    friend class View3DPy;
+    //friend class View3DPy;
 };
 
 } // namespace Gui

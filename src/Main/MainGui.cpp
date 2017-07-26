@@ -21,6 +21,8 @@
  *                                                                         *
  *   Juergen Riegel 2002                                                   *
  ***************************************************************************/
+#include <iostream>
+
 #include <FCConfig.h>
 
 #ifdef _PreComp_
@@ -47,8 +49,8 @@
 #include <QTextCodec>
 
 // FreeCAD header
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
+//#include <Base/Console.h>
+//#include <Base/Interpreter.h>
 #include <Base/Parameter.h>
 #include <Base/Exception.h>
 #include <Base/Factory.h>
@@ -173,8 +175,8 @@ int main( int argc, char ** argv )
         Gui::Application::initApplication();
 
         // Only if 'RunMode' is set to 'Gui' do the replacement
-        if (App::Application::Config()["RunMode"] == "Gui")
-            Base::Interpreter().replaceStdOutput();
+//        if (App::Application::Config()["RunMode"] == "Gui")
+//            Base::Interpreter().replaceStdOutput();
     }
     catch (const Base::UnknownProgramOption& e) {
         QApplication app(argc,argv);
@@ -200,25 +202,7 @@ int main( int argc, char ** argv )
         msg = QObject::tr("While initializing %1 the  following exception occurred: '%2'\n\n"
                           "Python is searching for its files in the following directories:\n%3\n\n"
                           "Python version information:\n%4\n")
-                          .arg(appName).arg(QString::fromUtf8(e.what()))
-#if PY_MAJOR_VERSION >= 3
-#if PY_MINOR_VERSION >= 5
-                          .arg(QString::fromUtf8(Py_EncodeLocale(Py_GetPath(),NULL))).arg(QString::fromLatin1(Py_GetVersion()));
-#else
-                          .arg(QString::fromUtf8(_Py_wchar2char(Py_GetPath(),NULL))).arg(QString::fromLatin1(Py_GetVersion()));
-#endif
-#else
-                          .arg(QString::fromUtf8(Py_GetPath())).arg(QString::fromLatin1(Py_GetVersion()));
-#endif
-        const char* pythonhome = getenv("PYTHONHOME");
-        if (pythonhome) {
-            msg += QObject::tr("\nThe environment variable PYTHONHOME is set to '%1'.")
-                .arg(QString::fromUtf8(pythonhome));
-            msg += QObject::tr("\nSetting this environment variable might cause Python to fail. "
-                "Please contact your administrator to unset it on your system.\n\n");
-        } else {
-            msg += QObject::tr("\nPlease contact the application's support team for more information.\n\n");
-        }
+                          .arg(appName).arg(QString::fromUtf8(e.what()));
 
         QMessageBox::critical(0, QObject::tr("Initialization of %1 failed").arg(appName), msg);
         exit(100);
@@ -234,12 +218,12 @@ int main( int argc, char ** argv )
     }
 
     // Run phase ===========================================================
-    Base::RedirectStdOutput stdcout;
-    Base::RedirectStdLog    stdclog;
-    Base::RedirectStdError  stdcerr;
-    std::streambuf* oldcout = std::cout.rdbuf(&stdcout);
-    std::streambuf* oldclog = std::clog.rdbuf(&stdclog);
-    std::streambuf* oldcerr = std::cerr.rdbuf(&stdcerr);
+    //Base::RedirectStdOutput stdcout;
+    //Base::RedirectStdLog    stdclog;
+    //Base::RedirectStdError  stdcerr;
+    //std::streambuf* oldcout = std::cout.rdbuf(&stdcout);
+    //std::streambuf* oldclog = std::clog.rdbuf(&stdclog);
+    //std::streambuf* oldcerr = std::cerr.rdbuf(&stdcerr);
 
     try {
         if (App::Application::Config()["RunMode"] == "Gui")
@@ -247,29 +231,29 @@ int main( int argc, char ** argv )
         else
             App::Application::runApplication();
     }
-    catch (const Base::SystemExitException& e) {
-        exit(e.getExitCode());
-    }
+    //catch (const Base::SystemExitException& e) {
+    //    exit(e.getExitCode());
+    //}
     catch (const Base::Exception& e) {
         e.ReportException();
         exit(1);
     }
     catch (...) {
-        Base::Console().Error("Application unexpectedly terminated\n");
+        printf("Application unexpectedly terminated\n");
         exit(1);
     }
 
-    std::cout.rdbuf(oldcout);
-    std::clog.rdbuf(oldclog);
-    std::cerr.rdbuf(oldcerr);
+    //std::cout.rdbuf(oldcout);
+    //std::clog.rdbuf(oldclog);
+    //std::cerr.rdbuf(oldcerr);
 
     // Destruction phase ===========================================================
-    Base::Console().Log("%s terminating...\n",App::Application::Config()["ExeName"].c_str());
+    printf("%s terminating...\n",App::Application::Config()["ExeName"].c_str());
 
     // cleans up 
     App::Application::destruct();
 
-    Base::Console().Log("%s completely terminated\n",App::Application::Config()["ExeName"].c_str());
+    printf("%s completely terminated\n",App::Application::Config()["ExeName"].c_str());
 
     return 0;
 }
@@ -301,12 +285,12 @@ public:
     MyStackWalker() : StackWalker(), threadId(GetCurrentThreadId())
     {
         std::string name = App::Application::Config()["UserAppData"] + "crash.log";
-        Base::Console().AttachObserver(new Base::ConsoleObserverFile(name.c_str()));
+        //Base::Console().AttachObserver(new Base::ConsoleObserverFile(name.c_str()));
     }
     MyStackWalker(DWORD dwProcessId, HANDLE hProcess) : StackWalker(dwProcessId, hProcess) {}
     virtual void OnOutput(LPCSTR szText)
     {
-        Base::Console().Log("Id: %ld: %s", threadId, szText);
+        printf("Id: %ld: %s", threadId, szText);
         //StackWalker::OnOutput(szText);
     }
 };
@@ -328,10 +312,10 @@ static LONG __stdcall MyCrashHandlerExceptionFilter(EXCEPTION_POINTERS* pEx)
 #endif 
   MyStackWalker sw;
   sw.ShowCallstack(GetCurrentThread(), pEx->ContextRecord);
-  Base::Console().Log("*** Unhandled Exception!\n");
-  Base::Console().Log("   ExpCode: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionCode);
-  Base::Console().Log("   ExpFlags: %d\n", pEx->ExceptionRecord->ExceptionFlags);
-  Base::Console().Log("   ExpAddress: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionAddress);
+  printf("*** Unhandled Exception!\n");
+  printf("   ExpCode: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionCode);
+  printf("   ExpFlags: %d\n", pEx->ExceptionRecord->ExceptionFlags);
+  printf("   ExpAddress: 0x%8.8X\n", pEx->ExceptionRecord->ExceptionAddress);
 
   bool bFailed = true; 
   HANDLE hFile; 

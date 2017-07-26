@@ -66,7 +66,7 @@ namespace Gui {
         class TaskContent;
     }
 class View3DInventorViewer;
-class ViewProviderPy;
+//class ViewProviderPy;
 class ObjectItem;
 
 enum ViewStatus {
@@ -216,7 +216,7 @@ public:
     void setStatus(ViewStatus pos, bool on) {StatusBits.set((size_t)pos, on);}
 
     std::string toString() const;
-    PyObject* getPyObject();
+    //PyObject* getPyObject();
 
     /** @name Display mode methods 
      */
@@ -360,7 +360,7 @@ protected:
     SoSwitch    *pcModeSwitch;
     /// The root separator for annotations
     SoSeparator *pcAnnotation;
-    ViewProviderPy* pyViewObject;
+    //ViewProviderPy* pyViewObject;
     std::string overrideMode;
     std::bitset<32> StatusBits;
 

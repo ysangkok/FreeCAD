@@ -41,7 +41,6 @@
 #include "Tree.h"
 #include "View3DInventor.h"
 #include "View3DInventorViewer.h"
-#include <Base/Console.h>
 
 
 using namespace Gui;
@@ -105,16 +104,4 @@ QIcon ViewProviderDocumentObjectGroup::getIcon() const
     groupIcon.addPixmap(QApplication::style()->standardPixmap(QStyle::SP_DirOpenIcon),
                         QIcon::Normal, QIcon::On);
     return groupIcon;
-}
-
-
-// Python feature -----------------------------------------------------------------------
-
-namespace Gui {
-/// @cond DOXERR
-PROPERTY_SOURCE_TEMPLATE(Gui::ViewProviderDocumentObjectGroupPython, Gui::ViewProviderDocumentObjectGroup)
-/// @endcond
-
-// explicit template instantiation
-template class GuiExport ViewProviderPythonFeatureT<ViewProviderDocumentObjectGroup>;
 }

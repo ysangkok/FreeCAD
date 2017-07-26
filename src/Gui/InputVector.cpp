@@ -29,7 +29,7 @@
 #include "InputVector.h"
 #include "ui_InputVector.h"
 #include "QuantitySpinBox.h"
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 
 using namespace Gui;
 
@@ -183,9 +183,9 @@ Base::Vector3d LocationWidget::getUserDirection(bool* ok) const
     Gui::Dialog::Ui_InputVector iv;
     QDialog dlg(const_cast<LocationWidget*>(this));
     iv.setupUi(&dlg);
-    iv.vectorX->setDecimals(Base::UnitsApi::getDecimals());
-    iv.vectorY->setDecimals(Base::UnitsApi::getDecimals());
-    iv.vectorZ->setDecimals(Base::UnitsApi::getDecimals());
+    iv.vectorX->setDecimals(2);
+    iv.vectorY->setDecimals(2);
+    iv.vectorZ->setDecimals(2);
     Base::Vector3d dir;
     if (dlg.exec()) {
         dir.x = iv.vectorX->value();
@@ -234,9 +234,9 @@ Base::Vector3d LocationDialog::getUserDirection(bool* ok) const
     Gui::Dialog::Ui_InputVector iv;
     QDialog dlg(const_cast<LocationDialog*>(this));
     iv.setupUi(&dlg);
-    iv.vectorX->setDecimals(Base::UnitsApi::getDecimals());
-    iv.vectorY->setDecimals(Base::UnitsApi::getDecimals());
-    iv.vectorZ->setDecimals(Base::UnitsApi::getDecimals());
+    iv.vectorX->setDecimals(2);
+    iv.vectorY->setDecimals(2);
+    iv.vectorZ->setDecimals(2);
     Base::Vector3d dir;
     if (dlg.exec()) {
         dir.x = iv.vectorX->value();

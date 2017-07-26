@@ -28,7 +28,7 @@
 # include <QPainter>
 #endif
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include "PropertyEditor.h"
@@ -169,7 +169,7 @@ void PropertyEditor::drawBranches(QPainter *painter, const QRect &rect, const QM
 void PropertyEditor::buildUp(const PropertyModel::PropertyList& props)
 {
     if (committing) {
-        Base::Console().Warning("While committing the data to the property the selection has changed.\n");
+        printf("While committing the data to the property the selection has changed.\n");
         delaybuild = true;
         return;
     }

@@ -30,10 +30,6 @@
 #include <Base/Parameter.h>
 #include <Gui/TaskView/TaskWatcher.h>
 
-namespace Base {
-class PyObjectBase;
-}
-
 namespace Gui {
 
 class MenuItem;
@@ -68,7 +64,7 @@ public:
     /**
      * The default implementation returns an instance of @ref WorkbenchPy.
      */
-    PyObject* getPyObject();
+    //PyObject* getPyObject();
     /** Sets up the contextmenu for this workbench. 
      * The default implementation does nothing.
      */
@@ -220,100 +216,6 @@ protected:
     ToolBarItem* setupCommandBars() const;
 };
 
-/**
- * The PythonBaseWorkbench class allows the manipulation of the workbench from Python.
- * Therefore PythonWorkbenchPy provides the required Python interface.
- * @author Werner Mayer
- */
-class GuiExport PythonBaseWorkbench : public Workbench
-{
-    TYPESYSTEM_HEADER();
-
-public:
-    PythonBaseWorkbench();
-    ~PythonBaseWorkbench();
-    /**
-     * Creates and returns immediately the corresponding Python workbench object.
-     */
-    PyObject* getPyObject();
-
-    /** @name Manipulation methods */
-    //@{
-    /// Appends a new menu
-    void appendMenu(const std::list<std::string>& menu, const std::list<std::string>& items) const;
-    /// Removes a menu
-    void removeMenu(const std::string& menu ) const;
-    //// Shows a list of all menus
-    std::list<std::string> listMenus() const;
-
-    /// Appends new context menu items
-    void appendContextMenu(const std::list<std::string>& menu, const std::list<std::string>& items) const;
-    /// Removes a context menu
-    void removeContextMenu(const std::string& menu ) const;
-    void setupContextMenu(const char* recipient,MenuItem*) const;
-    void clearContextMenu();
-
-    /// Appends a new toolbar
-    void appendToolbar(const std::string& bar, const std::list<std::string>& items) const;
-    /// Removes a toolbar
-    void removeToolbar(const std::string& bar) const;
-    //// Shows a list of all toolbars
-    std::list<std::string> listToolbars() const;
-
-    /// Appends a new command bar
-    void appendCommandbar(const std::string& bar, const std::list<std::string>& items) const;
-    /// Removes a command bar
-    void removeCommandbar(const std::string& bar) const;
-    //// Shows a list of all command bars
-    std::list<std::string> listCommandbars() const;
-    //@}
-
-protected:
-    MenuItem* setupMenuBar() const;
-    ToolBarItem* setupToolBars() const;
-    ToolBarItem* setupCommandBars() const;
-    DockWindowItems* setupDockWindows() const;
-
-protected:
-    MenuItem* _menuBar;
-    MenuItem* _contextMenu;
-    ToolBarItem* _toolBar;
-    ToolBarItem* _commandBar;
-    Base::PyObjectBase* _workbenchPy;
-};
-
-class GuiExport PythonBlankWorkbench : public PythonBaseWorkbench
-{
-    TYPESYSTEM_HEADER();
-
-public:
-    PythonBlankWorkbench();
-    ~PythonBlankWorkbench();
-};
-
-/**
- * The PythonWorkbench class allows the manipulation of the workbench from Python.
- * Therefore PythonWorkbenchPy provides the required Python interface.
- * @author Werner Mayer
- */
-class GuiExport PythonWorkbench : public PythonBaseWorkbench
-{
-    TYPESYSTEM_HEADER();
-
-public:
-    PythonWorkbench();
-    ~PythonWorkbench();
-
-    /** Defines the standard context menu. */
-    virtual void setupContextMenu(const char* recipient, MenuItem*) const;
-    virtual void createMainWindowPopupMenu(MenuItem*) const;
-
-protected:
-    MenuItem* setupMenuBar() const;
-    ToolBarItem* setupToolBars() const;
-    ToolBarItem* setupCommandBars() const;
-    DockWindowItems* setupDockWindows() const;
-};
 
 } // namespace Gui
 

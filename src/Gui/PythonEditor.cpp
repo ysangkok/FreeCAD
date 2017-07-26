@@ -31,14 +31,13 @@
 #endif
 
 #include "PythonEditor.h"
-#include "PythonDebugger.h"
+//#include "PythonDebugger.h"
 #include "Application.h"
 #include "BitmapFactory.h"
 #include "Macro.h"
 #include "FileDialog.h"
 #include "DlgEditorImp.h"
 
-#include <Base/Interpreter.h>
 #include <Base/Exception.h>
 #include <Base/Parameter.h>
 
@@ -52,13 +51,12 @@ struct PythonEditorP
     QPixmap breakpoint;
     QPixmap debugMarker;
     QString filename;
-    PythonDebugger* debugger;
+    //PythonDebugger* debugger;
     PythonEditorP()
         : debugLine(-1),
           breakpoint(BitmapFactory().iconFromTheme("breakpoint").pixmap(16,16)),
           debugMarker(BitmapFactory().iconFromTheme("debug-marker").pixmap(16,16))
     {
-        debugger = Application::Instance->macroManager()->debugger();
     }
 };
 } // namespace Gui
@@ -102,17 +100,12 @@ void PythonEditor::setFileName(const QString& fn)
 
 void PythonEditor::startDebug()
 {
-    if (d->debugger->start()) {
-        d->debugger->runFile(d->filename);
-        d->debugger->stop();
-    }
 }
 
 void PythonEditor::toggleBreakpoint()
 {
     QTextCursor cursor = textCursor();
     int line = cursor.blockNumber() + 1;
-    d->debugger->toggleBreakpoint(line, d->filename);
     getMarker()->update();
 }
 
@@ -142,10 +135,10 @@ void PythonEditor::hideDebugMarker()
 
 void PythonEditor::drawMarker(int line, int x, int y, QPainter* p)
 {
-    Breakpoint bp = d->debugger->getBreakpoint(d->filename);
-    if (bp.checkLine(line)) {
-        p->drawPixmap(x, y, d->breakpoint);
-    }
+    //Breakpoint bp = d->debugger->getBreakpoint(d->filename);
+    //if (bp.checkLine(line)) {
+    //    p->drawPixmap(x, y, d->breakpoint);
+    //}
     if (d->debugLine == line) {
         p->drawPixmap(x, y+2, d->debugMarker);
         d->debugRect = QRect(x, y+2, d->debugMarker.width(), d->debugMarker.height());

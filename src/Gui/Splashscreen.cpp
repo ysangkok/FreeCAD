@@ -43,8 +43,7 @@
 
 #include "Splashscreen.h"
 #include "ui_AboutApplication.h"
-#include <Base/Console.h>
-#include <CXX/WrapPython.h>
+//#include <CXX/WrapPython.h>
 #include <App/Application.h>
 #include <Gui/MainWindow.h>
 
@@ -56,13 +55,12 @@ namespace Gui {
 /** Displays all messages at startup inside the splash screen.
  * \author Werner Mayer
  */
-class SplashObserver : public Base::ConsoleObserver
+class SplashObserver
 {
 public:
     SplashObserver(QSplashScreen* splasher=0)
       : splash(splasher), alignment(Qt::AlignBottom|Qt::AlignLeft), textColor(Qt::black)
     {
-        Base::Console().AttachObserver(this);
 
         // allow to customize text position and color
         const std::map<std::string,std::string>& cfg = App::GetApplication().Config();
@@ -97,7 +95,6 @@ public:
     }
     virtual ~SplashObserver()
     {
-        Base::Console().DetachObserver(this);
     }
     const char* Name()
     {
@@ -541,7 +538,6 @@ void AboutDialog::on_copyButton_clicked()
     if (it != config.end())
         str << "Hash: " << it->second.c_str() << endl;
     // report also the version numbers of the most important libraries in FreeCAD
-    str << "Python version: " << PY_VERSION << endl;
     str << "Qt version: " << QT_VERSION_STR << endl;
     str << "Coin version: " << COIN_VERSION << endl;
 #if defined(HAVE_OCC_VERSION)

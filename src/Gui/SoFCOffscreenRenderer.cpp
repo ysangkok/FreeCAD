@@ -40,7 +40,7 @@
 
 #include <Base/FileInfo.h>
 #include <Base/Exception.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <App/Application.h>
 
 #include "SoFCOffscreenRenderer.h"

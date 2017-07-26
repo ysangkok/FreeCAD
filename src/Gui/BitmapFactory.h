@@ -41,7 +41,7 @@ namespace Gui {
   * \author Werner Mayer, Jürgen Riegel
   */
 class BitmapFactoryInstP;
-class GuiExport BitmapFactoryInst : public Base::Factory
+class GuiExport BitmapFactoryInst
 {
 public:
     enum Position

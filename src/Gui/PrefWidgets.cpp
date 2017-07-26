@@ -27,7 +27,7 @@
 # include <QMenu>
 #endif
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <App/Application.h>
 
@@ -35,7 +35,6 @@
 #include "FileDialog.h"
 #include <cstring>
 
-using Base::Console;
 using namespace Gui;
 
 /** Constructs a preference widget. 
@@ -73,7 +72,7 @@ void PrefWidget::setParamGrpPath( const QByteArray& path )
   if (getWindowParameter().isValid())
   {
     if ( paramGrpPath() != path )
-      Base::Console().Warning("Widget already attached\n");
+      printf("Widget already attached\n");
   }
 #endif
 
@@ -150,7 +149,7 @@ void PrefSpinBox::restorePreferences()
 {
   if ( getWindowParameter().isNull() )
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -162,7 +161,7 @@ void PrefSpinBox::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -184,7 +183,7 @@ void PrefDoubleSpinBox::restorePreferences()
 {
   if ( getWindowParameter().isNull() )
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -196,7 +195,7 @@ void PrefDoubleSpinBox::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -218,7 +217,7 @@ void PrefLineEdit::restorePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -231,7 +230,7 @@ void PrefLineEdit::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -253,7 +252,7 @@ void PrefFileChooser::restorePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -265,7 +264,7 @@ void PrefFileChooser::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -287,7 +286,7 @@ void PrefComboBox::restorePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -299,7 +298,7 @@ void PrefComboBox::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -321,7 +320,7 @@ void PrefCheckBox::restorePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -333,7 +332,7 @@ void PrefCheckBox::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -355,7 +354,7 @@ void PrefRadioButton::restorePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -367,7 +366,7 @@ void PrefRadioButton::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -389,7 +388,7 @@ void PrefSlider::restorePreferences()
 {
   if ( getWindowParameter().isNull() )
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -401,7 +400,7 @@ void PrefSlider::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -423,7 +422,7 @@ void PrefColorButton::restorePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot restore!\n");
+    printf("Cannot restore!\n");
     return;
   }
 
@@ -443,7 +442,7 @@ void PrefColorButton::savePreferences()
 {
   if (getWindowParameter().isNull())
   {
-    Console().Warning("Cannot save!\n");
+    printf("Cannot save!\n");
     return;
   }
 
@@ -575,7 +574,7 @@ void PrefQuantitySpinBox::pushToHistory(const QString &valueq)
             }
         }
         catch (const Base::Exception& e) {
-            Console().Warning("pushToHistory: %s\n", e.what());
+            printf("pushToHistory: %s\n", e.what());
         }
     }
 }

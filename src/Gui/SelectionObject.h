@@ -54,7 +54,7 @@ public:
     /**
      * The default implementation returns an instance of @ref SelectionObjectPy.
      */
-    PyObject* getPyObject();
+    //PyObject* getPyObject();
 
     /// get the SubElement name of this SelectionObject
     inline const std::vector<std::string> &getSubNames(void) const { return SubNames; }

@@ -26,7 +26,6 @@
 # include <sstream>
 #endif
 
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include "WorkbenchManager.h"
 #include "Workbench.h"
@@ -91,7 +90,7 @@ Workbench* WorkbenchManager::createWorkbench (const std::string& name, const std
             _workbenches[name] = wb;
         }
         else
-            Base::Console().Log("WorkbenchManager::createWorkbench(): Can not create "
+            printf("WorkbenchManager::createWorkbench(): Can not create "
                 "Workbench instance with type: %s\n",className.c_str());
     }
 

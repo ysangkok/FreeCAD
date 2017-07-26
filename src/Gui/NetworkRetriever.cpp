@@ -40,7 +40,6 @@
 #include "FileDialog.h"
 
 #include <App/Application.h>
-#include <Base/Console.h>
 
 using namespace Gui;
 using namespace Gui::Dialog;
@@ -118,7 +117,7 @@ void NetworkRetriever::testFailure()
     if ( wget->state() == QProcess::Running )
     {
         d->fail = false;
-        Base::Console().Message( tr("Download started...\n").toLatin1() );
+        printf( tr("Download started...\n").toLatin1() );
     }
 }
 
@@ -264,7 +263,7 @@ bool NetworkRetriever::startDownload( const QString& startUrl )
         {
             if ( dir.mkdir( d->dir ) == false)
             {
-                Base::Console().Error("Directory '%s' could not be created.", (const char*)d->dir.toLatin1());
+                printf("Directory '%s' could not be created.", (const char*)d->dir.toLatin1());
                 return true; // please, no error message
             }
         }
@@ -361,7 +360,7 @@ void NetworkRetriever::wgetFinished(int exitCode, QProcess::ExitStatus status)
     wget->setReadChannel(QProcess::StandardError);
     if (wget->canReadLine()) {
         QByteArray data = wget->readAll();
-        Base::Console().Warning(data);
+        printf(data);
     }
     wgetExited();
 }
@@ -533,7 +532,7 @@ void StdCmdDownloadOnlineHelp::activated(int iMsg)
         if (canStart) {
             bool ok = wget->startDownload(QString::fromLatin1(url.c_str()));
             if ( ok == false )
-                Base::Console().Error("The tool 'wget' couldn't be found. Please check your installation.");
+                printf("The tool 'wget' couldn't be found. Please check your installation.");
             else if ( wget->isDownloading() && _pcAction )
                 _pcAction->setText(tr("Stop downloading"));
         }

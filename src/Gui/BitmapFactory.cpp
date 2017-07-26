@@ -49,7 +49,7 @@
 #include <string>
 #include <Inventor/fields/SoSFImage.h>
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <App/Application.h>
 
 #include "BitmapFactory.h"
@@ -292,7 +292,7 @@ QPixmap BitmapFactoryInst::pixmap(const char* name) const
         return icon;
     }
 
-    Base::Console().Warning("Cannot find icon: %s\n", name);
+    printf("Cannot find icon: %s\n", name);
     return QPixmap(px);
 }
 
@@ -424,9 +424,9 @@ QPixmap BitmapFactoryInst::pixmapFromSvg(const QByteArray& contents, const QSize
 
     QPainter p(&image);
     // tmp. disable the report window to suppress some bothering warnings
-    Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, false);
+    //Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, false);
     QSvgRenderer svg(contents);
-    Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, true);
+    //Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, true);
     svg.render(&p);
     p.end();
 

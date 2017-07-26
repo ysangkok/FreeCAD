@@ -33,7 +33,6 @@
 #include "PreCompiled.h"
 #include "CoinRiftWidget.h"
 
-#include <Base/Console.h>
 
 #if BUILD_VR
 

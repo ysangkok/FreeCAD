@@ -35,7 +35,7 @@
 #include <Gui/BitmapFactory.h>
 #include <Gui/ViewProvider.h>
 #include <Gui/WaitCursor.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 
 using namespace Gui::TaskView;
 
@@ -150,7 +150,7 @@ void TaskAppearance::on_changeMode_activated(const QString& s)
 
 void TaskAppearance::on_changePlot_activated(const QString&s)
 {
-    Base::Console().Log("Plot = %s\n",(const char*)s.toLatin1());
+    printf("Plot = %s\n",(const char*)s.toLatin1());
 }
 
 /**

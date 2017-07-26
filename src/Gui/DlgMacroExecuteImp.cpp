@@ -40,7 +40,7 @@
 
 #include <App/Application.h>
 #include <App/Document.h>
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 
 using namespace Gui;
 using namespace Gui::Dialog;
@@ -233,18 +233,10 @@ void DlgMacroExecuteImp::accept()
     }
 
     QFileInfo fi(dir, item->text(0));
-    try {
         Application::Instance->macroManager()->run(Gui::MacroManager::File, fi.filePath().toUtf8());
         // after macro run recalculate the document
         if (Application::Instance->activeDocument())
             Application::Instance->activeDocument()->getDocument()->recompute();
-    }
-    catch (const Base::SystemExitException&) {
-        // handle SystemExit exceptions
-        Base::PyGILStateLocker locker;
-        Base::PyException e;
-        e.ReportException();
-    }
 }
 
 /**
@@ -289,17 +281,17 @@ void DlgMacroExecuteImp::on_editButton_clicked()
     QString file = QString::fromLatin1("%1/%2").arg(dir.absolutePath()).arg(item->text(0));
     PythonEditor* editor = new PythonEditor();
     editor->setWindowIcon(Gui::BitmapFactory().iconFromTheme("applications-python"));
-    PythonEditorView* edit = new PythonEditorView(editor, getMainWindow());
-    edit->open(file);
-    edit->resize(400, 300);
-    getMainWindow()->addWindow(edit);
+    //PythonEditorView* edit = new PythonEditorView(editor, getMainWindow());
+    //edit->open(file);
+    //edit->resize(400, 300);
+    //getMainWindow()->addWindow(edit);
 
-    if (mitem->systemWide) {
-        editor->setReadOnly(true);
-        QString shownName;
-        shownName = QString::fromLatin1("%1[*] - [%2]").arg(item->text(0)).arg(tr("Read-only"));
-        edit->setWindowTitle(shownName);
-    }
+    //if (mitem->systemWide) {
+    //    editor->setReadOnly(true);
+    //    QString shownName;
+    //    shownName = QString::fromLatin1("%1[*] - [%2]").arg(item->text(0)).arg(tr("Read-only"));
+    //    edit->setWindowTitle(shownName);
+    //}
 
     close();
 }
@@ -337,11 +329,11 @@ void DlgMacroExecuteImp::on_createButton_clicked()
             file.close();
             PythonEditor* editor = new PythonEditor();
             editor->setWindowIcon(Gui::BitmapFactory().iconFromTheme("applications-python"));
-            PythonEditorView* edit = new PythonEditorView(editor, getMainWindow());
-            edit->open(fi.absoluteFilePath());
-            edit->setWindowTitle(QString::fromLatin1("%1[*]").arg(fn));
-            edit->resize(400, 300);
-            getMainWindow()->addWindow(edit);
+            //PythonEditorView* edit = new PythonEditorView(editor, getMainWindow());
+            //edit->open(fi.absoluteFilePath());
+            //edit->setWindowTitle(QString::fromLatin1("%1[*]").arg(fn));
+            //edit->resize(400, 300);
+            //getMainWindow()->addWindow(edit);
             close();
         }
     }

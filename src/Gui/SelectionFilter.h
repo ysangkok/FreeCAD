@@ -25,7 +25,7 @@
 #define GUI_SelectionFilter_H
 
 #include <string>
-#include <CXX/Extensions.hxx>
+//#include <CXX/Extensions.hxx>
 #include "Selection.h"
 
 namespace App {
@@ -112,65 +112,7 @@ protected:
     SelectionFilter *Filter;
 };
 
-/**
- * A wrapper around a Python class that implements the SelectionGate interface
- * @author Werner Mayer
- */
-class SelectionGatePython : public SelectionGate
-{
-public:
-    /// Constructor
-    SelectionGatePython(const Py::Object& obj);
-    virtual ~SelectionGatePython();
 
-    bool allow(App::Document*, App::DocumentObject*, const char*);
-
-private:
-    Py::Object gate;
-};
-
-/**
- * Python binding for SelectionFilter class.
- * @see SelectionFilter
- * @author Werner Mayer
- */
-class SelectionFilterPy : public Py::PythonExtension<SelectionFilterPy> 
-{
-public:
-    SelectionFilter filter;
-
-public:
-    static void init_type(void);    // announce properties and methods
-
-    SelectionFilterPy(const std::string&);
-    ~SelectionFilterPy();
-
-    Py::Object repr();
-    Py::Object match(const Py::Tuple&);
-    Py::Object result(const Py::Tuple&);
-    Py::Object test(const Py::Tuple&);
-    Py::Object setFilter(const Py::Tuple&);
-
-private:
-    static PyObject *PyMake(struct _typeobject *, PyObject *, PyObject *);
-};
-
-/**
- * A Python wrapper around SelectionFilterPy to implement the SelectionGate interface
- * @author Werner Mayer
- */
-class SelectionFilterGatePython : public SelectionGate
-{
-public:
-    /// Constructor
-    SelectionFilterGatePython(SelectionFilterPy* obj);
-    virtual ~SelectionFilterGatePython();
-
-    bool allow(App::Document*, App::DocumentObject*, const char*);
-
-private:
-    SelectionFilterPy* filter;
-};
 
 // === Abstract syntax tree (AST) ===========================================
 

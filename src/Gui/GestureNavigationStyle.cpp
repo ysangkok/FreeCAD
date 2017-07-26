@@ -68,7 +68,6 @@
 #include <Inventor/sensors/SoTimerSensor.h>
 
 #include <App/Application.h>
-#include <Base/Console.h>
 #include "NavigationStyle.h"
 #include "View3DInventorViewer.h"
 #include "Application.h"
@@ -293,7 +292,7 @@ SbBool GestureNavigationStyle::processSoEvent(const SoEvent * const ev)
             if(!press){
                 SbBool ret = NavigationStyle::lookAtPoint(event->getPosition());
                 if(!ret){
-                    Base::Console().Warning(
+                    printf(
                         "No object under cursor! Can't set new center of rotation.\n");
                 }
             }
@@ -412,7 +411,7 @@ SbBool GestureNavigationStyle::processSoEvent(const SoEvent * const ev)
                 if(press){
                     SbBool ret = NavigationStyle::lookAtPoint(event->getPosition());
                     if(!ret){
-                        Base::Console().Warning(
+                        printf(
                             "No object under cursor! Can't set new center of rotation.\n");
                     }
                 }

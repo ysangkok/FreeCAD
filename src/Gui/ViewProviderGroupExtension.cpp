@@ -36,7 +36,6 @@
 #include <App/DocumentObject.h>
 #include <App/GroupExtension.h>
 #include <App/Expression.h>
-#include <Base/Console.h>
 #include <QMessageBox>
 
 using namespace Gui;
@@ -77,7 +76,7 @@ bool ViewProviderGroupExtension::extensionCanDropObjects() const {
 bool ViewProviderGroupExtension::extensionCanDropObject(App::DocumentObject* obj) const {
 
 #ifdef FC_DEBUG
-    Base::Console().Log("Check ViewProviderGroupExtension");
+    printf("Check ViewProviderGroupExtension");
 #endif
 
     auto* group = getExtendedViewProvider()->getObject()->getExtensionByType<App::GroupExtension>();
@@ -174,12 +173,4 @@ bool ViewProviderGroupExtension::extensionOnDelete(const std::vector< std::strin
         }
     }
     return true;
-}
-
-
-namespace Gui {
-EXTENSION_PROPERTY_SOURCE_TEMPLATE(Gui::ViewProviderGroupExtensionPython, Gui::ViewProviderGroupExtension)
-
-// explicit template instantiation
-template class GuiExport ViewProviderExtensionPythonT<ViewProviderGroupExtension>;
 }

@@ -29,9 +29,9 @@
 #endif
 
 #include <sstream>
-#include <CXX/Objects.hxx>
+//#include <CXX/Objects.hxx>
 #include <zipios++/zipfile.h>
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 #include <Base/Stream.h>
 #include <App/Application.h>
 
@@ -82,129 +82,6 @@ QByteArray PythonOnlineHelp::loadResource(const QString& filename) const
     fn = filename.mid(1);
     QByteArray res;
 
-    if (fn == QLatin1String("favicon.ico")) {
-        // Return an resource icon in ico format
-        res.reserve(navicon_data_len);
-        for (int i=0; i<(int)navicon_data_len;i++) {
-            res[i] = navicon_data[i];
-        }
-    }
-    else if (filename == QLatin1String("/")) {
-        // get the global interpreter lock otherwise the app may crash with the error
-        // 'PyThreadState_Get: no current thread' (see pystate.c)
-        Base::PyGILStateLocker lock;
-        PyObject* main = PyImport_AddModule("__main__");
-        PyObject* dict = PyModule_GetDict(main);
-        dict = PyDict_Copy(dict);
-
-        QByteArray cmd =
-            "import string, os, sys, pydoc, pkgutil\n"
-            "\n"
-            "class FreeCADDoc(pydoc.HTMLDoc):\n"
-            "    def index(self, dir, shadowed=None):\n"
-            "        \"\"\"Generate an HTML index for a directory of modules.\"\"\"\n"
-            "        modpkgs = []\n"
-            "        if shadowed is None: shadowed = {}\n"
-            "        for importer, name, ispkg in pkgutil.iter_modules([dir]):\n"
-            "            if name == 'Init': continue\n"
-            "            if name == 'InitGui': continue\n"
-            "            if name[-2:] == '_d': continue\n"
-            "            modpkgs.append((name, '', ispkg, name in shadowed))\n"
-            "            shadowed[name] = 1\n"
-            "\n"
-            "        if len(modpkgs) == 0: return None\n"
-            "        modpkgs.sort()\n"
-            "        contents = self.multicolumn(modpkgs, self.modpkglink)\n"
-            "        return self.bigsection(dir, '#ffffff', '#ee77aa', contents)\n"
-            "\n"
-            "pydoc.html=FreeCADDoc()\n"
-            "title='FreeCAD Python Modules Index'\n"
-            "\n"
-            "heading = pydoc.html.heading("
-            "'<big><big><strong>Python: Index of Modules</strong></big></big>',"
-            "'#ffffff', '#7799ee')\n"
-            "def bltinlink(name):\n"
-            "    return '<a href=\"%s.html\">%s</a>' % (name, name)\n"
-            "names = filter(lambda x: x != '__main__',\n"
-            "               sys.builtin_module_names)\n"
-            "contents = pydoc.html.multicolumn(names, bltinlink)\n"
-            "indices = ['<p>' + pydoc.html.bigsection(\n"
-            "    'Built-in Modules', '#ffffff', '#ee77aa', contents)]\n"
-            "\n"
-            "names = ['FreeCAD', 'FreeCADGui']\n"
-            "contents = pydoc.html.multicolumn(names, bltinlink)\n"
-            "indices.append('<p>' + pydoc.html.bigsection(\n"
-            "    'Built-in FreeCAD Modules', '#ffffff', '#ee77aa', contents))\n"
-            "\n"
-            "seen = {}\n"
-            "for dir in sys.path:\n"
-            "    dir = os.path.realpath(dir)\n"
-            "    ret = pydoc.html.index(dir, seen)\n"
-            "    if ret != None:\n"
-            "        indices.append(ret)\n"
-            "contents = heading + string.join(indices) + '''<p align=right>\n"
-            "<font color=\"#909090\" face=\"helvetica, arial\"><strong>\n"
-            "pydoc</strong> by Ka-Ping Yee &lt;ping@lfw.org&gt;</font>'''\n"
-            "htmldocument=pydoc.html.page(title,contents)\n";
-
-        PyObject* result = PyRun_String(cmd.constData(), Py_file_input, dict, dict);
-        if (result) {
-            Py_DECREF(result);
-            result = PyDict_GetItemString(dict, "htmldocument");
-#if PY_MAJOR_VERSION >= 3
-            const char* contents = PyUnicode_AsUTF8(result);
-#else
-            const char* contents = PyString_AsString(result);
-#endif
-            res.append("HTTP/1.0 200 OK\n");
-            res.append("Content-type: text/html\n");
-            res.append(contents);
-            return res;
-        }
-        else {
-            // load the error page
-            PyErr_Clear();
-            res = fileNotFound();
-        }
-
-        Py_DECREF(dict);
-    }
-    else {
-        // get the global interpreter lock otherwise the app may crash with the error
-        // 'PyThreadState_Get: no current thread' (see pystate.c)
-        Base::PyGILStateLocker lock;
-        QString name = fn.left(fn.length()-5);
-        PyObject* main = PyImport_AddModule("__main__");
-        PyObject* dict = PyModule_GetDict(main);
-        dict = PyDict_Copy(dict);
-        QByteArray cmd = 
-            "import pydoc\n"
-            "object, name = pydoc.resolve(\"";
-        cmd += name.toUtf8();
-        cmd += "\")\npage = pydoc.html.page(pydoc.describe(object), pydoc.html.document(object, name))\n";
-        PyObject* result = PyRun_String(cmd.constData(), Py_file_input, dict, dict);
-        if (result) {
-            Py_DECREF(result);
-            result = PyDict_GetItemString(dict, "page");
-#if PY_MAJOR_VERSION >= 3
-            const char* page = PyUnicode_AsUTF8(result);
-#else
-            const char* page = PyString_AsString(result);
-#endif
-            res.append("HTTP/1.0 200 OK\n");
-            res.append("Content-type: text/html\n");
-            res.append(page);
-        }
-        else {
-            // get information about the error
-            Base::PyException e;
-            Base::Console().Warning("PythonOnlineHelp::loadResource: %s\n", e.what());
-            // load the error page
-            res = fileNotFound();
-        }
-
-        Py_DECREF(dict);
-    }
 
     return res;
 }
@@ -346,83 +223,10 @@ StdCmdPythonHelp::~StdCmdPythonHelp()
 
 void StdCmdPythonHelp::activated(int iMsg)
 {
-    Q_UNUSED(iMsg); 
-    // try to open a connection over this port
-    qint16 port = 7465;
-    if (!this->server)
-        this->server = new HttpServer();
-
-    // if server is not yet running try to open one
-    if (this->server->isListening() || 
-        this->server->listen(QHostAddress(QHostAddress::LocalHost), port)) {
-        // okay the server is running, now we try to open the system internet browser
-        bool failed = true;
-
-        // The webbrowser Python module allows to start the system browser in an 
-        // OS-independent way
-        Base::PyGILStateLocker lock;
-        PyObject* module = PyImport_ImportModule("webbrowser");
-        if (module) {
-            // get the methods dictionary and search for the 'open' method
-            PyObject* dict = PyModule_GetDict(module);
-            PyObject* func = PyDict_GetItemString(dict, "open");
-            if (func) {
-                char szBuf[201];
-                snprintf(szBuf, 200, "http://localhost:%d", port);
-                PyObject* args = Py_BuildValue("(s)", szBuf);
-                PyObject* result = PyEval_CallObject(func,args);
-                if (result)
-                    failed = false;
-        
-                // decrement the args and module reference
-                Py_XDECREF(result);
-                Py_DECREF(args);
-                Py_DECREF(module);
-            }
-        }
-
-        // print error message on failure
-        if (failed) {
-            QMessageBox::critical(Gui::getMainWindow(), QObject::tr("No Browser"), 
-                QObject::tr("Unable to open your browser.\n\n"
-                "Please open a browser window and type in: http://localhost:%1.").arg(port));
-        }
-    }
-    else {
-        QMessageBox::critical(Gui::getMainWindow(), QObject::tr("No Server"), 
-            QObject::tr("Unable to start the server to port %1: %2.").arg(port).arg(server->errorString()));
-    }
 }
 
 bool Gui::OpenURLInBrowser(const char * URL)
 {
-    // The webbrowser Python module allows to start the system browser in an OS-independent way
-    bool failed = true;
-    Base::PyGILStateLocker lock;
-    PyObject* module = PyImport_ImportModule("webbrowser");
-    if (module) {
-        // get the methods dictionary and search for the 'open' method
-        PyObject* dict = PyModule_GetDict(module);
-        PyObject* func = PyDict_GetItemString(dict, "open");
-        if (func) {
-            PyObject* args = Py_BuildValue("(s)", URL);
-            PyObject* result = PyEval_CallObject(func,args);
-            if (result)
-                failed = false;
-        
-            // decrement the args and module reference
-            Py_XDECREF(result);
-            Py_DECREF(args);
-            Py_DECREF(module);
-        }
-    } 
-
-    // print error message on failure
-    if (failed) {
-        QMessageBox::critical(Gui::getMainWindow(), QObject::tr("No Browser"), 
-            QObject::tr("Unable to open your system browser."));
-        return false;
-    }
   
     return true;
 }

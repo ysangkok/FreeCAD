@@ -52,7 +52,7 @@
 #include "SpaceballEvent.h"
 #include "MainWindow.h"
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Exception.h>
 
 #include <App/Application.h>
@@ -79,7 +79,7 @@ GUIApplication::~GUIApplication()
 bool GUIApplication::notify (QObject * receiver, QEvent * event)
 {
     if (!receiver) {
-        Base::Console().Log("GUIApplication::notify: Unexpected null receiver, event type: %d\n",
+        printf("GUIApplication::notify: Unexpected null receiver, event type: %d\n",
             (int)event->type());
         return false;
     }
@@ -90,21 +90,21 @@ bool GUIApplication::notify (QObject * receiver, QEvent * event)
         else
             return QApplication::notify(receiver, event);
     }
-    catch (const Base::SystemExitException &e) {
-        caughtException.reset(new Base::SystemExitException(e));
-        qApp->exit(e.getExitCode());
-        return true;
-    }
-    catch (const Base::Exception& e) {
-        Base::Console().Error("Unhandled Base::Exception caught in GUIApplication::notify.\n"
-                              "The error message is: %s\n", e.what());
-    }
+    //catch (const Base::SystemExitException &e) {
+    //    caughtException.reset(new Base::SystemExitException(e));
+    //    qApp->exit(e.getExitCode());
+    //    return true;
+    //}
+    //catch (const Base::Exception& e) {
+    //    printf("Unhandled Base::Exception caught in GUIApplication::notify.\n"
+    //                          "The error message is: %s\n", e.what());
+    //}
     catch (const std::exception& e) {
-        Base::Console().Error("Unhandled std::exception caught in GUIApplication::notify.\n"
+        printf("Unhandled std::exception caught in GUIApplication::notify.\n"
                               "The error message is: %s\n", e.what());
     }
     catch (...) {
-        Base::Console().Error("Unhandled unknown exception caught in GUIApplication::notify.\n");
+        printf("Unhandled unknown exception caught in GUIApplication::notify.\n");
     }
 
     // Print some more information to the log file (if active) to ease bug fixing
@@ -127,11 +127,11 @@ bool GUIApplication::notify (QObject * receiver, QEvent * event)
                         dump << " is child of\n";
                 }
                 std::string str = dump.str();
-                Base::Console().Log("%s",str.c_str());
+                printf("%s",str.c_str());
             }
         }
         catch (...) {
-            Base::Console().Log("Invalid recipient and/or event in GUIApplication::notify\n");
+            printf("Invalid recipient and/or event in GUIApplication::notify\n");
         }
     }
 
@@ -219,10 +219,10 @@ public:
             }
         }
         if (server->isListening()) {
-            Base::Console().Log("Local server '%s' started\n", qPrintable(serverName));
+            printf("Local server '%s' started\n", qPrintable(serverName));
         }
         else {
-            Base::Console().Log("Local server '%s' failed to start\n", qPrintable(serverName));
+            printf("Local server '%s' failed to start\n", qPrintable(serverName));
         }
     }
 
@@ -290,7 +290,7 @@ void GUISingleApplication::receiveConnection()
             d_ptr->timer->stop();
             QByteArray message;
             in >> message;
-            Base::Console().Log("Received message: %s\n", message.constData());
+            printf("Received message: %s\n", message.constData());
             d_ptr->messages.push_back(message);
             d_ptr->timer->start(1000);
         }

@@ -30,7 +30,7 @@
 
 #include "DlgUnitsCalculatorImp.h"
 #include "ui_DlgUnitsCalculator.h"
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 
 using namespace Gui::Dialog;
 
@@ -108,7 +108,7 @@ void DlgUnitsCalculator::valueChanged(const Base::Quantity& quant)
             ui->pushButton_Copy->setEnabled(false);
         } else {
             double value = quant.getValue()/actUnit.getValue();
-            QString val = QLocale::system().toString(value, 'f', Base::UnitsApi::getDecimals());
+            QString val = QString::fromStdString(std::to_string(value));
             QString out = QString::fromLatin1("%1 %2").arg(val).arg(ui->UnitInput->text());
             ui->ValueOutput->setText(out);
             ui->pushButton_Copy->setEnabled(true);

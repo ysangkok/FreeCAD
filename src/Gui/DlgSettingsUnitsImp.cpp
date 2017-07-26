@@ -32,9 +32,9 @@
 #include "NavigationStyle.h"
 #include "PrefWidgets.h"
 #include <App/Application.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Parameter.h>
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 
 using namespace Gui::Dialog;
 using namespace Base;
@@ -68,7 +68,7 @@ void DlgSettingsUnitsImp::on_comboBox_ViewSystem_currentIndexChanged(int index)
     if (index < 0)
         return; // happens when clearing the combo box in retranslateUi()
 
-    UnitsApi::setSchema((UnitSystem)index);
+    //UnitsApi::setSchema((UnitSystem)index);
 
 }
 
@@ -80,7 +80,7 @@ void DlgSettingsUnitsImp::saveSettings()
         ("User parameter:BaseApp/Preferences/Units");
     hGrp->SetInt("UserSchema", ui->comboBox_ViewSystem->currentIndex());
     hGrp->SetInt("Decimals", ui->spinBoxDecimals->value());
-    Base::UnitsApi::setDecimals(ui->spinBoxDecimals->value());
+    //Base::UnitsApi::setDecimals(ui->spinBoxDecimals->value());
 }
 
 void DlgSettingsUnitsImp::loadSettings()
@@ -88,7 +88,7 @@ void DlgSettingsUnitsImp::loadSettings()
     ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath
         ("User parameter:BaseApp/Preferences/Units");
     ui->comboBox_ViewSystem->setCurrentIndex(hGrp->GetInt("UserSchema",0));
-    ui->spinBoxDecimals->setValue(hGrp->GetInt("Decimals",Base::UnitsApi::getDecimals()));
+    ui->spinBoxDecimals->setValue(hGrp->GetInt("Decimals",2));
 }
 
 /**

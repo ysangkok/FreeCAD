@@ -26,6 +26,7 @@
 
 #include "OriginGroupExtension.h"
 #include "PropertyLinks.h"
+#include "GeoFeature.h"
 
 #define AppExport
 

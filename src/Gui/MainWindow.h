@@ -25,7 +25,7 @@
 #define GUI_MAINWINDOW_H
 
 #include "Window.h"
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <string>
 #include <vector>
 
@@ -292,7 +292,7 @@ inline MainWindow* getMainWindow()
  * @see ConsoleObserver
  * @author Werner Mayer
  */
-class StatusBarObserver: public WindowParameter, public Base::ConsoleObserver
+class StatusBarObserver: public WindowParameter
 {
 public:
     StatusBarObserver();

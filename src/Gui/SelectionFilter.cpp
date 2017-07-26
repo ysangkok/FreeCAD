@@ -30,10 +30,10 @@
 
 #include <App/Application.h>
 #include <App/Document.h>
-#include <App/DocumentObjectPy.h>
+//#include <App/DocumentObjectPy.h>
 #include <App/DocumentObject.h>
-#include <Base/Interpreter.h>
-#include <CXX/Objects.hxx>
+//#include <Base/Interpreter.h>
+//#include <CXX/Objects.hxx>
 
 #include "Selection.h"
 #include "SelectionFilter.h"
@@ -74,60 +74,6 @@ bool SelectionFilterGate::allow(App::Document* /*pDoc*/, App::DocumentObject*pOb
 
 // ----------------------------------------------------------------------------
 
-SelectionGatePython::SelectionGatePython(const Py::Object& obj)
-  : gate(obj)
-{
-}
-
-SelectionGatePython::~SelectionGatePython()
-{
-}
-
-bool SelectionGatePython::allow(App::Document* doc, App::DocumentObject* obj, const char* sub)
-{
-    Base::PyGILStateLocker lock;
-    try {
-        if (this->gate.hasAttr(std::string("allow"))) {
-            Py::Callable method(this->gate.getAttr(std::string("allow")));
-            Py::Object pyDoc = Py::asObject(doc->getPyObject());
-            Py::Object pyObj = Py::asObject(obj->getPyObject());
-            Py::String pySub;
-            if (sub)
-                pySub = std::string(sub);
-            Py::Tuple args(3);
-            args.setItem(0, pyDoc);
-            args.setItem(1, pyObj);
-            args.setItem(2, pySub);
-            Py::Boolean ok(method.apply(args));
-            return (bool)ok;
-        }
-    }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        e.ReportException();
-    }
-
-    return true;
-}
-
-// ----------------------------------------------------------------------------
-
-SelectionFilterGatePython::SelectionFilterGatePython(SelectionFilterPy* obj) : filter(obj)
-{
-    Base::PyGILStateLocker lock;
-    Py_INCREF(filter);
-}
-
-SelectionFilterGatePython::~SelectionFilterGatePython()
-{
-    Base::PyGILStateLocker lock;
-    Py_DECREF(filter);
-}
-
-bool SelectionFilterGatePython::allow(App::Document*, App::DocumentObject* obj, const char* sub)
-{
-    return filter->filter.test(obj, sub);
-}
 
 // ----------------------------------------------------------------------------
 
@@ -235,111 +181,6 @@ void SelectionFilter::addError(const char* e)
 
 // ----------------------------------------------------------------------------
 
-void SelectionFilterPy::init_type()
-{
-    behaviors().name("SelectionFilter");
-    behaviors().doc("Filter for certain selection\n"
-        "Example strings are:\n"
-        "\"SELECT Part::Feature SUBELEMENT Edge\",\n"
-        "\"SELECT Part::Feature\", \n"
-        "\"SELECT Part::Feature COUNT 1..5\"\n");
-    // you must have overwritten the virtual functions
-    behaviors().supportRepr();
-    behaviors().supportGetattr();
-    behaviors().supportSetattr();
-    behaviors().set_tp_new(PyMake);
-    add_varargs_method("match",&SelectionFilterPy::match,
-        "Check if the current selection matches the filter");
-    add_varargs_method("result",&SelectionFilterPy::result,
-        "If match() returns True then with result() you get a list of the matching objects");
-    add_varargs_method("test",&SelectionFilterPy::test,
-        "test(Feature, SubName='')\n"
-        "Test if a given object is described in the filter.\n"
-        "If SubName is not empty the sub-element gets also tested.");
-    add_varargs_method("setFilter",&SelectionFilterPy::setFilter,
-        "Set a new selection filter");
-}
-
-PyObject *SelectionFilterPy::PyMake(struct _typeobject *, PyObject *args, PyObject *)
-{
-    char* str;
-    if (!PyArg_ParseTuple(args, "s",&str))
-        return 0;
-    try {
-        SelectionFilter filter(str);
-        return new SelectionFilterPy(filter.getFilter());
-    }
-    catch (const Base::Exception& e) {
-        PyErr_SetString(PyExc_SyntaxError, e.what());
-        return 0;
-    }
-}
-
-SelectionFilterPy::SelectionFilterPy(const std::string& s)
-  : filter(s)
-{
-}
-
-SelectionFilterPy::~SelectionFilterPy()
-{
-}
-
-Py::Object SelectionFilterPy::repr()
-{
-    std::string s;
-    std::ostringstream s_out;
-    s_out << "SelectionFilter";
-    return Py::String(s_out.str());
-}
-
-Py::Object SelectionFilterPy::match(const Py::Tuple& args)
-{
-    if (!PyArg_ParseTuple(args.ptr(), ""))
-        throw Py::Exception();
-    return Py::Boolean(filter.match());
-}
-
-Py::Object SelectionFilterPy::test(const Py::Tuple& args)
-{
-    PyObject * pcObj;
-    char* text=0;
-    if (!PyArg_ParseTuple(args.ptr(), "O!|s",&(App::DocumentObjectPy::Type),&pcObj,&text))
-        throw Py::Exception();
-
-    App::DocumentObjectPy* docObj = static_cast<App::DocumentObjectPy*>(pcObj);
-
-    return Py::Boolean(filter.test(docObj->getDocumentObjectPtr(),text));
-}
-
-Py::Object SelectionFilterPy::result(const Py::Tuple&)
-{
-    Py::List list;
-    std::vector<std::vector<SelectionObject> >::iterator it;
-    for (it = filter.Result.begin(); it != filter.Result.end(); ++it) {
-        std::vector<SelectionObject>::iterator jt;
-        Py::Tuple tuple(it->size());
-        int index=0;
-        for (jt = it->begin(); jt != it->end(); ++jt) {
-            tuple[index++] = Py::asObject(jt->getPyObject());
-        }
-        list.append(tuple);
-    }
-    return list;
-}
-
-Py::Object SelectionFilterPy::setFilter(const Py::Tuple& args)
-{
-    char* text=0;
-    if (!PyArg_ParseTuple(args.ptr(), "s",&text))
-        throw Py::Exception();
-    try {
-        filter.setFilter(text);
-        return Py::None();
-    }
-    catch (const Base::Exception& e) {
-        throw Py::Exception(PyExc_SyntaxError, e.what());
-    }
-}
 
 // === Parser & Scanner stuff ===============================================
 

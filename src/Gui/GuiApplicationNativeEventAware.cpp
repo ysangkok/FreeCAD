@@ -29,7 +29,7 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <FCConfig.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include "GuiApplicationNativeEventAware.h"
 #include "SpaceballEvent.h"
 #include "Application.h"
@@ -59,9 +59,9 @@ Gui::GUIApplicationNativeEventAware::~GUIApplicationNativeEventAware()
 #ifdef Q_WS_X11
 #ifdef SPNAV_FOUND
     if (spnav_close())
-        Base::Console().Log("Couldn't disconnect from spacenav daemon\n");
+        printf("Couldn't disconnect from spacenav daemon\n");
     else
-        Base::Console().Log("Disconnected from spacenav daemon\n");
+        printf("Disconnected from spacenav daemon\n");
 #endif
 #endif
 
@@ -69,7 +69,7 @@ Gui::GUIApplicationNativeEventAware::~GUIApplicationNativeEventAware()
 #ifdef Q_OS_WIN
     if (gMouseInput == this) {
         gMouseInput = 0;
-        Base::Console().Log("3Dconnexion device detached.\n");
+        printf("3Dconnexion device detached.\n");
     }
 #endif
 //mac
@@ -80,7 +80,7 @@ Gui::GUIApplicationNativeEventAware::~GUIApplicationNativeEventAware()
         if (tdxClientID)
             UnregisterConnexionClient(tdxClientID);
         CleanupConnexionHandlers();
-        Base::Console().Log("Disconnected from 3Dconnexion driver\n");
+        printf("Disconnected from 3Dconnexion driver\n");
     }
 #endif
 #endif
@@ -93,10 +93,10 @@ void Gui::GUIApplicationNativeEventAware::initSpaceball(QMainWindow *window)
 #ifdef Q_WS_X11
 #ifdef SPNAV_FOUND
     if (spnav_x11_open(QX11Info::display(), window->winId()) == -1)
-        Base::Console().Log("Couldn't connect to spacenav daemon\n");
+        printf("Couldn't connect to spacenav daemon\n");
     else
     {
-        Base::Console().Log("Connected to spacenav daemon\n");
+        printf("Connected to spacenav daemon\n");
         spaceballPresent = true;
     }
 #endif
@@ -116,12 +116,12 @@ void Gui::GUIApplicationNativeEventAware::initSpaceball(QMainWindow *window)
 #else
             qApp->setEventFilter(Gui::GUIApplicationNativeEventAware::RawInputEventFilter);
 #endif
-            Base::Console().Log("3Dconnexion device initialized.\n");
+            printf("3Dconnexion device initialized.\n");
         } else {
-            Base::Console().Log("3Dconnexion device is attached, but not initialized.\n");
+            printf("3Dconnexion device is attached, but not initialized.\n");
         }
     } else {
-        Base::Console().Log("3Dconnexion device not attached.\n");
+        printf("3Dconnexion device not attached.\n");
     }
 #endif // #ifdef Q_OS_WIN
 //mac
@@ -130,7 +130,7 @@ void Gui::GUIApplicationNativeEventAware::initSpaceball(QMainWindow *window)
     /* make sure the framework is installed */
     if (InstallConnexionHandlers == NULL)
     {
-        Base::Console().Log("3Dconnexion framework not found!\n");
+        printf("3Dconnexion framework not found!\n");
         return;
     }
     /* install 3dx message handler in order to receive driver events */
@@ -138,7 +138,7 @@ void Gui::GUIApplicationNativeEventAware::initSpaceball(QMainWindow *window)
     assert(err == 0);
     if (err)
     {
-        Base::Console().Log("Error installing 3Dconnexion handler\n");
+        printf("Error installing 3Dconnexion handler\n");
         return;
     }
     /* register our app with the driver */
@@ -151,11 +151,11 @@ void Gui::GUIApplicationNativeEventAware::initSpaceball(QMainWindow *window)
                                            kConnexionMaskAll );
     if (tdxClientID == 0)
     {
-        Base::Console().Log("Couldn't connect to 3Dconnexion driver\n");
+        printf("Couldn't connect to 3Dconnexion driver\n");
         return;
     }
     
-    Base::Console().Log("3Dconnexion driver initialized. Client ID: %d\n", tdxClientID);
+    printf("3Dconnexion driver initialized. Client ID: %d\n", tdxClientID);
     spaceballPresent = true;
 #endif
 #endif // _USE_3DCONNEXION_SDK
@@ -503,7 +503,7 @@ bool Gui::GUIApplicationNativeEventAware::x11EventFilter(XEvent *event)
         return true;
     }
 
-    Base::Console().Log("Unknown spaceball event\n");
+    printf("Unknown spaceball event\n");
     return true;
 #else
     Q_UNUSED(event); 

@@ -38,7 +38,7 @@ class Workbench;
  * @note To create workbenches you should use the API of WorkbenchManager.
  * @author Werner Mayer
  */
-class GuiExport WorkbenchFactoryInst : public Base::Factory
+class GuiExport WorkbenchFactoryInst
 {
 public:
   /// The one and only instance.
@@ -73,7 +73,7 @@ inline GuiExport WorkbenchFactoryInst& WorkbenchFactory()
  * @author Werner Mayer
  */
 template <class CLASS>
-class WorkbenchProducer: public Base::AbstractProducer
+class WorkbenchProducer
 {
 public:
   WorkbenchProducer ()

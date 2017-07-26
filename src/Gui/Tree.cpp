@@ -40,7 +40,7 @@
 # include <QHeaderView>
 #endif
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <App/Document.h>
 #include <App/DocumentObject.h>
 #include <App/DocumentObjectGroup.h>
@@ -178,7 +178,7 @@ void TreeWidget::contextMenuEvent (QContextMenuEvent * e)
             contextMenu.addSeparator();
         DocumentItem* docitem = static_cast<DocumentItem*>(this->contextItem);
         App::Document* doc = docitem->document()->getDocument();
-        this->skipRecomputeAction->setChecked(doc->testStatus(App::Document::SkipRecompute));
+        this->skipRecomputeAction->setChecked(doc->testStatus(App::Status::SkipRecompute));
         contextMenu.addAction(this->skipRecomputeAction);
         contextMenu.addAction(this->markRecomputeAction);
         contextMenu.addAction(this->createGroupAction);
@@ -334,7 +334,7 @@ void TreeWidget::onSkipRecompute(bool on)
     if (this->contextItem && this->contextItem->type() == DocumentType) {
         DocumentItem* docitem = static_cast<DocumentItem*>(this->contextItem);
         App::Document* doc = docitem->document()->getDocument();
-        doc->setStatus(App::Document::SkipRecompute, on);
+        doc->setStatus(App::Status::SkipRecompute, on);
     }
 }
 
@@ -776,7 +776,7 @@ void TreeWidget::onItemExpanded(QTreeWidgetItem * item)
         obj->setExpandedStatus(true);
         auto it = DocumentMap.find(obj->object()->getDocument());
         if(it==DocumentMap.end()) 
-            Base::Console().Warning("DocumentItem::onItemExpanded: cannot find object document\n");
+            printf("DocumentItem::onItemExpanded: cannot find object document\n");
         else
             it->second->populateItem(obj);
     }
@@ -1026,7 +1026,7 @@ bool DocumentItem::createNewItem(const Gui::ViewProviderDocumentObject& obj,
         if(!items) {
             items.reset(new DocumentObjectItems);
         }else if(items->size() && parent==NULL) {
-            Base::Console().Warning("DocumentItem::slotNewObject: Cannot add view provider twice.\n");
+            printf("DocumentItem::slotNewObject: Cannot add view provider twice.\n");
             return false;
         }
         ptrs = items;
@@ -1162,7 +1162,7 @@ void DocumentItem::populateItem(DocumentObjectItem *item, bool refresh) {
                 --i;
         }else {
             if(item->isChildOfItem(childItem)) {
-                Base::Console().Error("Gui::DocumentItem::populateItem(): Cyclic dependency in %s and %s\n",
+                printf("Gui::DocumentItem::populateItem(): Cyclic dependency in %s and %s\n",
                         item->object()->getObject()->Label.getValue(),
                         childItem->object()->getObject()->Label.getValue());
                 --i;

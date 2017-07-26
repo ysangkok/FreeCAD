@@ -35,7 +35,7 @@
 #include "DockWindowManager.h"
 #include "MainWindow.h"
 #include "PrefWidgets.h"
-#include "PythonConsole.h"
+//#include "PythonConsole.h"
 #include "Language/Translator.h"
 
 using namespace Gui::Dialog;
@@ -130,15 +130,15 @@ void DlgGeneralImp::saveSettings()
     PythonWordWrap->onSave();
   
     QWidget* pc = DockWindowManager::instance()->getDockWindow("Python console");
-    PythonConsole *pcPython = static_cast<PythonConsole*>(pc);
+    //PythonConsole *pcPython = static_cast<PythonConsole*>(pc);
     bool pythonWordWrap = App::GetApplication().GetUserParameter().
         GetGroup("BaseApp")->GetGroup("Preferences")->GetGroup("General")->GetBool("PythonWordWrap", true);
 
-    if (pythonWordWrap) {
-      pcPython->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    } else {
-      pcPython->setWordWrapMode(QTextOption::NoWrap);
-    }
+    //if (pythonWordWrap) {
+    //  pcPython->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    //} else {
+    //  pcPython->setWordWrapMode(QTextOption::NoWrap);
+    //}
 
     // set new user defined style
     //(void)QApplication::setStyle(WindowStyle->currentText());

@@ -40,8 +40,8 @@
 #include <iostream>
 
 // FreeCAD Base header
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
+//#include <Base/Console.h>
+//#include <Base/Interpreter.h>
 #include <Base/Parameter.h>
 #include <Base/Exception.h>
 #include <Base/Factory.h>
@@ -50,7 +50,7 @@
 #include <App/Application.h>
 
 
-using Base::Console;
+//using Base::Console;
 using App::Application;
 
 const char sBanner[] = "(c) Juergen Riegel, Werner Mayer, Yorik van Havre 2001-2017\n"\
@@ -98,16 +98,16 @@ int main( int argc, char ** argv )
         std::string appName = App::Application::Config()["ExeName"];
         std::stringstream msg;
         msg << "While initializing " << appName << " the  following exception occurred: '" << e.what() << "'\n\n";
-        msg << "Python is searching for its runtime files in the following directories:\n" << Py_GetPath() << "\n\n";
-        msg << "Python version information:\n" << Py_GetVersion() << "\n";
-        const char* pythonhome = getenv("PYTHONHOME");
-        if ( pythonhome ) {
-            msg << "\nThe environment variable PYTHONHOME is set to '" << pythonhome << "'.";
-            msg << "\nSetting this environment variable might cause Python to fail. Please contact your administrator to unset it on your system.\n\n";
-        }
-        else {
-            msg << "\nPlease contact the application's support team for more information.\n\n";
-        }
+        //msg << "Python is searching for its runtime files in the following directories:\n" << Py_GetPath() << "\n\n";
+        //msg << "Python version information:\n" << Py_GetVersion() << "\n";
+        //const char* pythonhome = getenv("PYTHONHOME");
+        //if ( pythonhome ) {
+        //    msg << "\nThe environment variable PYTHONHOME is set to '" << pythonhome << "'.";
+        //    msg << "\nSetting this environment variable might cause Python to fail. Please contact your administrator to unset it on your system.\n\n";
+        //}
+        //else {
+        //    msg << "\nPlease contact the application's support team for more information.\n\n";
+        //}
 
         printf("Initialization of %s failed:\n%s", appName.c_str(), msg.str().c_str());
         exit(100);
@@ -125,20 +125,20 @@ int main( int argc, char ** argv )
     try {
         Application::runApplication();
     }
-    catch (const Base::SystemExitException &e) {
-        exit(e.getExitCode());
-    }
-    catch (const Base::Exception& e) {
-        e.ReportException();
-        exit(1);
-    }
+    //catch (const ::Base::SystemExitException &e) {
+    //    exit(e.getExitCode());
+    //}
+    //catch (const ::Base::Exception& e) {
+    //    e.ReportException();
+    //    exit(1);
+    //}
     catch (...) {
-        Console().Error("Application unexpectedly terminated\n");
+        //Console().Error("Application unexpectedly terminated\n");
         exit(1);
     }
 
     // Destruction phase ===========================================================
-    Console().Log("FreeCAD terminating...\n");
+    //Console().Log("FreeCAD terminating...\n");
 
     try {
         // close open documents
@@ -150,7 +150,7 @@ int main( int argc, char ** argv )
     // cleans up
     Application::destruct();
 
-    Console().Log("FreeCAD completely terminated\n");
+    //Console().Log("FreeCAD completely terminated\n");
 
     return 0;
 }

@@ -38,7 +38,7 @@
 # include <Inventor/nodes/SoSeparator.h>
 #endif
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/Matrix.h>
 #include <Base/Reader.h>
@@ -54,7 +54,7 @@
 #include "MainWindow.h"
 #include "Tree.h"
 #include "Document.h"
-#include "DocumentPy.h"
+//#include "DocumentPy.h"
 #include "Command.h"
 #include "Control.h"
 #include "FileDialog.h"
@@ -165,7 +165,7 @@ Document::Document(App::Document* pcDocument,Application * app)
     // pointer to the python class
     // NOTE: As this Python object doesn't get returned to the interpreter we
     // mustn't increment it (Werner Jan-12-2006)
-    _pcDocPy = new Gui::DocumentPy(this);
+    //_pcDocPy = new Gui::DocumentPy(this);
 
     if (App::GetApplication().GetParameterGroupByPath
         ("User parameter:BaseApp/Preferences/Document")->GetBool("UsingUndo",true)){
@@ -210,8 +210,8 @@ Document::~Document()
         delete it2->second;
 
     // remove the reference from the object
-    _pcDocPy->setInvalid();
-    _pcDocPy->DecRef();
+    //_pcDocPy->setInvalid();
+    //_pcDocPy->DecRef();
     delete d;
 }
 
@@ -414,7 +414,7 @@ void Document::slotNewObject(const App::DocumentObject& Obj)
         std::string cName = Obj.getViewProviderName();
         if (cName.empty()) {
             // handle document object with no view provider specified
-            Base::Console().Log("%s has no view provider specified\n", Obj.getTypeId().getName());
+            printf("%s has no view provider specified\n", Obj.getTypeId().getName());
             return;
         }
 
@@ -434,19 +434,19 @@ void Document::slotNewObject(const App::DocumentObject& Obj)
                 pcProvider->setActiveMode();
             }
             catch(const Base::MemoryException& e){
-                Base::Console().Error("Memory exception in '%s' thrown: %s\n",Obj.getNameInDocument(),e.what());
+                printf("Memory exception in '%s' thrown: %s\n",Obj.getNameInDocument(),e.what());
             }
             catch(Base::Exception &e){
                 e.ReportException();
             }
 #ifndef FC_DEBUG
             catch(...){
-                Base::Console().Error("App::Document::_RecomputeFeature(): Unknown exception in Feature \"%s\" thrown\n",Obj.getNameInDocument());
+                printf("App::Document::_RecomputeFeature(): Unknown exception in Feature \"%s\" thrown\n",Obj.getNameInDocument());
             }
 #endif
         }
         else {
-            Base::Console().Warning("Gui::Document::slotNewObject() no view provider for the object %s found\n",cName.c_str());
+            printf("Gui::Document::slotNewObject() no view provider for the object %s found\n",cName.c_str());
         }
     }
 
@@ -504,16 +504,16 @@ void Document::slotChangedObject(const App::DocumentObject& Obj, const App::Prop
             viewProvider->update(&Prop);
         }
         catch(const Base::MemoryException& e) {
-            Base::Console().Error("Memory exception in '%s' thrown: %s\n",Obj.getNameInDocument(),e.what());
+            printf("Memory exception in '%s' thrown: %s\n",Obj.getNameInDocument(),e.what());
         }
         catch(Base::Exception& e){
             e.ReportException();
         }
         catch(const std::exception& e){
-            Base::Console().Error("C++ exception in '%s' thrown: %s\n",Obj.getNameInDocument(),e.what());
+            printf("C++ exception in '%s' thrown: %s\n",Obj.getNameInDocument(),e.what());
         }
         catch (...) {
-            Base::Console().Error("Cannot update representation for '%s'.\n", Obj.getNameInDocument());
+            printf("Cannot update representation for '%s'.\n", Obj.getNameInDocument());
         }
 
         handleChildren3D(viewProvider);
@@ -827,7 +827,7 @@ void Document::RestoreDocFile(Base::Reader &reader)
                 }
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
             }
         }
     }
@@ -1160,7 +1160,7 @@ void Document::detachView(Gui::BaseView* pcView, bool bPassiv)
 void Document::onUpdate(void)
 {
 #ifdef FC_LOGUPDATECHAIN
-    Base::Console().Log("Acti: Gui::Document::onUpdate()");
+    printf("Acti: Gui::Document::onUpdate()");
 #endif
 
     std::list<Gui::BaseView*>::iterator it;
@@ -1177,7 +1177,7 @@ void Document::onUpdate(void)
 void Document::onRelabel(void)
 {
 #ifdef FC_LOGUPDATECHAIN
-    Base::Console().Log("Acti: Gui::Document::onRelabel()");
+    printf("Acti: Gui::Document::onRelabel()");
 #endif
 
     std::list<Gui::BaseView*>::iterator it;
@@ -1464,11 +1464,11 @@ void Document::redo(int iSteps)
     }
 }
 
-PyObject* Document::getPyObject(void)
-{
-    _pcDocPy->IncRef();
-    return _pcDocPy;
-}
+//PyObject* Document::getPyObject(void)
+//{
+//    _pcDocPy->IncRef();
+//    return _pcDocPy;
+//}
 
 void Document::handleChildren3D(ViewProvider* viewProvider)
 {

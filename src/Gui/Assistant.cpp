@@ -33,7 +33,6 @@
 #endif
 
 #include "Assistant.h"
-#include <Base/Console.h>
 #include <App/Application.h>
 
 using namespace Gui;
@@ -109,7 +108,7 @@ bool Assistant::startAssistant()
 
         static bool first = true;
         if (first) {
-            Base::Console().Log("Help file at %s\n", (const char*)qhc.toUtf8());
+            printf("Help file at %s\n", (const char*)qhc.toUtf8());
             first = false;
         }
 
@@ -133,13 +132,13 @@ bool Assistant::startAssistant()
 void Assistant::readyReadStandardOutput()
 {
     QByteArray data = proc->readAllStandardOutput();
-    Base::Console().Log("Help view: %s\n", data.constData());
+    printf("Help view: %s\n", data.constData());
 }
 
 void Assistant::readyReadStandardError()
 {
     QByteArray data = proc->readAllStandardError();
-    Base::Console().Log("Help view: %s\n", data.constData());
+    printf("Help view: %s\n", data.constData());
 }
 
 #include "moc_Assistant.cpp"

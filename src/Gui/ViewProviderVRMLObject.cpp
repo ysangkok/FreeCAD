@@ -48,7 +48,6 @@
 #include "SoFCSelection.h"
 #include <App/VRMLObject.h>
 #include <App/Document.h>
-#include <Base/Console.h>
 #include <Base/FileInfo.h>
 #include <Base/Stream.h>
 #include <sstream>
@@ -233,7 +232,7 @@ void ViewProviderVRMLObject::updateData(const App::Property* prop)
 
             if (node) {
                 if (!checkRecursion(node)) {
-                    Base::Console().Error("The VRML file causes an infinite recursion!\n");
+                    printf("The VRML file causes an infinite recursion!\n");
                     return;
                 }
                 pcVRML->addChild(node);

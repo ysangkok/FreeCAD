@@ -41,7 +41,7 @@
 #endif
 
 #include <Base/Exception.h>
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 
 #include "Widgets.h"
 #include "Application.h"
@@ -819,22 +819,6 @@ void UrlLabel::leaveEvent ( QEvent * )
 
 void UrlLabel::mouseReleaseEvent (QMouseEvent *)
 {
-    // The webbrowser Python module allows to start the system browser in an OS-independent way
-    Base::PyGILStateLocker lock;
-    PyObject* module = PyImport_ImportModule("webbrowser");
-    if (module) {
-        // get the methods dictionary and search for the 'open' method
-        PyObject* dict = PyModule_GetDict(module);
-        PyObject* func = PyDict_GetItemString(dict, "open");
-        if (func) {
-            PyObject* args = Py_BuildValue("(s)", (const char*)this->_url.toLatin1());
-            PyObject* result = PyEval_CallObject(func,args);
-            // decrement the args and module reference
-            Py_XDECREF(result);
-            Py_DECREF(args);
-            Py_DECREF(module);
-        }
-    }
 }
 
 QString UrlLabel::url() const

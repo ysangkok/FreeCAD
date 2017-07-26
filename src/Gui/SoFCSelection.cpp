@@ -48,7 +48,7 @@
 #include "View3DInventor.h"
 #include "View3DInventorViewer.h"
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include "SoFCSelection.h"
 #include "MainWindow.h"
 #include "Selection.h"

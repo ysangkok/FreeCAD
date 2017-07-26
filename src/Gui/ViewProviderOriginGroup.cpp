@@ -28,7 +28,6 @@
 # include <boost/bind.hpp>
 #endif
 
-#include <Base/Console.h>
 #include <App/OriginGroupExtension.h>
 #include <App/Origin.h>
 

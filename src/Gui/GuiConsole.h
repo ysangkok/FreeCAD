@@ -25,7 +25,7 @@
 #define GUI_GUICONSOLE_H
 
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 
 namespace Gui {
 
@@ -40,7 +40,7 @@ namespace Gui {
  *  @see FCConsole
  *  \author Jürgen Riegel
  */
-class GuiExport GUIConsole :public Base::ConsoleObserver
+class GuiExport GUIConsole
 {
 public:
   /// Constructor

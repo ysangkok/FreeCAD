@@ -80,7 +80,7 @@ public:
     /// Get the GUI document to this ViewProvider object
     Gui::Document* getDocument() const;
     /// Get the python wrapper for that ViewProvider
-    PyObject* getPyObject();
+    //PyObject* getPyObject();
 
     /** @name Restoring view provider from document load */
     //@{

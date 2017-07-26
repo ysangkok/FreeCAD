@@ -20,7 +20,6 @@
 
 #include "PreCompiled.h"
 #include "SoQTQuarterAdaptor.h"
-#include <Base/Console.h>
 #include <Inventor/nodes/SoPerspectiveCamera.h>
 #include <Inventor/nodes/SoOrthographicCamera.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -199,7 +198,7 @@ void SIM::Coin3D::Quarter::SoQTQuarterAdaptor::setCameraType(SoType type)
 {
     if(!getSoRenderManager()->getCamera()->isOfType(SoPerspectiveCamera::getClassTypeId()) &&
        !getSoRenderManager()->getCamera()->isOfType(SoOrthographicCamera::getClassTypeId())) {
-        Base::Console().Warning("Quarter::setCameraType",
+        printf("Quarter::setCameraType",
                                 "Only SoPerspectiveCamera and SoOrthographicCamera is supported.");
         return;
     }

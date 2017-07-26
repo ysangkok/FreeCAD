@@ -50,7 +50,7 @@
 #include "View3DInventor.h"
 #include "View3DInventorViewer.h"
 
-#include "Base/Console.h"
+//#include "Base/Console.h"
 
 #include <App/Origin.h>
 
@@ -137,7 +137,7 @@ void ViewProviderOrigin::setTemporaryVisibility(bool axis, bool plane) {
             }
         }
     } catch (const Base::Exception &ex) {
-        Base::Console().Error ("%s\n", ex.what() );
+        printf("%s\n", ex.what() );
     }
 
     // Remember & Set self visibility
@@ -194,7 +194,7 @@ void ViewProviderOrigin::onChanged(const App::Property* prop) {
             if (vpLineZ) { vpLineZ->Size.setValue ( szZ ); }
 
         } catch (const Base::Exception &ex) {
-            Base::Console().Error ("%s\n", ex.what() );
+            printf("%s\n", ex.what() );
         }
     }
 

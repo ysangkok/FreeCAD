@@ -63,7 +63,6 @@ protected:
     SoGroup *pcGroupChildren;
 };
 
-typedef ViewProviderExtensionPythonT<Gui::ViewProviderGeoFeatureGroupExtension> ViewProviderGeoFeatureGroupExtensionPython;
 
 } //namespace Gui
 

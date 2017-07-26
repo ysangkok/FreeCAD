@@ -31,7 +31,7 @@
 #include "DlgMacroExecuteImp.h"
 #include "DlgMacroRecordImp.h"
 #include "Macro.h"
-#include "PythonDebugger.h"
+//#include "PythonDebugger.h"
 
 using namespace Gui;
 
@@ -169,11 +169,6 @@ StdCmdMacroStartDebug::StdCmdMacroStartDebug()
 void StdCmdMacroStartDebug::activated(int iMsg)
 {
     Q_UNUSED(iMsg); 
-    PythonDebugger* dbg = Application::Instance->macroManager()->debugger();
-    if (!dbg->isRunning())
-        doCommand(Command::Gui,"Gui.SendMsgToActiveView(\"StartDebug\")");
-    else
-        dbg->stepRun();
 }
 
 bool StdCmdMacroStartDebug::isActive(void)
@@ -199,13 +194,11 @@ StdCmdMacroStopDebug::StdCmdMacroStopDebug()
 void StdCmdMacroStopDebug::activated(int iMsg)
 {
     Q_UNUSED(iMsg); 
-    Application::Instance->macroManager()->debugger()->tryStop();
 }
 
 bool StdCmdMacroStopDebug::isActive(void)
 {
-    static PythonDebugger* dbg = Application::Instance->macroManager()->debugger();
-    return dbg->isRunning();
+    return false;
 }
 
 DEF_STD_CMD_A(StdCmdMacroStepOver);
@@ -226,13 +219,11 @@ StdCmdMacroStepOver::StdCmdMacroStepOver()
 void StdCmdMacroStepOver::activated(int iMsg)
 {
     Q_UNUSED(iMsg); 
-    Application::Instance->macroManager()->debugger()->stepOver();
 }
 
 bool StdCmdMacroStepOver::isActive(void)
 {
-    static PythonDebugger* dbg = Application::Instance->macroManager()->debugger();
-    return dbg->isRunning();
+    return false;
 }
 
 DEF_STD_CMD_A(StdCmdMacroStepInto);
@@ -253,13 +244,11 @@ StdCmdMacroStepInto::StdCmdMacroStepInto()
 void StdCmdMacroStepInto::activated(int iMsg)
 {
     Q_UNUSED(iMsg); 
-    Application::Instance->macroManager()->debugger()->stepInto();
 }
 
 bool StdCmdMacroStepInto::isActive(void)
 {
-    static PythonDebugger* dbg = Application::Instance->macroManager()->debugger();
-    return dbg->isRunning();
+    return false;
 }
 
 DEF_STD_CMD_A(StdCmdToggleBreakpoint);

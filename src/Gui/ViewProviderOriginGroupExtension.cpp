@@ -38,7 +38,6 @@
 #include <App/OriginGroupExtension.h>
 #include <App/Document.h>
 #include <App/Origin.h>
-#include <Base/Console.h>
 #include <boost/bind.hpp>
 #include <Inventor/actions/SoGetBoundingBoxAction.h>
 #include <Inventor/nodes/SoSeparator.h>
@@ -154,8 +153,8 @@ void ViewProviderOriginGroupExtension::updateOriginSize () {
         vpOrigin = static_cast <Gui::ViewProviderOrigin *> ( vp );
     } catch (const Base::Exception &ex) {
         // if is restoring it is normal that the origin property is null until after restored, so no need to report this.
-        if(!getExtendedViewProvider()->getDocument()->getDocument()->testStatus(App::Document::Restoring))
-            Base::Console().Error ("%s\n", ex.what() );
+        if(!getExtendedViewProvider()->getDocument()->getDocument()->testStatus(App::Status::Restoring))
+            printf("%s\n", ex.what() );
         return;
     }
 
@@ -197,11 +196,4 @@ void ViewProviderOriginGroupExtension::updateOriginSize () {
     }
 
     vpOrigin->Size.setValue ( size * 1.3 );
-}
-
-namespace Gui {
-EXTENSION_PROPERTY_SOURCE_TEMPLATE(Gui::ViewProviderOriginGroupExtensionPython, Gui::ViewProviderOriginGroupExtension)
-
-// explicit template instantiation
-template class GuiExport ViewProviderExtensionPythonT<ViewProviderOriginGroupExtension>;
 }

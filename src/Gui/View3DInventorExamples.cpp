@@ -41,7 +41,6 @@
 # include <cstring>
 #endif
 
-#include "../Base/Console.h"
 
 
 #include "View3DInventorExamples.h"

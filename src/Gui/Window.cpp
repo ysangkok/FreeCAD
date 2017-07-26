@@ -26,7 +26,6 @@
 #include <qglobal.h>
 #include "Window.h"
 
-#include <Base/Console.h>
 #include <App/Application.h>
 
 using namespace Gui;
@@ -75,7 +74,7 @@ void WindowParameter::OnChange(Base::Subject<const char*> &rCaller, const char *
 {
   Q_UNUSED(rCaller);
   Q_UNUSED(sReason);
-  Base::Console().Log("Parameter has changed and window (%s) has not overridden this function!",_handle->GetGroupName());
+  printf("Parameter has changed and window (%s) has not overridden this function!",_handle->GetGroupName());
 }
 
 ParameterGrp::handle  WindowParameter::getWindowParameter(void)

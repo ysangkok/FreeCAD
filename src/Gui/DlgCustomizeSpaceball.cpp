@@ -35,7 +35,7 @@
 #include <QTableView>
 #endif
 
-#include "Base/Console.h"
+//#include "Base/Console.h"
 #include "Application.h"
 #include "GuiApplicationNativeEventAware.h"
 #include "SpaceballEvent.h"
@@ -92,7 +92,7 @@ QVariant ButtonModel::data (const QModelIndex &index, int role) const
     GroupVector groupVector = spaceballButtonGroup()->GetGroups();
     if (index.row() >= (int)groupVector.size())
     {
-        Base::Console().Log("index error in ButtonModel::data\n");
+        printf("index error in ButtonModel::data\n");
         return QVariant();
     }
     if (role == Qt::DisplayRole)

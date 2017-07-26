@@ -244,7 +244,7 @@ public:
     bool canClose();
     bool isLastView(void);
 
-    virtual PyObject *getPyObject(void);
+    //virtual PyObject *getPyObject(void);
 
 protected:
     // pointer to the python class

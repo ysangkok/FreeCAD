@@ -50,7 +50,6 @@
 #  include <Inventor/nodes/SoBaseColor.h>
 #endif
 
-#include <Base/Console.h>
 
 #include "SoFCSelectionAction.h"
 #include "SoFCSelection.h"

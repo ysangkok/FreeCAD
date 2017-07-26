@@ -40,13 +40,12 @@
 #include "SelectionFilter.h"
 #include "View3DInventor.h"
 #include <Base/Exception.h>
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/DocumentObject.h>
-#include <App/DocumentObjectPy.h>
-#include <Gui/SelectionObjectPy.h>
+//#include <App/DocumentObjectPy.h>
+//#include <Gui/SelectionObjectPy.h>
 #include "MainWindow.h"
 
 
@@ -96,177 +95,6 @@ void SelectionObserver::detachSelection()
 
 // -------------------------------------------
 
-std::vector<SelectionObserverPython*> SelectionObserverPython::_instances;
-
-SelectionObserverPython::SelectionObserverPython(const Py::Object& obj) : inst(obj)
-{
-}
-
-SelectionObserverPython::~SelectionObserverPython()
-{
-}
-
-void SelectionObserverPython::addObserver(const Py::Object& obj)
-{
-    _instances.push_back(new SelectionObserverPython(obj));
-}
-
-void SelectionObserverPython::removeObserver(const Py::Object& obj)
-{
-    SelectionObserverPython* obs=0;
-    for (std::vector<SelectionObserverPython*>::iterator it =
-        _instances.begin(); it != _instances.end(); ++it) {
-        if ((*it)->inst == obj) {
-            obs = *it;
-            _instances.erase(it);
-            break;
-        }
-    }
-
-    delete obs;
-}
-
-void SelectionObserverPython::onSelectionChanged(const SelectionChanges& msg)
-{
-    switch (msg.Type)
-    {
-    case SelectionChanges::AddSelection:
-        addSelection(msg);
-        break;
-    case SelectionChanges::RmvSelection:
-        removeSelection(msg);
-        break;
-    case SelectionChanges::SetSelection:
-        setSelection(msg);
-        break;
-    case SelectionChanges::ClrSelection:
-        clearSelection(msg);
-        break;
-    case SelectionChanges::SetPreselect:
-        setPreselection(msg);
-        break;
-    case SelectionChanges::RmvPreselect:
-        removePreselection(msg);
-        break;
-    default:
-        break;
-    }
-}
-
-void SelectionObserverPython::addSelection(const SelectionChanges& msg)
-{
-    Base::PyGILStateLocker lock;
-    try {
-        if (this->inst.hasAttr(std::string("addSelection"))) {
-            Py::Callable method(this->inst.getAttr(std::string("addSelection")));
-            Py::Tuple args(4);
-            args.setItem(0, Py::String(msg.pDocName ? msg.pDocName : ""));
-            args.setItem(1, Py::String(msg.pObjectName ? msg.pObjectName : ""));
-            args.setItem(2, Py::String(msg.pSubName ? msg.pSubName : ""));
-            Py::Tuple tuple(3);
-            tuple[0] = Py::Float(msg.x);
-            tuple[1] = Py::Float(msg.y);
-            tuple[2] = Py::Float(msg.z);
-            args.setItem(3, tuple);
-            method.apply(args);
-        }
-    }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        e.ReportException();
-    }
-}
-
-void SelectionObserverPython::removeSelection(const SelectionChanges& msg)
-{
-    Base::PyGILStateLocker lock;
-    try {
-        if (this->inst.hasAttr(std::string("removeSelection"))) {
-            Py::Callable method(this->inst.getAttr(std::string("removeSelection")));
-            Py::Tuple args(3);
-            args.setItem(0, Py::String(msg.pDocName ? msg.pDocName : ""));
-            args.setItem(1, Py::String(msg.pObjectName ? msg.pObjectName : ""));
-            args.setItem(2, Py::String(msg.pSubName ? msg.pSubName : ""));
-            method.apply(args);
-        }
-    }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        e.ReportException();
-    }
-}
-
-void SelectionObserverPython::setSelection(const SelectionChanges& msg)
-{
-    Base::PyGILStateLocker lock;
-    try {
-        if (this->inst.hasAttr(std::string("setSelection"))) {
-            Py::Callable method(this->inst.getAttr(std::string("setSelection")));
-            Py::Tuple args(1);
-            args.setItem(0, Py::String(msg.pDocName ? msg.pDocName : ""));
-            method.apply(args);
-        }
-    }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        e.ReportException();
-    }
-}
-
-void SelectionObserverPython::clearSelection(const SelectionChanges& msg)
-{
-    Base::PyGILStateLocker lock;
-    try {
-        if (this->inst.hasAttr(std::string("clearSelection"))) {
-            Py::Callable method(this->inst.getAttr(std::string("clearSelection")));
-            Py::Tuple args(1);
-            args.setItem(0, Py::String(msg.pDocName ? msg.pDocName : ""));
-            method.apply(args);
-        }
-    }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        e.ReportException();
-    }
-}
-
-void SelectionObserverPython::setPreselection(const SelectionChanges& msg)
-{
-    Base::PyGILStateLocker lock;
-    try {
-        if (this->inst.hasAttr(std::string("setPreselection"))) {
-            Py::Callable method(this->inst.getAttr(std::string("setPreselection")));
-            Py::Tuple args(3);
-            args.setItem(0, Py::String(msg.pDocName ? msg.pDocName : ""));
-            args.setItem(1, Py::String(msg.pObjectName ? msg.pObjectName : ""));
-            args.setItem(2, Py::String(msg.pSubName ? msg.pSubName : ""));
-            method.apply(args);
-        }
-    }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        e.ReportException();
-    }
-}
-
-void SelectionObserverPython::removePreselection(const SelectionChanges& msg)
-{
-    Base::PyGILStateLocker lock;
-    try {
-        if (this->inst.hasAttr(std::string("removePreselection"))) {
-            Py::Callable method(this->inst.getAttr(std::string("removePreselection")));
-            Py::Tuple args(3);
-            args.setItem(0, Py::String(msg.pDocName ? msg.pDocName : ""));
-            args.setItem(1, Py::String(msg.pObjectName ? msg.pObjectName : ""));
-            args.setItem(2, Py::String(msg.pSubName ? msg.pSubName : ""));
-            method.apply(args);
-        }
-    }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        e.ReportException();
-    }
-}
 
 // -------------------------------------------
 
@@ -727,7 +555,7 @@ bool SelectionSingleton::addSelection(const char* pDocName, const char* pObjectN
     else {
         // neither an existing nor active document available 
         // this can often happen when importing .iv files
-        Base::Console().Error("Cannot add to selection: no document '%s' found.\n", pDocName);
+        printf("Cannot add to selection: no document '%s' found.\n", pDocName);
         return false;
     }
 }
@@ -778,7 +606,7 @@ bool SelectionSingleton::addSelection(const char* pDocName, const char* pObjectN
     else {
         // neither an existing nor active document available 
         // this can often happen when importing .iv files
-        Base::Console().Error("Cannot add to selection: no document '%s' found.\n", pDocName);
+        printf("Cannot add to selection: no document '%s' found.\n", pDocName);
         return false;
     }
 }
@@ -813,7 +641,7 @@ void SelectionSingleton::rmvSelection(const char* pDocName, const char* pObjectN
       
             rmvList.push_back(Chng);
 #ifdef FC_DEBUG
-            Base::Console().Log("Sel : Rmv Selection \"%s.%s.%s\"\n",pDocName,pObjectName,pSubName);
+            printf("Sel : Rmv Selection \"%s.%s.%s\"\n",pDocName,pObjectName,pSubName);
 #endif
         }
         else {
@@ -913,7 +741,7 @@ void SelectionSingleton::clearSelection(const char* pDocName)
         signalSelectionChanged(Chng);
 
 #ifdef FC_DEBUG
-        Base::Console().Log("Sel : Clear selection\n");
+        printf("Sel : Clear selection\n");
 #endif
     }
 }
@@ -934,7 +762,7 @@ void SelectionSingleton::clearCompleteSelection()
     signalSelectionChanged(Chng);
 
 #ifdef FC_DEBUG
-    Base::Console().Log("Sel : Clear selection\n");
+    printf("Sel : Clear selection\n");
 #endif
 }
 
@@ -1025,333 +853,3 @@ void SelectionSingleton::destruct (void)
 
 //**************************************************************************
 // Python stuff
-
-// SelectionSingleton Methods  // Methods structure
-PyMethodDef SelectionSingleton::Methods[] = {
-    {"addSelection",         (PyCFunction) SelectionSingleton::sAddSelection, 1, 
-     "addSelection(object,[string,float,float,float]) -- Add an object to the selection\n"
-     "where string is the sub-element name and the three floats represent a 3d point"},
-    {"removeSelection",      (PyCFunction) SelectionSingleton::sRemoveSelection, 1,
-     "removeSelection(object) -- Remove an object from the selection"},
-    {"clearSelection"  ,     (PyCFunction) SelectionSingleton::sClearSelection, 1,
-     "clearSelection([string]) -- Clear the selection\n"
-     "Clear the selection to the given document name. If no document is\n"
-     "given the complete selection is cleared."},
-    {"isSelected",           (PyCFunction) SelectionSingleton::sIsSelected, 1,
-     "isSelected(object) -- Check if a given object is selected"},
-    {"countObjectsOfType",   (PyCFunction) SelectionSingleton::sCountObjectsOfType, 1,
-     "countObjectsOfType(string, [string]) -- Get the number of selected objects\n"
-     "The first argument defines the object type e.g. \"Part::Feature\" and the\n"
-     "second argumeht defines the document name. If no document name is given the\n"
-     "currently active document is used"},
-    {"getSelection",         (PyCFunction) SelectionSingleton::sGetSelection, 1,
-     "getSelection([string]) -- Return a list of selected objets\n"
-     "Return a list of selected objects for a given document name. If no\n"
-     "document name is given the selection for the active document is returned."},
-    {"getCompleteSelection", (PyCFunction) SelectionSingleton::sGetCompleteSelection, 1,
-     "getCompleteSelection() -- Return a list of selected objects of all documents."},
-    {"getSelectionEx",         (PyCFunction) SelectionSingleton::sGetSelectionEx, 1,
-     "getSelectionEx([string]) -- Return a list of SelectionObjects\n"
-     "Return a list of SelectionObjects for a given document name. If no\n"
-     "document is given the selection of the active document is returned.\n"
-     "The SelectionObjects contain a variety of information about the selection,\n"
-     "e.g. sub-element names."},
-    {"getSelectionObject",  (PyCFunction) SelectionSingleton::sGetSelectionObject, 1,
-     "getSelectionObject(doc,obj,sub,(x,y,z)) -- Return a SelectionObject"},
-    {"addObserver",         (PyCFunction) SelectionSingleton::sAddSelObserver, 1,
-     "addObserver(Object) -- Install an observer\n"},
-    {"removeObserver",      (PyCFunction) SelectionSingleton::sRemSelObserver, 1,
-     "removeObserver(Object) -- Uninstall an observer\n"},
-    {"addSelectionGate",      (PyCFunction) SelectionSingleton::sAddSelectionGate, 1,
-     "addSelectionGate(String|Filter|Gate) -- activate the selection gate.\n"
-     "The selection gate will prohibit all selections which do not match\n"
-     "the given selection filter string.\n"
-     " Examples strings are:\n"
-     "'SELECT Part::Feature SUBELEMENT Edge',\n"
-     "'SELECT Robot::RobotObject'\n"
-     "\n"
-     "You can also set an instance of SelectionFilter:\n"
-     "filter = Gui.Selection.Filter('SELECT Part::Feature SUBELEMENT Edge')\n"
-     "Gui.Selection.addSelectionGate(filter)\n"
-     "\n"
-     "And the most flexible approach is to write your own selection gate class\n"
-     "that implements the method 'allow'\n"
-     "class Gate:\n"
-     "  def allow(self,doc,obj,sub):\n"
-     "    return (sub[0:4] == 'Face')\n"
-     "Gui.Selection.addSelectionGate(Gate())"},
-    {"removeSelectionGate",      (PyCFunction) SelectionSingleton::sRemoveSelectionGate, 1,
-     "removeSelectionGate() -- remove the active selection gate\n"},
-    {NULL, NULL, 0, NULL}  /* Sentinel */
-};
-
-PyObject *SelectionSingleton::sAddSelection(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    PyObject *object;
-    char* subname=0;
-    float x=0,y=0,z=0;
-    if (PyArg_ParseTuple(args, "O!|sfff", &(App::DocumentObjectPy::Type),&object,&subname,&x,&y,&z)) {
-        App::DocumentObjectPy* docObjPy = static_cast<App::DocumentObjectPy*>(object);
-        App::DocumentObject* docObj = docObjPy->getDocumentObjectPtr();
-        if (!docObj || !docObj->getNameInDocument()) {
-            PyErr_SetString(Base::BaseExceptionFreeCADError, "Cannot check invalid object");
-            return NULL;
-        }
-
-        Selection().addSelection(docObj->getDocument()->getName(),
-                                 docObj->getNameInDocument(),
-                                 subname,x,y,z);
-        Py_Return;
-    }
-
-    PyErr_Clear();
-    PyObject *sequence;
-    if (PyArg_ParseTuple(args, "O!O", &(App::DocumentObjectPy::Type),&object,&sequence)) {
-        App::DocumentObjectPy* docObjPy = static_cast<App::DocumentObjectPy*>(object);
-        App::DocumentObject* docObj = docObjPy->getDocumentObjectPtr();
-        if (!docObj || !docObj->getNameInDocument()) {
-            PyErr_SetString(Base::BaseExceptionFreeCADError, "Cannot check invalid object");
-            return NULL;
-        }
-
-        try {
-            if (PyTuple_Check(sequence) || PyList_Check(sequence)) {
-                Py::Sequence list(sequence);
-                for (Py::Sequence::iterator it = list.begin(); it != list.end(); ++it) {
-                    std::string subname = static_cast<std::string>(Py::String(*it));
-                    Selection().addSelection(docObj->getDocument()->getName(),
-                                             docObj->getNameInDocument(),
-                                             subname.c_str());
-                }
-
-                Py_Return;
-            }
-        }
-        catch (const Py::Exception&) {
-            // do nothing here
-        }
-    }
-
-    PyErr_SetString(PyExc_ValueError, "type must be 'DocumentObject[,subname[,x,y,z]]' or 'DocumentObject, list or tuple of subnames'");
-    return 0;
-}
-
-PyObject *SelectionSingleton::sRemoveSelection(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    PyObject *object;
-    char* subname=0;
-    if (!PyArg_ParseTuple(args, "O!|s", &(App::DocumentObjectPy::Type),&object,&subname))
-        return NULL;                             // NULL triggers exception 
-
-    App::DocumentObjectPy* docObjPy = static_cast<App::DocumentObjectPy*>(object);
-    App::DocumentObject* docObj = docObjPy->getDocumentObjectPtr();
-    if (!docObj || !docObj->getNameInDocument()) {
-        PyErr_SetString(Base::BaseExceptionFreeCADError, "Cannot check invalid object");
-        return NULL;
-    }
-
-    Selection().rmvSelection(docObj->getDocument()->getName(),
-                             docObj->getNameInDocument(),
-                             subname);
-
-    Py_Return;
-}
-
-PyObject *SelectionSingleton::sClearSelection(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    char *documentName=0;
-    if (!PyArg_ParseTuple(args, "|s", &documentName))     // convert args: Python->C 
-        return NULL;                             // NULL triggers exception
-    documentName ? Selection().clearSelection(documentName) : Selection().clearCompleteSelection();
-    Py_Return;
-}
-
-PyObject *SelectionSingleton::sIsSelected(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    PyObject *object;
-    char* subname=0;
-    if (!PyArg_ParseTuple(args, "O!|s", &(App::DocumentObjectPy::Type), &object, &subname))
-        return NULL;                             // NULL triggers exception 
-
-    App::DocumentObjectPy* docObj = static_cast<App::DocumentObjectPy*>(object);
-    bool ok = Selection().isSelected(docObj->getDocumentObjectPtr(), subname);
-    return Py_BuildValue("O", (ok ? Py_True : Py_False));
-}
-
-PyObject *SelectionSingleton::sCountObjectsOfType(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    char* objecttype;
-    char* document=0;
-    if (!PyArg_ParseTuple(args, "s|s", &objecttype, &document))
-        return NULL;
-
-    unsigned int count = Selection().countObjectsOfType(objecttype, document);
-#if PY_MAJOR_VERSION < 3
-    return PyInt_FromLong(count);
-#else
-    return PyLong_FromLong(count);
-#endif
-}
-
-PyObject *SelectionSingleton::sGetSelection(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    char *documentName=0;
-    if (!PyArg_ParseTuple(args, "|s", &documentName))     // convert args: Python->C 
-        return NULL;                             // NULL triggers exception
-
-    std::vector<SelectionSingleton::SelObj> sel;
-    sel = Selection().getSelection(documentName);
-
-    try {
-        Py::List list;
-        for (std::vector<SelectionSingleton::SelObj>::iterator it = sel.begin(); it != sel.end(); ++it) {
-            list.append(Py::asObject(it->pObject->getPyObject()));
-        }
-        return Py::new_reference_to(list);
-    }
-    catch (Py::Exception&) {
-        return 0;
-    }
-}
-
-PyObject *SelectionSingleton::sGetCompleteSelection(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    if (!PyArg_ParseTuple(args, ""))     // convert args: Python->C 
-        return NULL;                             // NULL triggers exception
-
-    std::vector<SelectionSingleton::SelObj> sel;
-    sel = Selection().getCompleteSelection();
-
-    try {
-        Py::List list;
-        for (std::vector<SelectionSingleton::SelObj>::iterator it = sel.begin(); it != sel.end(); ++it) {
-            list.append(Py::asObject(it->pObject->getPyObject()));
-        }
-        return Py::new_reference_to(list);
-    }
-    catch (Py::Exception&) {
-        return 0;
-    }
-}
-
-PyObject *SelectionSingleton::sGetSelectionEx(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    char *documentName=0;
-    if (!PyArg_ParseTuple(args, "|s", &documentName))     // convert args: Python->C 
-        return NULL;                             // NULL triggers exception
-
-    std::vector<SelectionObject> sel;
-    sel = Selection().getSelectionEx(documentName);
-
-    try {
-        Py::List list;
-        for (std::vector<SelectionObject>::iterator it = sel.begin(); it != sel.end(); ++it) {
-            list.append(Py::asObject(it->getPyObject()));
-        }
-        return Py::new_reference_to(list);
-    }
-    catch (Py::Exception&) {
-        return 0;
-    }
-}
-
-PyObject *SelectionSingleton::sGetSelectionObject(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    char *docName, *objName, *subName;
-    PyObject* tuple=0;
-    if (!PyArg_ParseTuple(args, "sss|O!", &docName, &objName, &subName,
-                                          &PyTuple_Type, &tuple))
-        return NULL;
-
-    try {
-        SelectionObject selObj;
-        selObj.DocName  = docName;
-        selObj.FeatName = objName;
-        std::string sub = subName;
-        if (!sub.empty()) {
-            selObj.SubNames.push_back(sub);
-            if (tuple) {
-                Py::Tuple t(tuple);
-                double x = (double)Py::Float(t.getItem(0));
-                double y = (double)Py::Float(t.getItem(1));
-                double z = (double)Py::Float(t.getItem(2));
-                selObj.SelPoses.push_back(Base::Vector3d(x,y,z));
-            }
-        }
-
-        return selObj.getPyObject();
-    }
-    catch (const Py::Exception&) {
-        return 0;
-    }
-    catch (const Base::Exception& e) {
-        PyErr_SetString(Base::BaseExceptionFreeCADError, e.what());
-        return 0;
-    }
-}
-
-PyObject *SelectionSingleton::sAddSelObserver(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    PyObject* o;
-    if (!PyArg_ParseTuple(args, "O",&o))
-        return NULL;
-    PY_TRY {
-        SelectionObserverPython::addObserver(Py::Object(o));
-        Py_Return;
-    } PY_CATCH;
-}
-
-PyObject *SelectionSingleton::sRemSelObserver(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    PyObject* o;
-    if (!PyArg_ParseTuple(args, "O",&o))
-        return NULL;
-    PY_TRY {
-        SelectionObserverPython::removeObserver(Py::Object(o));
-        Py_Return;
-    } PY_CATCH;
-}
-
-PyObject *SelectionSingleton::sAddSelectionGate(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    char* filter;
-    if (PyArg_ParseTuple(args, "s",&filter)) {
-        PY_TRY {
-            Selection().addSelectionGate(new SelectionFilterGate(filter));
-            Py_Return;
-        } PY_CATCH;
-    }
-
-    PyErr_Clear();
-    PyObject* filterPy;
-    if (PyArg_ParseTuple(args, "O!",SelectionFilterPy::type_object(),&filterPy)) {
-        PY_TRY {
-            Selection().addSelectionGate(new SelectionFilterGatePython(static_cast<SelectionFilterPy*>(filterPy)));
-            Py_Return;
-        } PY_CATCH;
-    }
-
-    PyErr_Clear();
-    PyObject* gate;
-    if (PyArg_ParseTuple(args, "O",&gate)) {
-        PY_TRY {
-            Selection().addSelectionGate(new SelectionGatePython(Py::Object(gate, false)));
-            Py_Return;
-        } PY_CATCH;
-    }
-
-    PyErr_SetString(PyExc_ValueError, "Argument is neither string nor SelectionFiler nor SelectionGate");
-    return 0;
-}
-
-PyObject *SelectionSingleton::sRemoveSelectionGate(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/)
-{
-    if (!PyArg_ParseTuple(args, ""))
-        return NULL;                             // NULL triggers exception 
-
-    PY_TRY {
-        Selection().rmvSelectionGate();
-    } PY_CATCH;
-
-    Py_Return;
-}

@@ -35,7 +35,7 @@
 #endif
 
 #include <Base/Exception.h>
-#include <Base/Console.h> 
+//#include <Base/Console.h> 
 #include <App/Application.h>
 #include "DlgPreferencesImp.h"
 #include "ui_DlgPreferences.h"
@@ -114,14 +114,14 @@ void DlgPreferencesImp::setupPages()
         item->setTextAlignment(Qt::AlignHCenter);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         for (std::list<std::string>::iterator jt = it->second.begin(); jt != it->second.end(); ++jt) {
-            PreferencePage* page = WidgetFactory().createPreferencePage(jt->c_str());
-            if (page) {
-                tabWidget->addTab(page, page->windowTitle());
-                page->loadSettings();
-            }
-            else {
-                Base::Console().Warning("%s is not a preference page\n", jt->c_str());
-            }
+            //PreferencePage* page = WidgetFactory().createPreferencePage(jt->c_str());
+            //if (page) {
+            //    tabWidget->addTab(page, page->windowTitle());
+            //    page->loadSettings();
+            //}
+            //else {
+            //    printf("%s is not a preference page\n", jt->c_str());
+            //}
         }
     }
 

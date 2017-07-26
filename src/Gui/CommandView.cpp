@@ -68,7 +68,7 @@
 #include "Utilities.h"
 #include "NavigationStyle.h"
 
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/FileInfo.h>
 #include <Base/Reader.h>
@@ -2290,7 +2290,7 @@ void StdCmdViewIvIssueCamPos::activated(int iMsg)
     Temp += Temp2;
     Temp += "\")";
 
-    Base::Console().Message("%s\n",Temp2.c_str());
+    printf("%s\n",Temp2.c_str());
     getGuiApplication()->macroManager()->addLine(MacroManager::Gui,Temp.c_str());
 }
 

@@ -33,7 +33,6 @@
 #endif
 
 /// Here the FreeCAD includes sorted by Base,App,Gui......
-#include <Base/Console.h>
 #include <App/Material.h>
 #include <App/DocumentObject.h>
 #include "Application.h"
@@ -44,7 +43,6 @@
 #include "TaskView/TaskAppearance.h"
 #include "ViewProviderDocumentObject.h"
 #include "ViewProviderExtension.h"
-#include <Gui/ViewProviderDocumentObjectPy.h>
 
 
 using namespace Gui;
@@ -275,12 +273,4 @@ void ViewProviderDocumentObject::setActiveMode()
     }
     if (!Visibility.getValue())
         ViewProvider::hide();
-}
-
-PyObject* ViewProviderDocumentObject::getPyObject()
-{
-    if (!pyViewObject)
-        pyViewObject = new ViewProviderDocumentObjectPy(this);
-    pyViewObject->IncRef();
-    return pyViewObject;
 }

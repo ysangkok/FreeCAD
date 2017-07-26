@@ -58,7 +58,7 @@
 #include <Base/Parameter.h>
 #include <Base/Exception.h>
 #include <Base/FileInfo.h>
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 #include <Base/Persistence.h>
 #include <Base/Stream.h>
 #include <Base/Reader.h>
@@ -369,22 +369,6 @@ MainWindow::MainWindow(QWidget * parent, Qt::WindowFlags f)
         (QString::fromLatin1(QT_TRANSLATE_NOOP("QDockWidget","Report view")));
     pDockMgr->registerDockWindow("Std_ReportView", pcReport);
 
-    // Python console
-    PythonConsole* pcPython = new PythonConsole(this);
-    ParameterGrp::handle hGrp = App::GetApplication().GetUserParameter().
-        GetGroup("BaseApp")->GetGroup("Preferences")->GetGroup("General");
-
-    if (hGrp->GetBool("PythonWordWrap", true)) {
-      pcPython->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    } else {
-      pcPython->setWordWrapMode(QTextOption::NoWrap);
-    }
-
-    pcPython->setWindowIcon(Gui::BitmapFactory().iconFromTheme("applications-python"));
-    pcPython->setObjectName
-        (QString::fromLatin1(QT_TRANSLATE_NOOP("QDockWidget","Python console")));
-    pDockMgr->registerDockWindow("Std_PythonView", pcPython);
-    
     //Dag View.
     //work through parameter.
     ParameterGrp::handle group = App::GetApplication().GetUserParameter().
@@ -991,7 +975,6 @@ void MainWindow::showMainWindow()
 void MainWindow::processMessages(const QList<QByteArray> & msg)
 {
     // handle all the messages to open files
-    try {
         WaitCursor wc;
         std::list<std::string> files;
         QByteArray action("OpenFile:");
@@ -1004,25 +987,17 @@ void MainWindow::processMessages(const QList<QByteArray> & msg)
             QString filename = QString::fromUtf8(it->c_str(), it->size());
             FileDialog::setWorkingDirectory(filename);
         }
-    }
-    catch (const Base::SystemExitException&) {
-    }
 }
 
 void MainWindow::delayedStartup()
 {
     // processing all command line files
-    try {
         std::list<std::string> files = App::Application::getCmdLineFiles();
         files = App::Application::processFiles(files);
         for (std::list<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
             QString filename = QString::fromUtf8(it->c_str(), it->size());
             FileDialog::setWorkingDirectory(filename);
         }
-    }
-    catch (const Base::SystemExitException&) {
-        throw;
-    }
 
     const std::map<std::string,std::string>& cfg = App::Application::Config();
     std::map<std::string,std::string>::const_iterator it = cfg.find("StartHidden");
@@ -1110,10 +1085,10 @@ void MainWindow::loadWindowSettings()
     this->move(pos);
 
     // tmp. disable the report window to suppress some bothering warnings
-    Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, false);
+    //Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, false);
     this->restoreState(config.value(QString::fromLatin1("MainWindowState")).toByteArray());
     std::clog << "Main window restored" << std::endl;
-    Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, true);
+    //Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, true);
 
     bool max = config.value(QString::fromLatin1("Maximized"), false).toBool();
     max ? showMaximized() : show();
@@ -1430,7 +1405,7 @@ void MainWindow::loadUrls(App::Document* doc, const QList<QUrl>& url)
                 files << info.absoluteFilePath();
             }
             else {
-                Base::Console().Message("No support to load file '%s'\n",
+                printf("No support to load file '%s'\n",
                     (const char*)info.absoluteFilePath().toUtf8());
             }
         }
@@ -1597,7 +1572,7 @@ StatusBarObserver::StatusBarObserver()
     msg = QString::fromLatin1("#000000"); // black
     wrn = QString::fromLatin1("#ffaa00"); // orange
     err = QString::fromLatin1("#ff0000"); // red
-    Base::Console().AttachObserver(this);
+    //Base::Console().AttachObserver(this);
     getWindowParameter()->Attach(this);
     getWindowParameter()->NotifyAll();
 }
@@ -1605,7 +1580,7 @@ StatusBarObserver::StatusBarObserver()
 StatusBarObserver::~StatusBarObserver()
 {
     getWindowParameter()->Detach(this);
-    Base::Console().DetachObserver(this);
+    //Base::Console().DetachObserver(this);
 }
 
 void StatusBarObserver::OnChange(Base::Subject<const char*> &rCaller, const char * sReason)

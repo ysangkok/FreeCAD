@@ -28,8 +28,6 @@
 #endif
 
 #include "Workbench.h"
-#include "WorkbenchPy.h"
-#include "PythonWorkbenchPy.h"
 #include "MenuManager.h"
 #include "ToolBarManager.h"
 #include "DockWindowManager.h"
@@ -47,7 +45,7 @@
 
 #include <App/Application.h>
 #include <App/DocumentObject.h>
-#include <Base/Interpreter.h>
+//#include <Base/Interpreter.h>
 
 using namespace Gui;
 
@@ -280,7 +278,7 @@ void Workbench::setupCustomToolbars(ToolBarItem* root, const Base::Reference<Par
                     // first try the module name as is
                     std::string pyMod = it2->second;
                     try {
-                        Base::Interpreter().loadModule(pyMod.c_str());
+                        //Base::Interpreter().loadModule(pyMod.c_str());
                         // Try again
                         pCmd = rMgr.getCommandByName(it2->first.c_str());
                     }
@@ -293,7 +291,7 @@ void Workbench::setupCustomToolbars(ToolBarItem* root, const Base::Reference<Par
                     // add the 'Gui' suffix
                     std::string pyMod = it2->second + "Gui";
                     try {
-                        Base::Interpreter().loadModule(pyMod.c_str());
+                        //Base::Interpreter().loadModule(pyMod.c_str());
                         // Try again
                         pCmd = rMgr.getCommandByName(it2->first.c_str());
                     }
@@ -381,10 +379,6 @@ void Workbench::retranslate() const
     MenuManager::getInstance()->retranslate();
 }
 
-PyObject* Workbench::getPyObject()
-{
-    return new WorkbenchPy(this);
-}
 
 void Workbench::addTaskWatcher(const std::vector<Gui::TaskView::TaskWatcher*> &Watcher)
 {
@@ -837,274 +831,3 @@ ToolBarItem* TestWorkbench::setupCommandBars() const
 
 // -----------------------------------------------------------------------
 
-TYPESYSTEM_SOURCE_ABSTRACT(Gui::PythonBaseWorkbench, Gui::Workbench)
-
-PythonBaseWorkbench::PythonBaseWorkbench()
-  : _menuBar(0), _contextMenu(0), _toolBar(0), _commandBar(0), _workbenchPy(0)
-{
-}
-
-PythonBaseWorkbench::~PythonBaseWorkbench()
-{
-    delete _menuBar;
-    delete _contextMenu;
-    delete _toolBar;
-    delete _commandBar;
-    if (_workbenchPy) {
-        _workbenchPy->setInvalid();
-        _workbenchPy->DecRef();
-    }
-}
-
-PyObject* PythonBaseWorkbench::getPyObject()
-{
-    if (!_workbenchPy)
-    {
-        _workbenchPy = new PythonWorkbenchPy(this);
-    }
-
-    // Increment every time when this object is returned
-    _workbenchPy->IncRef();
-
-    return _workbenchPy;
-}
-
-MenuItem* PythonBaseWorkbench::setupMenuBar() const
-{
-    return _menuBar->copy();
-}
-
-ToolBarItem* PythonBaseWorkbench::setupToolBars() const
-{
-    return _toolBar->copy();
-}
-
-ToolBarItem* PythonBaseWorkbench::setupCommandBars() const
-{
-    return _commandBar->copy();
-}
-
-DockWindowItems* PythonBaseWorkbench::setupDockWindows() const
-{
-    return new DockWindowItems();
-}
-
-void PythonBaseWorkbench::setupContextMenu(const char* recipient, MenuItem* item) const
-{
-    Q_UNUSED(recipient);
-    QList<MenuItem*> items = _contextMenu->getItems();
-    for (QList<MenuItem*>::Iterator it = items.begin(); it != items.end(); ++it) {
-        item->appendItem((*it)->copy());
-    }
-}
-
-void PythonBaseWorkbench::appendMenu(const std::list<std::string>& menu, const std::list<std::string>& items) const
-{
-    if ( menu.empty() || items.empty() )
-        return;
-
-    std::list<std::string>::const_iterator jt=menu.begin();
-    MenuItem* item = _menuBar->findItem( *jt );
-    if (!item)
-    {
-        item = new MenuItem;
-        item->setCommand( *jt );
-        Gui::MenuItem* wnd = _menuBar->findItem( "&Windows" );
-        if (wnd)
-            _menuBar->insertItem(wnd, item);
-        else
-            _menuBar->appendItem(item);
-    }
-
-    // create sub menus
-    for ( jt++; jt != menu.end(); jt++ )
-    {
-        MenuItem* subitem = item->findItem( *jt );
-        if ( !subitem )
-        {
-            subitem = new MenuItem(item);
-            subitem->setCommand( *jt );
-        }
-        item = subitem;
-    }
-
-    for (std::list<std::string>::const_iterator it = items.begin(); it != items.end(); ++it)
-        *item << *it;
-}
-
-void PythonBaseWorkbench::removeMenu(const std::string& menu) const
-{
-    MenuItem* item = _menuBar->findItem(menu);
-    if ( item ) {
-        _menuBar->removeItem(item);
-        delete item;
-    }
-}
-
-std::list<std::string> PythonBaseWorkbench::listMenus() const
-{
-    std::list<std::string> menus;
-    QList<MenuItem*> items = _menuBar->getItems();
-    for ( QList<MenuItem*>::ConstIterator it = items.begin(); it != items.end(); ++it )
-        menus.push_back((*it)->command());
-    return menus;
-}
-
-void PythonBaseWorkbench::appendContextMenu(const std::list<std::string>& menu, const std::list<std::string>& items) const
-{
-    MenuItem* item = _contextMenu;
-    for (std::list<std::string>::const_iterator jt=menu.begin();jt!=menu.end();++jt) {
-        MenuItem* subitem = item->findItem(*jt);
-        if (!subitem) {
-            subitem = new MenuItem(item);
-            subitem->setCommand(*jt);
-        }
-        item = subitem;
-    }
-
-    for (std::list<std::string>::const_iterator it = items.begin(); it != items.end(); ++it)
-        *item << *it;
-}
-
-void PythonBaseWorkbench::removeContextMenu(const std::string& menu) const
-{
-    MenuItem* item = _contextMenu->findItem(menu);
-    if (item) {
-        _contextMenu->removeItem(item);
-        delete item;
-    }
-}
-
-void PythonBaseWorkbench::clearContextMenu()
-{
-    _contextMenu->clear();
-}
-
-void PythonBaseWorkbench::appendToolbar(const std::string& bar, const std::list<std::string>& items) const
-{
-    ToolBarItem* item = _toolBar->findItem(bar);
-    if (!item)
-    {
-        item = new ToolBarItem(_toolBar);
-        item->setCommand(bar);
-    }
-
-    for (std::list<std::string>::const_iterator it = items.begin(); it != items.end(); ++it)
-        *item << *it;
-}
-
-void PythonBaseWorkbench::removeToolbar(const std::string& bar) const
-{
-    ToolBarItem* item = _toolBar->findItem(bar);
-    if (item) {
-        _toolBar->removeItem(item);
-        delete item;
-    }
-}
-
-std::list<std::string> PythonBaseWorkbench::listToolbars() const
-{
-    std::list<std::string> bars;
-    QList<ToolBarItem*> items = _toolBar->getItems();
-    for (QList<ToolBarItem*>::ConstIterator item = items.begin(); item != items.end(); ++item)
-        bars.push_back((*item)->command());
-    return bars;
-}
-
-void PythonBaseWorkbench::appendCommandbar(const std::string& bar, const std::list<std::string>& items) const
-{
-    ToolBarItem* item = _commandBar->findItem( bar );
-    if ( !item )
-    {
-        item = new ToolBarItem(_commandBar);
-        item->setCommand(bar);
-    }
-
-    for (std::list<std::string>::const_iterator it = items.begin(); it != items.end(); ++it)
-        *item << *it;
-}
-
-void PythonBaseWorkbench::removeCommandbar(const std::string& bar) const
-{
-    ToolBarItem* item = _commandBar->findItem(bar);
-    if ( item ) {
-        _commandBar->removeItem(item);
-        delete item;
-    }
-}
-
-std::list<std::string> PythonBaseWorkbench::listCommandbars() const
-{
-    std::list<std::string> bars;
-    QList<ToolBarItem*> items = _commandBar->getItems();
-    for (QList<ToolBarItem*>::ConstIterator item = items.begin(); item != items.end(); ++item)
-        bars.push_back((*item)->command());
-    return bars;
-}
-
-// -----------------------------------------------------------------------
-
-TYPESYSTEM_SOURCE(Gui::PythonBlankWorkbench, Gui::PythonBaseWorkbench)
-
-PythonBlankWorkbench::PythonBlankWorkbench()
-{
-    _menuBar = new MenuItem;
-    _contextMenu = new MenuItem;
-    _toolBar = new ToolBarItem;
-    _commandBar = new ToolBarItem;
-}
-
-PythonBlankWorkbench::~PythonBlankWorkbench()
-{
-}
-
-// -----------------------------------------------------------------------
-
-TYPESYSTEM_SOURCE(Gui::PythonWorkbench, Gui::PythonBaseWorkbench)
-
-PythonWorkbench::PythonWorkbench()
-{
-    StdWorkbench wb;
-    _menuBar = wb.setupMenuBar();
-    _contextMenu = new MenuItem;
-    _toolBar = wb.setupToolBars();
-    _commandBar = new ToolBarItem;
-}
-
-PythonWorkbench::~PythonWorkbench()
-{
-}
-
-MenuItem* PythonWorkbench::setupMenuBar() const
-{
-    return _menuBar->copy();
-}
-
-ToolBarItem* PythonWorkbench::setupToolBars() const
-{
-    return _toolBar->copy();
-}
-
-ToolBarItem* PythonWorkbench::setupCommandBars() const
-{
-    return _commandBar->copy();
-}
-
-DockWindowItems* PythonWorkbench::setupDockWindows() const
-{
-    StdWorkbench wb;
-    return wb.setupDockWindows();
-}
-
-void PythonWorkbench::setupContextMenu(const char* recipient, MenuItem* item) const
-{
-    StdWorkbench wb;
-    wb.setupContextMenu(recipient, item);
-    PythonBaseWorkbench::setupContextMenu(recipient, item);
-}
-
-void PythonWorkbench::createMainWindowPopupMenu(MenuItem* item) const
-{
-    StdWorkbench wb;
-    wb.createMainWindowPopupMenu(item);
-}

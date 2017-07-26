@@ -38,7 +38,6 @@
 #endif
 
 /// Here the FreeCAD includes sorted by Base,App,Gui......
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/Matrix.h>
 #include <App/PropertyGeo.h>
@@ -47,7 +46,6 @@
 #include "Application.h"
 #include "ActionFunction.h"
 #include "Document.h"
-#include "ViewProviderPy.h"
 #include "BitmapFactory.h"
 #include "View3DInventor.h"
 #include "View3DInventorViewer.h"
@@ -69,7 +67,6 @@ PROPERTY_SOURCE_ABSTRACT(Gui::ViewProvider, App::TransactionalObject)
 
 ViewProvider::ViewProvider()
     : pcAnnotation(0)
-    , pyViewObject(0)
     , overrideMode("As Is")
     , _iActualMode(-1)
     , _iEditMode(-1)
@@ -91,11 +88,6 @@ ViewProvider::ViewProvider()
 
 ViewProvider::~ViewProvider()
 {
-    if (pyViewObject) {
-        pyViewObject->setInvalid();
-        pyViewObject->DecRef();
-    }
-
     pcRoot->unref();
     pcTransform->unref();
     pcModeSwitch->unref();
@@ -211,13 +203,13 @@ void ViewProvider::eventCallback(void * ud, SoEventCallback * node)
         }
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("Unhandled exception in ViewProvider::eventCallback: %s\n", e.what());
+        printf("Unhandled exception in ViewProvider::eventCallback: %s\n", e.what());
     }
     catch (const std::exception& e) {
-        Base::Console().Error("Unhandled std exception in ViewProvider::eventCallback: %s\n", e.what());
+        printf("Unhandled std exception in ViewProvider::eventCallback: %s\n", e.what());
     }
     catch (...) {
-        Base::Console().Error("Unhandled unknown C++ exception in ViewProvider::eventCallback");
+        printf("Unhandled unknown C++ exception in ViewProvider::eventCallback");
     }
 }
 
@@ -423,14 +415,6 @@ void ViewProvider::onChanged(const App::Property* prop)
 std::string ViewProvider::toString() const
 {
     return SoFCDB::writeNodesToString(pcRoot);
-}
-
-PyObject* ViewProvider::getPyObject()
-{
-    if (!pyViewObject)
-        pyViewObject = new ViewProviderPy(this);
-    pyViewObject->IncRef();
-    return pyViewObject;
 }
 
 #include <boost/graph/topological_sort.hpp>
@@ -654,11 +638,11 @@ bool ViewProvider::canDropObject(App::DocumentObject* obj) const {
 
     auto vector = getExtensionsDerivedFromType<Gui::ViewProviderExtension>();
 #if FC_DEBUG
-    Base::Console().Log("Check extensions for drop\n");
+    printf("Check extensions for drop\n");
 #endif
     for(Gui::ViewProviderExtension* ext : vector){
 #if FC_DEBUG
-        Base::Console().Log("Check extensions %s\n", ext->name().c_str());
+        printf("Check extensions %s\n", ext->name().c_str());
 #endif
         if(ext->extensionCanDropObject(obj))
             return true;

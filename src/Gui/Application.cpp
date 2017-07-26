@@ -52,16 +52,16 @@
 #endif
 
 // FreeCAD Base header
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
+//#include <Base/Console.h>
+//#include <Base/Interpreter.h>
 #include <Base/Parameter.h>
 #include <Base/Exception.h>
 #include <Base/Factory.h>
 #include <Base/FileInfo.h>
 #include <Base/Tools.h>
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 #include <App/Document.h>
-#include <App/DocumentObjectPy.h>
+//#include <App/DocumentObjectPy.h>
 
 #include "Application.h"
 #include "AutoSaver.h"
@@ -69,7 +69,7 @@
 #include "MainWindow.h"
 #include "Document.h"
 #include "View.h"
-#include "View3DPy.h"
+//#include "View3DPy.h"
 #include "WidgetFactory.h"
 #include "Command.h"
 #include "Macro.h"
@@ -83,9 +83,9 @@
 #include "Selection.h"
 #include "BitmapFactory.h"
 #include "SoFCDB.h"
-#include "PythonConsolePy.h"
-#include "PythonDebugger.h"
-#include "View3DPy.h"
+//#include "PythonConsolePy.h"
+//#include "PythonDebugger.h"
+//#include "View3DPy.h"
 #include "DlgOnlineHelpImp.h"
 #include "SpaceballEvent.h"
 #include "Control.h"
@@ -99,7 +99,7 @@
 #include "ViewProviderExtension.h"
 #include "ViewProviderExtern.h"
 #include "ViewProviderFeature.h"
-#include "ViewProviderPythonFeature.h"
+//#include "ViewProviderPythonFeature.h"
 #include "ViewProviderDocumentObjectGroup.h"
 #include "ViewProviderGeometryObject.h"
 #include "ViewProviderInventorObject.h"
@@ -120,9 +120,9 @@
 
 #include "Language/Translator.h"
 #include "TaskView/TaskView.h"
-#include "TaskView/TaskDialogPython.h"
+//#include "TaskView/TaskDialogPython.h"
 #include <Gui/Quarter/Quarter.h>
-#include "View3DViewerPy.h"
+//#include "View3DViewerPy.h"
 #include <Gui/GuiInitScript.h>
 
 
@@ -165,118 +165,118 @@ struct ApplicationP
     CommandManager commandManager;
 };
 
-static PyObject *
-FreeCADGui_subgraphFromObject(PyObject * /*self*/, PyObject *args)
-{
-    PyObject *o;
-    if (!PyArg_ParseTuple(args, "O!",&(App::DocumentObjectPy::Type), &o))
-        return NULL;
-    App::DocumentObject* obj = static_cast<App::DocumentObjectPy*>(o)->getDocumentObjectPtr();
-    std::string vp = obj->getViewProviderName();
-    SoNode* node = 0;
-    try {
-        Base::BaseClass* base = static_cast<Base::BaseClass*>(Base::Type::createInstanceByName(vp.c_str(), true));
-        if (base && base->getTypeId().isDerivedFrom(Gui::ViewProviderDocumentObject::getClassTypeId())) {
-            std::unique_ptr<Gui::ViewProviderDocumentObject> vp(static_cast<Gui::ViewProviderDocumentObject*>(base));
-            std::map<std::string, App::Property*> Map;
-            obj->getPropertyMap(Map);
-            vp->attach(obj);
-            for (std::map<std::string, App::Property*>::iterator it = Map.begin(); it != Map.end(); ++it) {
-                vp->updateData(it->second);
-            }
-
-            std::vector<std::string> modes = vp->getDisplayModes();
-            if (!modes.empty())
-                vp->setDisplayMode(modes.front().c_str());
-            node = vp->getRoot()->copy();
-            node->ref();
-            std::string type = "So";
-            type += node->getTypeId().getName().getString();
-            type += " *";
-            PyObject* proxy = 0;
-            proxy = Base::Interpreter().createSWIGPointerObj("pivy.coin", type.c_str(), (void*)node, 1);
-            return Py::new_reference_to(Py::Object(proxy, true));
-        }
-    }
-    catch (const Base::Exception& e) {
-        if (node) node->unref();
-        PyErr_SetString(PyExc_RuntimeError, e.what());
-        return 0;
-    }
-
-    Py_INCREF(Py_None);
-    return Py_None;
-}
-
-static PyObject *
-FreeCADGui_getSoDBVersion(PyObject * /*self*/, PyObject *args)
-{
-    if (!PyArg_ParseTuple(args, ""))
-        return NULL;
-#if PY_MAJOR_VERSION >= 3
-    return PyUnicode_FromString(SoDB::getVersion());
-#else
-    return PyString_FromString(SoDB::getVersion());
-#endif
-}
-
-// Copied from https://github.com/python/cpython/blob/master/Objects/moduleobject.c
-#if PY_MAJOR_VERSION >= 3
-#if PY_MINOR_VERSION <= 4
-static int
-_add_methods_to_object(PyObject *module, PyObject *name, PyMethodDef *functions)
-{
-    PyObject *func;
-    PyMethodDef *fdef;
-
-    for (fdef = functions; fdef->ml_name != NULL; fdef++) {
-        if ((fdef->ml_flags & METH_CLASS) ||
-            (fdef->ml_flags & METH_STATIC)) {
-            PyErr_SetString(PyExc_ValueError,
-                            "module functions cannot set"
-                            " METH_CLASS or METH_STATIC");
-            return -1;
-        }
-        func = PyCFunction_NewEx(fdef, (PyObject*)module, name);
-        if (func == NULL) {
-            return -1;
-        }
-        if (PyObject_SetAttrString(module, fdef->ml_name, func) != 0) {
-            Py_DECREF(func);
-            return -1;
-        }
-        Py_DECREF(func);
-    }
-
-    return 0;
-}
-
-int
-PyModule_AddFunctions(PyObject *m, PyMethodDef *functions)
-{
-    int res;
-    PyObject *name = PyModule_GetNameObject(m);
-    if (name == NULL) {
-        return -1;
-    }
-
-    res = _add_methods_to_object(m, name, functions);
-    Py_DECREF(name);
-    return res;
-}
-#endif
-#endif
-
-struct PyMethodDef FreeCADGui_methods[] = {
-    {"subgraphFromObject",FreeCADGui_subgraphFromObject,METH_VARARGS,
-     "subgraphFromObject(object) -> Node\n\n"
-     "Return the Inventor subgraph to an object"},
-    {"getSoDBVersion",FreeCADGui_getSoDBVersion,METH_VARARGS,
-     "getSoDBVersion() -> String\n\n"
-     "Return a text string containing the name\n"
-     "of the Coin library and version information"},
-    {NULL, NULL, 0, NULL}  /* sentinel */
-};
+//static PyObject *
+//FreeCADGui_subgraphFromObject(PyObject * /*self*/, PyObject *args)
+//{
+//    PyObject *o;
+//    if (!PyArg_ParseTuple(args, "O!",&(App::DocumentObjectPy::Type), &o))
+//        return NULL;
+//    App::DocumentObject* obj = static_cast<App::DocumentObjectPy*>(o)->getDocumentObjectPtr();
+//    std::string vp = obj->getViewProviderName();
+//    SoNode* node = 0;
+//    try {
+//        Base::BaseClass* base = static_cast<Base::BaseClass*>(Base::Type::createInstanceByName(vp.c_str(), true));
+//        if (base && base->getTypeId().isDerivedFrom(Gui::ViewProviderDocumentObject::getClassTypeId())) {
+//            std::unique_ptr<Gui::ViewProviderDocumentObject> vp(static_cast<Gui::ViewProviderDocumentObject*>(base));
+//            std::map<std::string, App::Property*> Map;
+//            obj->getPropertyMap(Map);
+//            vp->attach(obj);
+//            for (std::map<std::string, App::Property*>::iterator it = Map.begin(); it != Map.end(); ++it) {
+//                vp->updateData(it->second);
+//            }
+//
+//            std::vector<std::string> modes = vp->getDisplayModes();
+//            if (!modes.empty())
+//                vp->setDisplayMode(modes.front().c_str());
+//            node = vp->getRoot()->copy();
+//            node->ref();
+//            std::string type = "So";
+//            type += node->getTypeId().getName().getString();
+//            type += " *";
+//            PyObject* proxy = 0;
+//            proxy = Base::Interpreter().createSWIGPointerObj("pivy.coin", type.c_str(), (void*)node, 1);
+//            return Py::new_reference_to(Py::Object(proxy, true));
+//        }
+//    }
+//    catch (const Base::Exception& e) {
+//        if (node) node->unref();
+//        PyErr_SetString(PyExc_RuntimeError, e.what());
+//        return 0;
+//    }
+//
+//    Py_INCREF(Py_None);
+//    return Py_None;
+//}
+//
+//static PyObject *
+//FreeCADGui_getSoDBVersion(PyObject * /*self*/, PyObject *args)
+//{
+//    if (!PyArg_ParseTuple(args, ""))
+//        return NULL;
+//#if PY_MAJOR_VERSION >= 3
+//    return PyUnicode_FromString(SoDB::getVersion());
+//#else
+//    return PyString_FromString(SoDB::getVersion());
+//#endif
+//}
+//
+//// Copied from https://github.com/python/cpython/blob/master/Objects/moduleobject.c
+//#if PY_MAJOR_VERSION >= 3
+//#if PY_MINOR_VERSION <= 4
+//static int
+//_add_methods_to_object(PyObject *module, PyObject *name, PyMethodDef *functions)
+//{
+//    PyObject *func;
+//    PyMethodDef *fdef;
+//
+//    for (fdef = functions; fdef->ml_name != NULL; fdef++) {
+//        if ((fdef->ml_flags & METH_CLASS) ||
+//            (fdef->ml_flags & METH_STATIC)) {
+//            PyErr_SetString(PyExc_ValueError,
+//                            "module functions cannot set"
+//                            " METH_CLASS or METH_STATIC");
+//            return -1;
+//        }
+//        func = PyCFunction_NewEx(fdef, (PyObject*)module, name);
+//        if (func == NULL) {
+//            return -1;
+//        }
+//        if (PyObject_SetAttrString(module, fdef->ml_name, func) != 0) {
+//            Py_DECREF(func);
+//            return -1;
+//        }
+//        Py_DECREF(func);
+//    }
+//
+//    return 0;
+//}
+//
+//int
+//PyModule_AddFunctions(PyObject *m, PyMethodDef *functions)
+//{
+//    int res;
+//    PyObject *name = PyModule_GetNameObject(m);
+//    if (name == NULL) {
+//        return -1;
+//    }
+//
+//    res = _add_methods_to_object(m, name, functions);
+//    Py_DECREF(name);
+//    return res;
+//}
+//#endif
+//#endif
+//
+//struct PyMethodDef FreeCADGui_methods[] = {
+//    {"subgraphFromObject",FreeCADGui_subgraphFromObject,METH_VARARGS,
+//     "subgraphFromObject(object) -> Node\n\n"
+//     "Return the Inventor subgraph to an object"},
+//    {"getSoDBVersion",FreeCADGui_getSoDBVersion,METH_VARARGS,
+//     "getSoDBVersion() -> String\n\n"
+//     "Return a text string containing the name\n"
+//     "of the Coin library and version information"},
+//    {NULL, NULL, 0, NULL}  /* sentinel */
+//};
 
 
 Gui::MDIView* Application::activeView(void) const
@@ -309,7 +309,7 @@ Application::Application(bool GUIenabled)
 
         ParameterGrp::handle hUnits = App::GetApplication().GetParameterGroupByPath
             ("User parameter:BaseApp/Preferences/Units");
-        Base::UnitsApi::setDecimals(hUnits->GetInt("Decimals", Base::UnitsApi::getDecimals()));
+        //Base::UnitsApi::setDecimals(hUnits->GetInt("Decimals", Base::UnitsApi::getDecimals()));
 
         // Check for the symbols for group separator and deciaml point. They must be different otherwise
         // Qt doesn't work properly.
@@ -331,109 +331,11 @@ Application::Application(bool GUIenabled)
         QLocale::setDefault(loc);
 #endif
 
-        // setting up Python binding
-        Base::PyGILStateLocker lock;
-
-        PyDoc_STRVAR(FreeCADGui_doc,
-            "The functions in the FreeCADGui module allow working with GUI documents,\n"
-            "view providers, views, workbenches and much more.\n\n"
-            "The FreeCADGui instance provides a list of references of GUI documents which\n"
-            "can be addressed by a string. These documents contain the view providers for\n"
-            "objects in the associated App document. An App and GUI document can be\n"
-            "accessed with the same name.\n\n"
-            "The FreeCADGui module also provides a set of functions to work with so called\n"
-            "workbenches."
-            );
-
-#if PY_MAJOR_VERSION >= 3
-        // if this returns a valid pointer then the 'FreeCADGui' Python module was loaded,
-        // otherwise the executable was launched
-        PyObject *module = PyImport_AddModule("FreeCADGui");
-        if (!module) {
-            static struct PyModuleDef FreeCADGuiModuleDef = {
-                PyModuleDef_HEAD_INIT,
-                "FreeCADGui", FreeCADGui_doc, -1,
-                Application::Methods,
-                NULL, NULL, NULL, NULL
-            };
-            module = PyModule_Create(&FreeCADGuiModuleDef);
-            _PyImport_FixupBuiltin(module, "FreeCADGui");
-        }
-        else {
-            // extend the method list
-            PyModule_AddFunctions(module, Application::Methods);
-        }
-#else
-        PyObject* module = Py_InitModule3("FreeCADGui", Application::Methods, FreeCADGui_doc);
-#endif
-        Py::Module(module).setAttr(std::string("ActiveDocument"),Py::None());
-
-        UiLoaderPy::init_type();
-        Base::Interpreter().addType(UiLoaderPy::type_object(),
-            module,"UiLoader");
-        PyResource::init_type();
-
-        // PySide additions
-        PySideUicModule* pySide = new PySideUicModule();
-        Py_INCREF(pySide->module().ptr());
-        PyModule_AddObject(module, "PySideUic", pySide->module().ptr());
-
-        //insert Selection module
-#if PY_MAJOR_VERSION >= 3
-        static struct PyModuleDef SelectionModuleDef = {
-            PyModuleDef_HEAD_INIT,
-            "Selection", "Selection module", -1,
-            SelectionSingleton::Methods,
-            NULL, NULL, NULL, NULL
-        };
-        PyObject* pSelectionModule = PyModule_Create(&SelectionModuleDef);
-#else
-        PyObject* pSelectionModule = Py_InitModule3("Selection", SelectionSingleton::Methods,"Selection module");
-#endif
-        Py_INCREF(pSelectionModule);
-        PyModule_AddObject(module, "Selection", pSelectionModule);
-
-        SelectionFilterPy::init_type();
-        Base::Interpreter().addType(SelectionFilterPy::type_object(),
-            pSelectionModule,"Filter");
-
-        Gui::TaskView::ControlPy::init_type();
-        Py::Module(module).setAttr(std::string("Control"),
-            Py::Object(Gui::TaskView::ControlPy::getInstance(), true));
     }
-
-    Base::PyGILStateLocker lock;
-    PyObject *module = PyImport_AddModule("FreeCADGui");
-    PyMethodDef *meth = FreeCADGui_methods;
-    PyObject *dict = PyModule_GetDict(module);
-    for (; meth->ml_name != NULL; meth++) {
-        PyObject *descr;
-        descr = PyCFunction_NewEx(meth,0,0);
-        if (descr == NULL)
-            break;
-        if (PyDict_SetItemString(dict, meth->ml_name, descr) != 0)
-            break;
-        Py_DECREF(descr);
-    }
-
-    // Python console binding
-    PythonDebugModule           ::init_module();
-    PythonStdout                ::init_type();
-    PythonStderr                ::init_type();
-    OutputStdout                ::init_type();
-    OutputStderr                ::init_type();
-    PythonStdin                 ::init_type();
-    View3DInventorPy            ::init_type();
-    View3DInventorViewerPy      ::init_type();
-    AbstractSplitViewPy         ::init_type();
-
     d = new ApplicationP;
 
     // global access 
     Instance = this;
-
-    // instanciate the workbench dictionary
-    _pcWorkbenchDictionary = PyDict_New();
 
     if (GUIenabled) {
         createStandardOperations();
@@ -443,7 +345,6 @@ Application::Application(bool GUIenabled)
 
 Application::~Application()
 {
-    Base::Console().Log("Destruct Gui::Application\n");
     WorkbenchManager::destruct();
     SelectionSingleton::destruct();
     Translator::destruct();
@@ -465,10 +366,6 @@ Application::~Application()
     SoDB::cleanup();
 #endif
 #endif
-    {
-    Base::PyGILStateLocker lock;
-    Py_DECREF(_pcWorkbenchDictionary);
-    }
 
     // save macros
     try {
@@ -507,7 +404,6 @@ void Application::open(const char* FileName, const char* Module)
     if (Module != 0) {
         // issue module loading
         Command::doCommand(Command::App, "import %s", Module);
-        try {
             // load the file with the module
             Command::doCommand(Command::App, "%s.open(u\"%s\")", Module, unicodepath.c_str());
             // ViewFit
@@ -521,11 +417,6 @@ void Application::open(const char* FileName, const char* Module)
             QString filename = QString::fromUtf8(File.filePath().c_str());
             getMainWindow()->appendRecentFile(filename);
             FileDialog::setWorkingDirectory(filename);
-        }
-        catch (const Base::PyException& e){
-            // Usually thrown if the file is invalid somehow
-            e.ReportException();
-        }
     }
     else {
         wc.restoreCursor();
@@ -548,7 +439,6 @@ void Application::importFrom(const char* FileName, const char* DocName, const ch
         // issue module loading
         Command::doCommand(Command::App, "import %s", Module);
 
-        try {
             // load the file with the module
             if (File.hasExtension("FCStd")) {
                 Command::doCommand(Command::App, "%s.open(u\"%s\")"
@@ -571,11 +461,6 @@ void Application::importFrom(const char* FileName, const char* DocName, const ch
             QString filename = QString::fromUtf8(File.filePath().c_str());
             getMainWindow()->appendRecentFile(filename);
             FileDialog::setWorkingDirectory(filename);
-        }
-        catch (const Base::PyException& e){
-            // Usually thrown if the file is invalid somehow
-            e.ReportException();
-        }
     }
     else {
         wc.restoreCursor();
@@ -593,7 +478,6 @@ void Application::exportTo(const char* FileName, const char* DocName, const char
     string unicodepath = Base::Tools::escapedUnicodeFromUtf8(File.filePath().c_str());
 
     if (Module != 0) {
-        try {
             std::vector<App::DocumentObject*> sel = Gui::Selection().getObjectsOfType
                 (App::DocumentObject::getClassTypeId(),DocName);
             if (sel.empty()) {
@@ -626,11 +510,6 @@ void Application::exportTo(const char* FileName, const char* DocName, const char
 
             // allow exporters to pass _objs__ to submodules before deleting it
             Gui::Command::runCommand(Gui::Command::App, "del __objs__");
-        }
-        catch (const Base::PyException& e){
-            // Usually thrown if the file is invalid somehow
-            e.ReportException();
-        }
     }
     else {
         wc.restoreCursor();
@@ -678,7 +557,7 @@ void Application::slotDeleteDocument(const App::Document& Doc)
 {
     std::map<const App::Document*, Gui::Document*>::iterator doc = d->documents.find(&Doc);
     if (doc == d->documents.end()) {
-        Base::Console().Log("GUI document '%s' already deleted\n", Doc.getName());
+        printf("GUI document '%s' already deleted\n", Doc.getName());
         return;
     }
 
@@ -727,15 +606,6 @@ void Application::slotActiveDocument(const App::Document& Doc)
         // because no MDI view will be activated
         if (d->activeDocument != doc->second) {
             d->activeDocument = doc->second;
-            if (d->activeDocument) {
-                Base::PyGILStateLocker lock;
-                Py::Object active(d->activeDocument->getPyObject(), true);
-                Py::Module("FreeCADGui").setAttr(std::string("ActiveDocument"),active);
-            }
-            else {
-                Base::PyGILStateLocker lock;
-                Py::Module("FreeCADGui").setAttr(std::string("ActiveDocument"),Py::None());
-            }
         }
         signalActiveDocument(*doc->second);
     }
@@ -769,13 +639,8 @@ void Application::slotActivatedObject(const ViewProvider& vp)
 void Application::onLastWindowClosed(Gui::Document* pcDoc)
 {
     if (!d->isClosing && pcDoc) {
-        try {
             // Call the closing mechanism from Python. This also checks whether pcDoc is the last open document.
             Command::doCommand(Command::Doc, "App.closeDocument(\"%s\")", pcDoc->getDocument()->getName());
-        }
-        catch (const Base::PyException& e) {
-            e.ReportException();
-        }
     }
 }
 
@@ -836,15 +701,6 @@ void Application::setActiveDocument(Gui::Document* pcDocument)
         macroManager()->addLine(MacroManager::Cmt,nameGui.c_str());
     }
 
-    // Sets the currently active document
-    try {
-        Base::Interpreter().runString(nameApp.c_str());
-        Base::Interpreter().runString(nameGui.c_str());
-    }
-    catch (const Base::Exception& e) {
-        Base::Console().Warning(e.what());
-        return;
-    }
 
 #ifdef FC_DEBUG
     // May be useful for error detection
@@ -1021,48 +877,10 @@ bool Application::activateWorkbench(const char* name)
     if (oldWb && oldWb->name() == name)
         return false; // already active
 
-    // we check for the currently active workbench and call its 'Deactivated'
-    // method, if available
-    PyObject* pcOldWorkbench = 0;
-    if (oldWb) {
-        pcOldWorkbench = PyDict_GetItemString(_pcWorkbenchDictionary, oldWb->name().c_str());
-    }
 
-    // get the python workbench object from the dictionary
-    Base::PyGILStateLocker lock;
-    PyObject* pcWorkbench = 0;
-    pcWorkbench = PyDict_GetItemString(_pcWorkbenchDictionary, name);
-    // test if the workbench exists
-    if (!pcWorkbench)
-        return false;
-
-    try {
+    //try
+    {
         std::string type;
-        Py::Object handler(pcWorkbench);
-        if (!handler.hasAttr(std::string("__Workbench__"))) {
-            // call its GetClassName method if possible
-            Py::Callable method(handler.getAttr(std::string("GetClassName")));
-            Py::Tuple args;
-            Py::String result(method.apply(args));
-            type = result.as_std_string("ascii");
-            if (Base::Type::fromName(type.c_str()).isDerivedFrom(Gui::PythonBaseWorkbench::getClassTypeId())) {
-                Workbench* wb = WorkbenchManager::instance()->createWorkbench(name, type);
-                if (!wb)
-                    throw Py::RuntimeError("Failed to instantiate workbench of type " + type);
-                handler.setAttr(std::string("__Workbench__"), Py::Object(wb->getPyObject(), true));
-            }
-
-            // import the matching module first
-            Py::Callable activate(handler.getAttr(std::string("Initialize")));
-            activate.apply(args);
-
-            // Dependent on the implementation of a workbench handler the type
-            // can be defined after the call of Initialize()
-            if (type.empty()) {
-                Py::String result(method.apply(args));
-                type = result.as_std_string("ascii");
-            }
-        }
 
         // does the Python workbench handler have changed the workbench?
         Workbench* curWb = WorkbenchManager::instance()->active();
@@ -1077,132 +895,69 @@ bool Application::activateWorkbench(const char* name)
 
         // if we still not have this member then it must be built-in C++ workbench
         // which could be created after loading the appropriate module
-        if (!handler.hasAttr(std::string("__Workbench__"))) {
-            Workbench* wb = WorkbenchManager::instance()->getWorkbench(name);
-            if (wb) handler.setAttr(std::string("__Workbench__"), Py::Object(wb->getPyObject(), true));
-        }
+        //if (!handler.hasAttr(std::string("__Workbench__"))) {
+        //    Workbench* wb = WorkbenchManager::instance()->getWorkbench(name);
+        //    if (wb) handler.setAttr(std::string("__Workbench__"), Py::Object(wb->getPyObject(), true));
+        //}
 
         // If the method Deactivate is available we call it
-        if (pcOldWorkbench) {
-            Py::Object handler(pcOldWorkbench);
-            if (handler.hasAttr(std::string("Deactivated"))) {
-                Py::Object method(handler.getAttr(std::string("Deactivated")));
-                if (method.isCallable()) {
-                    Py::Tuple args;
-                    Py::Callable activate(method);
-                    activate.apply(args);
-                }
-            }
-        }
+        //if (pcOldWorkbench) {
+        //    Py::Object handler(pcOldWorkbench);
+        //    if (handler.hasAttr(std::string("Deactivated"))) {
+        //        Py::Object method(handler.getAttr(std::string("Deactivated")));
+        //        if (method.isCallable()) {
+        //            Py::Tuple args;
+        //            Py::Callable activate(method);
+        //            activate.apply(args);
+        //        }
+        //    }
+        //}
 
         if (oldWb)
             oldWb->deactivated();
 
         // If the method Activate is available we call it
-        if (handler.hasAttr(std::string("Activated"))) {
-            Py::Object method(handler.getAttr(std::string("Activated")));
-            if (method.isCallable()) {
-                Py::Tuple args;
-                Py::Callable activate(method);
-                activate.apply(args);
-            }
-        }
+        //if (handler.hasAttr(std::string("Activated"))) {
+        //    Py::Object method(handler.getAttr(std::string("Activated")));
+        //    if (method.isCallable()) {
+        //        Py::Tuple args;
+        //        Py::Callable activate(method);
+        //        activate.apply(args);
+        //    }
+        //}
 
         // now get the newly activated workbench
         Workbench* newWb = WorkbenchManager::instance()->active();
         if (newWb)
             newWb->activated();
     }
-    catch (Py::Exception&) {
-        Base::PyException e; // extract the Python error text
-        QString msg = QString::fromLatin1(e.what());
-        QRegExp rx;
-        // ignore '<type 'exceptions.ImportError'>' prefixes
-        rx.setPattern(QLatin1String("^\\s*<type 'exceptions.ImportError'>:\\s*"));
-        int pos = rx.indexIn(msg);
-        while ( pos != -1 ) {
-            msg = msg.mid(rx.matchedLength());
-            pos = rx.indexIn(msg);
-        }
+    //catch (Py::Exception&) {
+    //    Base::PyException e; // extract the Python error text
+    //    QString msg = QString::fromLatin1(e.what());
+    //    QRegExp rx;
+    //    // ignore '<type 'exceptions.ImportError'>' prefixes
+    //    rx.setPattern(QLatin1String("^\\s*<type 'exceptions.ImportError'>:\\s*"));
+    //    int pos = rx.indexIn(msg);
+    //    while ( pos != -1 ) {
+    //        msg = msg.mid(rx.matchedLength());
+    //        pos = rx.indexIn(msg);
+    //    }
 
-        Base::Console().Error("%s\n", (const char*)msg.toLatin1());
-        Base::Console().Error("%s\n", e.getStackTrace().c_str());
-        if (!d->startingUp) {
-            wc.restoreCursor();
-            QMessageBox::critical(getMainWindow(), QObject::tr("Workbench failure"), 
-                QObject::tr("%1").arg(msg));
-            wc.setWaitCursor();
-        }
-    }
+    //    Base::Console().Error("%s\n", (const char*)msg.toLatin1());
+    //    Base::Console().Error("%s\n", e.getStackTrace().c_str());
+    //    if (!d->startingUp) {
+    //        wc.restoreCursor();
+    //        QMessageBox::critical(getMainWindow(), QObject::tr("Workbench failure"), 
+    //            QObject::tr("%1").arg(msg));
+    //        wc.setWaitCursor();
+    //    }
+    //}
 
     return ok;
 }
 
 QPixmap Application::workbenchIcon(const QString& wb) const
 {
-    Base::PyGILStateLocker lock;
-    // get the python workbench object from the dictionary
-    PyObject* pcWorkbench = PyDict_GetItemString(_pcWorkbenchDictionary, wb.toLatin1());
-    // test if the workbench exists
-    if (pcWorkbench) {
-        // make a unique icon name
-        std::stringstream str;
-        str << static_cast<const void *>(pcWorkbench) << std::ends;
-        std::string iconName = str.str();
-        QPixmap icon;
-        if (BitmapFactory().findPixmapInCache(iconName.c_str(), icon))
-            return icon;
-
-        // get its Icon member if possible
-        try {
-            Py::Object handler(pcWorkbench);
-            if (handler.hasAttr(std::string("Icon"))) {
-                Py::Object member = handler.getAttr(std::string("Icon"));
-                Py::String data(member);
-                std::string content = data.as_std_string("utf-8");
-
-                // test if in XPM format
-                QByteArray ary;
-                int strlen = (int)content.size();
-                ary.resize(strlen);
-                for (int j=0; j<strlen; j++)
-                    ary[j]=content[j];
-                if (ary.indexOf("/* XPM */") > 0) {
-                    // Make sure to remove crap around the XPM data
-                    QList<QByteArray> lines = ary.split('\n');
-                    QByteArray buffer;
-                    buffer.reserve(ary.size()+lines.size());
-                    for (QList<QByteArray>::iterator it = lines.begin(); it != lines.end(); ++it) {
-                        QByteArray trim = it->trimmed();
-                        if (!trim.isEmpty()) {
-                            buffer.append(trim);
-                            buffer.append('\n');
-                        }
-                    }
-                    icon.loadFromData(buffer, "XPM");
-                }
-                else {
-                    // is it a file name...
-                    QString file = QString::fromUtf8(content.c_str());
-                    icon.load(file);
-                    if (icon.isNull()) {
-                        // ... or the name of another icon?
-                        icon = BitmapFactory().pixmap(file.toUtf8());
-                    }
-                }
-
-                if (!icon.isNull()) {
-                    BitmapFactory().addPixmapToCache(iconName.c_str(), icon);
-                }
-
-                return icon;
-            }
-        }
-        catch (Py::Exception& e) {
-            e.clear();
-        }
-    }
-
     QIcon icon = QApplication::windowIcon();
     if (!icon.isNull()) {
         QList<QSize> s = icon.availableSizes();
@@ -1214,50 +969,12 @@ QPixmap Application::workbenchIcon(const QString& wb) const
 
 QString Application::workbenchToolTip(const QString& wb) const
 {
-    // get the python workbench object from the dictionary
-    Base::PyGILStateLocker lock;
-    PyObject* pcWorkbench = PyDict_GetItemString(_pcWorkbenchDictionary, wb.toLatin1());
-    // test if the workbench exists
-    if (pcWorkbench) {
-        // get its ToolTip member if possible
-        try {
-            Py::Object handler(pcWorkbench);
-            Py::Object member = handler.getAttr(std::string("ToolTip"));
-            if (member.isString()) {
-                Py::String tip(member);
-                return QString::fromUtf8(tip.as_std_string("utf-8").c_str());
-            }
-        }
-        catch (Py::Exception& e) {
-            e.clear();
-        }
-    }
 
     return QString();
 }
 
 QString Application::workbenchMenuText(const QString& wb) const
 {
-    // get the python workbench object from the dictionary
-    Base::PyGILStateLocker lock;
-    PyObject* pcWorkbench = PyDict_GetItemString(_pcWorkbenchDictionary, wb.toLatin1());
-    // test if the workbench exists
-    if (pcWorkbench) {
-        // get its ToolTip member if possible
-        Base::PyGILStateLocker locker;
-        try {
-            Py::Object handler(pcWorkbench);
-            Py::Object member = handler.getAttr(std::string("MenuText"));
-            if (member.isString()) {
-                Py::String tip(member);
-                return QString::fromUtf8(tip.as_std_string("utf-8").c_str());
-            }
-        }
-        catch (Py::Exception& e) {
-            e.clear();
-        }
-    }
-
     return QString();
 }
 
@@ -1283,68 +1000,43 @@ QStringList Application::workbenches(void) const
             extra.push_back(QLatin1String(""));
     }
 
-    PyObject *key, *value;
-    Py_ssize_t pos = 0;
     QStringList wb;
-    // insert all items
-    while (PyDict_Next(_pcWorkbenchDictionary, &pos, &key, &value)) {
-        /* do something interesting with the values... */
-#if PY_MAJOR_VERSION >= 3
-        const char* wbName = PyUnicode_AsUTF8(key);
-#else
-        const char* wbName = PyString_AsString(key);
-#endif
-        // add only allowed workbenches
-        bool ok = true;
-        if (!extra.isEmpty()&&ok) {
-            ok = (extra.indexOf(QString::fromLatin1(wbName)) != -1);
-        }
-        if (!hidden.isEmpty()&&ok) {
-            ok = (hidden.indexOf(QString::fromLatin1(wbName)) == -1);
-        }
-    
-        // okay the item is visible
-        if (ok)
-            wb.push_back(QString::fromLatin1(wbName));
-        // also allow start workbench in case it is hidden
-        else if (strcmp(wbName, start) == 0)
-            wb.push_back(QString::fromLatin1(wbName));
-    }
+    wb.push_back(QString::fromLatin1("lolworkbook"));
 
     return wb;
 }
 
 void Application::setupContextMenu(const char* recipient, MenuItem* items) const
 {
-    Workbench* actWb = WorkbenchManager::instance()->active();
-    if (actWb) {
-        // when populating the context-menu of a Python workbench invoke the method 
-        // 'ContextMenu' of the handler object
-        if (actWb->getTypeId().isDerivedFrom(PythonWorkbench::getClassTypeId())) {
-            static_cast<PythonWorkbench*>(actWb)->clearContextMenu();
-            Base::PyGILStateLocker lock;
-            PyObject* pWorkbench = 0;
-            pWorkbench = PyDict_GetItemString(_pcWorkbenchDictionary, actWb->name().c_str());
-
-            try {
-                // call its GetClassName method if possible
-                Py::Object handler(pWorkbench);
-                Py::Callable method(handler.getAttr(std::string("ContextMenu")));
-                Py::Tuple args(1);
-                args.setItem(0, Py::String(recipient));
-                method.apply(args);
-            }
-            catch (Py::Exception& e) {
-                Py::Object o = Py::type(e);
-                e.clear();
-                if (o.isString()) {
-                    Py::String s(o);
-                    std::clog << "Application::setupContextMenu: " << s.as_std_string("utf-8") << std::endl;
-                }
-            }
-        }
-        actWb->setupContextMenu(recipient, items);
-    }
+//    Workbench* actWb = WorkbenchManager::instance()->active();
+//    if (actWb) {
+//        // when populating the context-menu of a Python workbench invoke the method 
+//        // 'ContextMenu' of the handler object
+//        if (actWb->getTypeId().isDerivedFrom(PythonWorkbench::getClassTypeId())) {
+//            static_cast<PythonWorkbench*>(actWb)->clearContextMenu();
+//            Base::PyGILStateLocker lock;
+//            PyObject* pWorkbench = 0;
+//            pWorkbench = PyDict_GetItemString(_pcWorkbenchDictionary, actWb->name().c_str());
+//
+//            try {
+//                // call its GetClassName method if possible
+//                Py::Object handler(pWorkbench);
+//                Py::Callable method(handler.getAttr(std::string("ContextMenu")));
+//                Py::Tuple args(1);
+//                args.setItem(0, Py::String(recipient));
+//                method.apply(args);
+//            }
+//            catch (Py::Exception& e) {
+//                Py::Object o = Py::type(e);
+//                e.clear();
+//                if (o.isString()) {
+//                    Py::String s(o);
+//                    std::clog << "Application::setupContextMenu: " << s.as_std_string("utf-8") << std::endl;
+//                }
+//            }
+//        }
+//        actWb->setupContextMenu(recipient, items);
+//    }
 }
 
 bool Application::isClosing(void)
@@ -1431,7 +1123,7 @@ void messageHandler(QtMsgType type, const char *msg)
 #else
     // do not stress user with Qt internals but write to log file if enabled
     Q_UNUSED(type);
-    Base::Console().Log("%s\n", msg);
+    printf("%s\n", msg);
 #endif
 }
 #endif
@@ -1483,13 +1175,13 @@ void Application::initApplication(void)
 {
     static bool init = false;
     if (init) {
-        Base::Console().Error("Tried to run Gui::Application::initApplication() twice!\n");
+        printf("Tried to run Gui::Application::initApplication() twice!\n");
         return;
     }
 
     try {
         initTypes();
-        new Base::ScriptProducer( "FreeCADGuiInit", FreeCADGuiInit );
+        //new Base::ScriptProducer( "FreeCADGuiInit", FreeCADGuiInit );
         init_resources();
 #if QT_VERSION >=0x050000
         old_qtmsg_handler = qInstallMessageHandler(messageHandler);
@@ -1516,18 +1208,18 @@ void Application::initTypes(void)
     // View Provider
     Gui::ViewProvider                           ::init();
     Gui::ViewProviderExtension                  ::init();
-    Gui::ViewProviderExtensionPython            ::init();
+    //Gui::ViewProviderExtensionPython            ::init();
     Gui::ViewProviderGroupExtension             ::init();
-    Gui::ViewProviderGroupExtensionPython       ::init();
+    //Gui::ViewProviderGroupExtensionPython       ::init();
     Gui::ViewProviderGeoFeatureGroupExtension   ::init();
-    Gui::ViewProviderGeoFeatureGroupExtensionPython::init();    
+    //Gui::ViewProviderGeoFeatureGroupExtensionPython::init();    
     Gui::ViewProviderOriginGroupExtension       ::init();
-    Gui::ViewProviderOriginGroupExtensionPython ::init();
+    //Gui::ViewProviderOriginGroupExtensionPython ::init();
     Gui::ViewProviderExtern                     ::init();
     Gui::ViewProviderDocumentObject             ::init();
     Gui::ViewProviderFeature                    ::init();
     Gui::ViewProviderDocumentObjectGroup        ::init();
-    Gui::ViewProviderDocumentObjectGroupPython  ::init();
+    //Gui::ViewProviderDocumentObjectGroupPython  ::init();
     Gui::ViewProviderGeometryObject             ::init();
     Gui::ViewProviderInventorObject             ::init();
     Gui::ViewProviderVRMLObject                 ::init();
@@ -1535,19 +1227,19 @@ void Application::initTypes(void)
     Gui::ViewProviderAnnotationLabel            ::init();
     Gui::ViewProviderPointMarker                ::init();
     Gui::ViewProviderMeasureDistance            ::init();
-    Gui::ViewProviderPythonFeature              ::init();
-    Gui::ViewProviderPythonGeometry             ::init();
+    //Gui::ViewProviderPythonFeature              ::init();
+    //Gui::ViewProviderPythonGeometry             ::init();
     Gui::ViewProviderPlacement                  ::init();
     Gui::ViewProviderOriginFeature              ::init();
     Gui::ViewProviderPlane                      ::init();
     Gui::ViewProviderLine                       ::init();
     Gui::ViewProviderGeoFeatureGroup            ::init();
-    Gui::ViewProviderGeoFeatureGroupPython      ::init();
+    //Gui::ViewProviderGeoFeatureGroupPython      ::init();
     Gui::ViewProviderOriginGroup                ::init();
     Gui::ViewProviderPart                       ::init();
     Gui::ViewProviderOrigin                     ::init();
     Gui::ViewProviderMaterialObject             ::init();
-    Gui::ViewProviderMaterialObjectPython       ::init();
+    //Gui::ViewProviderMaterialObjectPython       ::init();
     Gui::ViewProviderTextDocument               ::init();
 
     // Workbench
@@ -1556,13 +1248,10 @@ void Application::initTypes(void)
     Gui::BlankWorkbench                         ::init();
     Gui::NoneWorkbench                          ::init();
     Gui::TestWorkbench                          ::init();
-    Gui::PythonBaseWorkbench                    ::init();
-    Gui::PythonBlankWorkbench                   ::init();
-    Gui::PythonWorkbench                        ::init();
 
     // register transaction type
-    new App::TransactionProducer<TransactionViewProvider>
-            (ViewProviderDocumentObject::getClassTypeId());
+    //new App::TransactionProducer<TransactionViewProvider>
+    //        (ViewProviderDocumentObject::getClassTypeId());
 }
 
 void Application::runApplication(void)
@@ -1571,7 +1260,7 @@ void Application::runApplication(void)
     std::map<std::string,std::string>::const_iterator it;
 
     // A new QApplication
-    Base::Console().Log("Init: Creating Gui::Application and QApplication\n");
+    //Base::Console().Log("Init: Creating Gui::Application and QApplication\n");
     // if application not yet created by the splasher
     int argc = App::Application::GetARGC();
     GUISingleApplication mainApp(argc, App::Application::GetARGV());
@@ -1654,31 +1343,31 @@ void Application::runApplication(void)
         throw Base::RuntimeError("This system does not support OpenGL");
     }
     if (!QGLFramebufferObject::hasOpenGLFramebufferObjects()) {
-        Base::Console().Log("This system does not support framebuffer objects\n");
+        printf("This system does not support framebuffer objects\n");
     }
     if (!QGLPixelBuffer::hasOpenGLPbuffers()) {
-        Base::Console().Log("This system does not support pbuffers\n");
+        printf("This system does not support pbuffers\n");
     }
 
     QGLFormat::OpenGLVersionFlags version = QGLFormat::openGLVersionFlags ();
     if (version & QGLFormat::OpenGL_Version_3_0)
-        Base::Console().Log("OpenGL version 3.0 or higher is present\n");
+        printf("OpenGL version 3.0 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_2_1)
-        Base::Console().Log("OpenGL version 2.1 or higher is present\n");
+        printf("OpenGL version 2.1 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_2_0)
-        Base::Console().Log("OpenGL version 2.0 or higher is present\n");
+        printf("OpenGL version 2.0 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_1_5)
-        Base::Console().Log("OpenGL version 1.5 or higher is present\n");
+        printf("OpenGL version 1.5 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_1_4)
-        Base::Console().Log("OpenGL version 1.4 or higher is present\n");
+        printf("OpenGL version 1.4 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_1_3)
-        Base::Console().Log("OpenGL version 1.3 or higher is present\n");
+        printf("OpenGL version 1.3 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_1_2)
-        Base::Console().Log("OpenGL version 1.2 or higher is present\n");
+        printf("OpenGL version 1.2 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_1_1)
-        Base::Console().Log("OpenGL version 1.1 or higher is present\n");
+        printf("OpenGL version 1.1 or higher is present\n");
     else if (version & QGLFormat::OpenGL_Version_None)
-        Base::Console().Log("No OpenGL is present or no OpenGL context is current\n");
+        printf("No OpenGL is present or no OpenGL context is current\n");
 #endif
 
 #if !defined(Q_OS_LINUX)
@@ -1784,11 +1473,11 @@ void Application::runApplication(void)
 
     // running the GUI init script
     try {
-        Base::Console().Log("Run Gui init script\n");
-        Base::Interpreter().runString(Base::ScriptFactory().ProduceScript("FreeCADGuiInit"));
+        printf("Run Gui init script\n");
+        //Base::Interpreter().runString(Base::ScriptFactory().ProduceScript("FreeCADGuiInit"));
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("Error in FreeCADGuiInit.py: %s\n", e.what());
+        printf("Error in FreeCADGuiInit.py: %s\n", e.what());
         mw.stopSplasher();
         throw;
     }
@@ -1800,7 +1489,7 @@ void Application::runApplication(void)
 
     // Activate the correct workbench
     std::string start = App::Application::Config()["StartWorkbench"];
-    Base::Console().Log("Init: Activating default workbench %s\n", start.c_str());
+    printf("Init: Activating default workbench %s\n", start.c_str());
     start = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/General")->
                            GetASCII("AutoloadModule", start.c_str());
     // if the auto workbench is not visible then force to use the default workbech
@@ -1819,7 +1508,7 @@ void Application::runApplication(void)
 
     // show the main window
     if (!hidden) {
-        Base::Console().Log("Init: Showing main window\n");
+        printf("Init: Showing main window\n");
         mw.loadWindowSettings();
     }
 
@@ -1871,7 +1560,7 @@ void Application::runApplication(void)
     QTimer::singleShot(0, &mw, SLOT(delayedStartup()));
 
     // run the Application event loop
-    Base::Console().Log("Init: Entering event loop\n");
+    printf("Init: Entering event loop\n");
 
     // boot phase reference point
     // https://forum.freecadweb.org/viewtopic.php?f=10&t=21665
@@ -1883,15 +1572,15 @@ void Application::runApplication(void)
           << "_" << QCoreApplication::applicationPid() << ".lock";
         // open a lock file with the PID
         Base::FileInfo fi(s.str());
-        Base::ofstream lock(fi);
+        std::ofstream lock(fi.filePath());
         boost::interprocess::file_lock flock(s.str().c_str());
         flock.lock();
 
         mainApp.exec();
         // Qt can't handle exceptions thrown from event handlers, so we need
         // to manually rethrow SystemExitExceptions.
-        if(mainApp.caughtException.get())
-            throw Base::SystemExitException(*mainApp.caughtException.get());
+        //if(mainApp.caughtException.get())
+        //    throw Base::SystemExitException(*mainApp.caughtException.get());
 
         // close the lock file, in case of a crash we can see the existing lock file
         // on the next restart and try to repair the documents, if needed.
@@ -1899,24 +1588,24 @@ void Application::runApplication(void)
         lock.close();
         fi.deleteFile();
     }
-    catch (const Base::SystemExitException&) {
-        Base::Console().Message("System exit\n");
-        throw;
-    }
+    //catch (const Base::SystemExitException&) {
+    //    Base::Console().Message("System exit\n");
+    //    throw;
+    //}
     catch (const std::exception& e) {
         // catching nasty stuff coming out of the event loop
         App::Application::destructObserver();
-        Base::Console().Error("Event loop left through unhandled exception: %s\n", e.what());
+        printf("Event loop left through unhandled exception: %s\n", e.what());
         throw;
     }
     catch (...) {
         // catching nasty stuff coming out of the event loop
         App::Application::destructObserver();
-        Base::Console().Error("Event loop left through unhandled exception\n");
+        printf("Event loop left through unhandled exception\n");
         throw;
     }
 
-    Base::Console().Log("Finish: Event loop left\n");
+    printf("Finish: Event loop left\n");
 }
 
 void Application::checkForPreviousCrashes()

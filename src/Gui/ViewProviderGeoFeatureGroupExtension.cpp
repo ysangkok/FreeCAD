@@ -33,7 +33,6 @@
 #include "Application.h"
 #include "Document.h"
 #include <App/GeoFeatureGroupExtension.h>
-#include <Base/Console.h>
 #include <Inventor/nodes/SoGroup.h>
 
 using namespace Gui;
@@ -118,11 +117,4 @@ void ViewProviderGeoFeatureGroupExtension::extensionUpdateData(const App::Proper
     } else {
         ViewProviderGroupExtension::extensionUpdateData ( prop );
     }
-}
-
-namespace Gui {
-EXTENSION_PROPERTY_SOURCE_TEMPLATE(Gui::ViewProviderGeoFeatureGroupExtensionPython, Gui::ViewProviderGeoFeatureGroupExtension)
-
-// explicit template instantiation
-template class GuiExport ViewProviderExtensionPythonT<ViewProviderGeoFeatureGroupExtension>;
 }

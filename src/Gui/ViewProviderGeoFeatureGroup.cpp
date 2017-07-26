@@ -50,11 +50,3 @@ ViewProviderGeoFeatureGroup::~ViewProviderGeoFeatureGroup()
 
 // Python feature -----------------------------------------------------------------------
 
-namespace Gui {
-/// @cond DOXERR
-PROPERTY_SOURCE_TEMPLATE(Gui::ViewProviderGeoFeatureGroupPython, Gui::ViewProviderGeoFeatureGroup)
-/// @endcond
-
-// explicit template instantiation
-template class GuiExport ViewProviderPythonFeatureT<ViewProviderGeoFeatureGroup>;
-}

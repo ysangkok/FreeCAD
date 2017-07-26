@@ -26,7 +26,7 @@
 
 
 #include "ViewProviderDocumentObject.h"
-#include "ViewProviderPythonFeature.h"
+//#include "ViewProviderPythonFeature.h"
 
 namespace Gui {
 
@@ -48,8 +48,6 @@ public:
     virtual bool isShow(void) const{return true;}
 
 };
-
-typedef ViewProviderPythonFeatureT<ViewProviderMaterialObject> ViewProviderMaterialObjectPython;
 
 } // namespace Gui
 

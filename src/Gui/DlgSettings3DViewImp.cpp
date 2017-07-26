@@ -36,7 +36,7 @@
 #include "View3DInventorViewer.h"
 #include "ui_MouseButtons.h"
 #include <App/Application.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Parameter.h>
 #include <Base/Tools.h>
 

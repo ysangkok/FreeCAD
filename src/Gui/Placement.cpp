@@ -37,9 +37,9 @@
 #include <App/Document.h>
 #include <App/GeoFeature.h>
 #include <App/PropertyGeo.h>
-#include <Base/Console.h>
+//#include <Base/Console.h>
 #include <Base/Tools.h>
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 
 using namespace Gui::Dialog;
 
@@ -197,7 +197,7 @@ void Placement::applyPlacement(const Base::Placement& p, bool incremental)
         }
     }
     else {
-        Base::Console().Warning("No object selected.\n");
+        printf("No object selected.\n");
     }
 }
 
@@ -246,7 +246,7 @@ void Placement::applyPlacement(const QString& data, bool incremental)
         }
     }
     else {
-        Base::Console().Warning("No object selected.\n");
+        printf("No object selected.\n");
     }
 }
 

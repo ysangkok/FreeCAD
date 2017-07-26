@@ -38,7 +38,6 @@
 # include <QThreadPool>
 #endif
 
-#include <Base/Console.h>
 #include "Application.h"
 #include "MainWindow.h"
 #include "MDIView.h"
@@ -537,7 +536,7 @@ public:
         }
 
         this->deleteLater();
-        Base::Console().Message("Thread with %d steps finished\n",this->steps);
+        printf("Thread with %d steps finished\n",this->steps);
     }
 
 private:
@@ -667,7 +666,7 @@ CmdTestConsoleOutput::CmdTestConsoleOutput()
 }
 
 namespace Gui {
-class TestConsoleObserver : public Base::ConsoleObserver
+class TestConsoleObserver
 {
     QMutex mutex;
 public:
@@ -703,7 +702,7 @@ public:
     void run()
     {
         for (int i=0; i<10; i++)
-            Base::Console().Message("Write a message to the console output.\n");
+            printf("Write a message to the console output.\n");
     }
 };
 
@@ -713,7 +712,7 @@ public:
     void run()
     {
         for (int i=0; i<10; i++)
-            Base::Console().Warning("Write a warning to the console output.\n");
+            printf("Write a warning to the console output.\n");
     }
 };
 
@@ -723,7 +722,7 @@ public:
     void run()
     {
         for (int i=0; i<10; i++)
-            Base::Console().Error("Write an error to the console output.\n");
+            printf("Write an error to the console output.\n");
     }
 };
 
@@ -733,7 +732,7 @@ public:
     void run()
     {
         for (int i=0; i<10; i++)
-            Base::Console().Log("Write a log to the console output.\n");
+            printf("Write a log to the console output.\n");
     }
 };
 
@@ -743,16 +742,14 @@ void CmdTestConsoleOutput::activated(int iMsg)
 {
     Q_UNUSED(iMsg); 
     TestConsoleObserver obs;
-    Base::Console().AttachObserver(&obs);
     QThreadPool::globalInstance()->start(new ConsoleMessageTask);
     QThreadPool::globalInstance()->start(new ConsoleWarningTask);
     QThreadPool::globalInstance()->start(new ConsoleErrorTask);
     QThreadPool::globalInstance()->start(new ConsoleLogTask);
     QThreadPool::globalInstance()->waitForDone();
-    Base::Console().DetachObserver(&obs);
 
     if (obs.matchMsg > 0 || obs.matchWrn > 0 || obs.matchErr > 0 || obs.matchLog > 0) {
-        Base::Console().Error("Race condition in Console class\n");
+        printf("Race condition in Console class\n");
     }
 }
 

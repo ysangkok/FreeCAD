@@ -83,31 +83,6 @@ private:
   //Gui::ViewProviderDocumentObject* m_viewBase = nullptr;
 };
 
-/**
- * Generic Python extension class which allows to behave every extension
- * derived class as Python extension -- simply by subclassing.
- */
-template <class ExtensionT>
-class ViewProviderExtensionPythonT : public ExtensionT
-{
-    EXTENSION_PROPERTY_HEADER(Gui::ViewProviderExtensionPythonT<ExtensionT>);
-
-public:
-    typedef ExtensionT Inherited;
-    
-    ViewProviderExtensionPythonT() {
-        ExtensionT::m_isPythonExtension = true;
-        ExtensionT::initExtensionType(ViewProviderExtensionPythonT::getExtensionClassTypeId());
-        
-        EXTENSION_ADD_PROPERTY(ExtensionProxy,(Py::Object()));
-    }
-    virtual ~ViewProviderExtensionPythonT() {
-    }
-
-    App::PropertyPythonObject ExtensionProxy;
-};
-
-typedef ViewProviderExtensionPythonT<Gui::ViewProviderExtension> ViewProviderExtensionPython;
 
 } //Gui
 
