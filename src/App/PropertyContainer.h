@@ -233,7 +233,7 @@ public: \
 /// 
 #define PROPERTY_SOURCE(_class_, _parentclass_) \
 TYPESYSTEM_SOURCE_P(_class_);\
-const ::App::PropertyData * _class_::getPropertyDataPtr(void){abort();} \
+const ::App::PropertyData * _class_::getPropertyDataPtr(void){return nullptr;} \
 const ::App::PropertyData & _class_::getPropertyData(void) const{abort();} \
 /*::App::PropertyData _class_::propertyData;*/ \
 void _class_::init(void){\
@@ -243,7 +243,7 @@ void _class_::init(void){\
 
 #define PROPERTY_SOURCE_ABSTRACT(_class_, _parentclass_) \
 TYPESYSTEM_SOURCE_ABSTRACT_P(_class_);\
-const ::App::PropertyData * _class_::getPropertyDataPtr(void){abort();} \
+const ::App::PropertyData * _class_::getPropertyDataPtr(void){return nullptr;} \
 const ::App::PropertyData & _class_::getPropertyData(void) const{abort();} \
 /*::App::PropertyData _class_::propertyData;*/ \
 void _class_::init(void){\

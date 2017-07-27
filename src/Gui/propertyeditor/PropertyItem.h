@@ -59,7 +59,7 @@ void * _class_::create(void) { \
    return new _class_ ();\
 } \
 void _class_::init(void) { \
-abort();\
+\
 }
 
 namespace Gui {

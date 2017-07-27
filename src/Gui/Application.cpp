@@ -131,9 +131,16 @@ using namespace Gui::DockWnd;
 using namespace std;
 
 
-Application* Application::Instance = 0L;
+// To fix bug #0000345 move Q_INIT_RESOURCE() outside initApplication()
+static void init_resources()
+{
+    // init resources
+    Q_INIT_RESOURCE(resource);
+    Q_INIT_RESOURCE(translation);
+}
 
 namespace Gui {
+Application* Application::Instance = 0L;
 
 // Pimpl class
 struct ApplicationP
@@ -286,8 +293,6 @@ Gui::MDIView* Application::activeView(void) const
     else
         return NULL;
 }
-
-} // namespace Gui
 
 Application::Application(bool GUIenabled)
 {
@@ -1054,6 +1059,8 @@ CommandManager &Application::commandManager(void)
     return d->commandManager;
 }
 
+
+
 //**************************************************************************
 // Init, Destruct and singleton
 
@@ -1163,13 +1170,6 @@ void messageHandlerCoin(const SoError * error, void * /*userdata*/)
 
 #endif
 
-// To fix bug #0000345 move Q_INIT_RESOURCE() outside initApplication()
-static void init_resources()
-{
-    // init resources
-    Q_INIT_RESOURCE(resource);
-    Q_INIT_RESOURCE(translation);
-}
 
 void Application::initApplication(void)
 {
@@ -1182,7 +1182,7 @@ void Application::initApplication(void)
     try {
         initTypes();
         //new Base::ScriptProducer( "FreeCADGuiInit", FreeCADGuiInit );
-        init_resources();
+        ::init_resources();
 #if QT_VERSION >=0x050000
         old_qtmsg_handler = qInstallMessageHandler(messageHandler);
 #else
@@ -1685,3 +1685,4 @@ void Application::checkForPreviousCrashes()
             dlg.exec();
     }
 }
+} // namespace Gui

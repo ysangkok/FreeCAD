@@ -270,7 +270,7 @@ std::vector<App::DocumentObject*> DocumentObject::getOutListRecursive(void) cons
 
 DocumentObjectGroup* DocumentObject::getGroup() const
 {
-    return dynamic_cast<DocumentObjectGroup*>(GroupExtension::getGroupOfObject(this));
+    return nullptr;
 }
 
 bool DocumentObject::testIfLinkDAGCompatible(DocumentObject *linkTo) const

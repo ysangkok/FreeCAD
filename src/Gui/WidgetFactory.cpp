@@ -129,7 +129,7 @@ WidgetFactorySupplier & WidgetFactorySupplier::instance()
 
 void WidgetFactorySupplier::destruct()
 {
-   abort();
+   //abort();
 }
 
 // ----------------------------------------------------
