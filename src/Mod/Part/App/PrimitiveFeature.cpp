@@ -63,9 +63,6 @@
 
 
 #include "PrimitiveFeature.h"
-#include <Mod/Part/App/PartFeaturePy.h>
-#include <App/FeaturePythonPyImp.h>
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/Reader.h>
 #include <Base/Tools.h>
@@ -86,7 +83,6 @@ namespace Part {
 using namespace Part;
 
 
-PROPERTY_SOURCE_ABSTRACT_WITH_EXTENSIONS(Part::Primitive, Part::Feature)
 
 Primitive::Primitive(void) 
 {
@@ -107,20 +103,6 @@ App::DocumentObjectExecReturn* Primitive::execute(void) {
     return Part::Feature::execute();
 }
 
-namespace Part {
-    PYTHON_TYPE_DEF(PrimitivePy, PartFeaturePy)
-    PYTHON_TYPE_IMP(PrimitivePy, PartFeaturePy)
-}
-
-PyObject* Primitive::getPyObject()
-{
-    if (PythonObject.is(Py::_None())){
-        // ref counter is set to 1
-        PythonObject = Py::Object(new PrimitivePy(this),true);
-    }
-    return Py::new_reference_to(PythonObject);
-}
-
 void Primitive::Restore(Base::XMLReader &reader)
 {
     reader.readElement("Properties");
@@ -138,7 +120,7 @@ void Primitive::Restore(Base::XMLReader &reader)
         // classes do not re-implement the Save/Restore methods.
         try {
             if (prop && strcmp(prop->getTypeId().getName(), TypeName) == 0) {
-                prop->Restore(reader);
+                //prop->Restore(reader);
             }
             else if (prop) {
                 Base::Type inputType = Base::Type::fromName(TypeName);
@@ -156,17 +138,17 @@ void Primitive::Restore(Base::XMLReader &reader)
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("Primitive::Restore: Unknown C++ exception thrown");
+            printf("Primitive::Restore: Unknown C++ exception thrown");
         }
 #endif
 

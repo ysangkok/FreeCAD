@@ -102,7 +102,6 @@ public:
 
     virtual short int extensionMustExecute(void);
     virtual App::DocumentObjectExecReturn *extensionExecute(void);
-    virtual PyObject* getExtensionPyObject(void);
 protected:
     virtual void extensionOnChanged(const App::Property* /*prop*/);
     
@@ -115,8 +114,6 @@ private:
     Attacher::AttachEngine* _attacher;
 };
 
-
-typedef App::ExtensionPythonT<AttachExtension> AttachExtensionPython;
 
 } // namespace Part
 

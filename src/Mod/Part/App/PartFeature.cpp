@@ -44,7 +44,6 @@
 
 
 #include <sstream>
-#include <Base/Console.h>
 #include <Base/Writer.h>
 #include <Base/Reader.h>
 #include <Base/Exception.h>
@@ -52,10 +51,8 @@
 #include <Base/Stream.h>
 #include <Base/Placement.h>
 #include <Base/Rotation.h>
-#include <App/FeaturePythonPyImp.h>
 
 #include "PartFeature.h"
-#include "PartFeaturePy.h"
 
 using namespace Part;
 
@@ -94,32 +91,6 @@ App::DocumentObjectExecReturn *Feature::execute(void)
 {
     this->Shape.touch();
     return GeoFeature::execute();
-}
-
-PyObject *Feature::getPyObject(void)
-{
-    if (PythonObject.is(Py::_None())){
-        // ref counter is set to 1
-        PythonObject = Py::Object(new PartFeaturePy(this),true);
-    }
-    return Py::new_reference_to(PythonObject); 
-}
-
-std::vector<PyObject *> Feature::getPySubObjects(const std::vector<std::string>& NameVec) const
-{
-    try {
-        std::vector<PyObject *> temp;
-        for(std::vector<std::string>::const_iterator it=NameVec.begin();it!=NameVec.end();++it){
-            PyObject *obj = Shape.getShape().getPySubShape((*it).c_str());
-            if(obj)
-                temp.push_back(obj);
-        }
-        return temp;
-    }
-    catch (Standard_Failure) {
-        Handle(Standard_Failure) e = Standard_Failure::Caught();
-        throw Py::ValueError(e->GetMessageString());
-    }
 }
 
 void Feature::onChanged(const App::Property* prop)
@@ -270,27 +241,6 @@ short FilletBase::mustExecute() const
 // ---------------------------------------------------------
 
 PROPERTY_SOURCE(Part::FeatureExt, Part::Feature)
-
-
-
-namespace App {
-/// @cond DOXERR
-PROPERTY_SOURCE_TEMPLATE(Part::FeaturePython, Part::Feature)
-template<> const char* Part::FeaturePython::getViewProviderName(void) const {
-    return "PartGui::ViewProviderPython";
-}
-template<> PyObject* Part::FeaturePython::getPyObject(void) {
-    if (PythonObject.is(Py::_None())) {
-        // ref counter is set to 1
-        PythonObject = Py::Object(new FeaturePythonPyT<Part::PartFeaturePy>(this),true);
-    }
-    return Py::new_reference_to(PythonObject);
-}
-/// @endcond
-
-// explicit template instantiation
-template class PartExport FeaturePythonT<Part::Feature>;
-}
 
 // ----------------------------------------------------------------
 

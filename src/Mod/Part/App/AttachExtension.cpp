@@ -27,12 +27,7 @@
 
 #include "AttachExtension.h"
 
-#include <Base/Console.h>
 #include <App/Application.h>
-
-#include <App/FeaturePythonPyImp.h>
-#include "AttachExtensionPy.h"
-
 
 using namespace Part;
 using namespace Attacher;
@@ -163,11 +158,11 @@ void AttachExtension::extensionOnChanged(const App::Property* prop)
                 bAttached = positionBySupport();
             } catch (Base::Exception &e) {
                 getExtendedObject()->setStatus(App::Error, true);
-                Base::Console().Error("PositionBySupport: %s",e.what());
+                printf("PositionBySupport: %s",e.what());
                 //set error message - how?
             } catch (Standard_Failure &e){
                 getExtendedObject()->setStatus(App::Error, true);
-                Base::Console().Error("PositionBySupport: %s",e.GetMessageString());
+                printf("PositionBySupport: %s",e.GetMessageString());
             }
 
             eMapMode mmode = eMapMode(this->MapMode.getValue());
@@ -202,24 +197,5 @@ App::PropertyPlacement& AttachExtension::getPlacement() {
         throw Base::RuntimeError("AttachExtension not added to GeooFeature!");
     
     return static_cast<App::GeoFeature*>(getExtendedObject())->Placement;
-}
-
-PyObject* AttachExtension::getExtensionPyObject(void) {
-    
-    if (ExtensionPythonObject.is(Py::_None())){
-        // ref counter is set to 1
-        ExtensionPythonObject = Py::Object(new AttachExtensionPy(this),true);
-    }
-    return Py::new_reference_to(ExtensionPythonObject);
-}
-
-
-namespace App {
-/// @cond DOXERR
-  EXTENSION_PROPERTY_SOURCE_TEMPLATE(Part::AttachExtensionPython, Part::AttachExtension)
-/// @endcond
-
-// explicit template instantiation
-  template class PartExport ExtensionPythonT<Part::AttachExtension>;
 }
 

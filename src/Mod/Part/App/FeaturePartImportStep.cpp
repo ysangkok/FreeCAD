@@ -26,7 +26,6 @@
 # include <fcntl.h>
 #endif
 
-#include <Base/Console.h>
 #include <Base/FileInfo.h>
 #include "FeaturePartImportStep.h"
 
@@ -52,7 +51,7 @@ App::DocumentObjectExecReturn *ImportStep::execute(void)
 {
     Base::FileInfo fi(FileName.getValue());
     if (!fi.isReadable()) {
-        Base::Console().Log("ImportStep::execute() not able to open %s!\n",FileName.getValue());
+        printf("ImportStep::execute() not able to open %s!\n",FileName.getValue());
         std::string error = std::string("Cannot open file ") + FileName.getValue();
         return new App::DocumentObjectExecReturn(error);
     }

@@ -99,34 +99,6 @@
 # include <ShapeConstruct_Curve.hxx>
 #endif
 
-#include <Base/VectorPy.h>
-#include <Mod/Part/App/LinePy.h>
-#include <Mod/Part/App/LineSegmentPy.h>
-#include <Mod/Part/App/CirclePy.h>
-#include <Mod/Part/App/EllipsePy.h>
-#include <Mod/Part/App/ArcPy.h>
-#include <Mod/Part/App/ArcOfCirclePy.h>
-#include <Mod/Part/App/ArcOfEllipsePy.h>
-#include <Mod/Part/App/ArcOfParabolaPy.h>
-#include <Mod/Part/App/BezierCurvePy.h>
-#include <Mod/Part/App/BSplineCurvePy.h>
-#include <Mod/Part/App/HyperbolaPy.h>
-#include <Mod/Part/App/ArcOfHyperbolaPy.h>
-#include <Mod/Part/App/OffsetCurvePy.h>
-#include <Mod/Part/App/ParabolaPy.h>
-#include <Mod/Part/App/BezierSurfacePy.h>
-#include <Mod/Part/App/BSplineSurfacePy.h>
-#include <Mod/Part/App/ConePy.h>
-#include <Mod/Part/App/CylinderPy.h>
-#include <Mod/Part/App/OffsetSurfacePy.h>
-#include <Mod/Part/App/PlateSurfacePy.h>
-#include <Mod/Part/App/PlanePy.h>
-#include <Mod/Part/App/RectangularTrimmedSurfacePy.h>
-#include <Mod/Part/App/SpherePy.h>
-#include <Mod/Part/App/SurfaceOfExtrusionPy.h>
-#include <Mod/Part/App/SurfaceOfRevolutionPy.h>
-#include <Mod/Part/App/ToroidPy.h>
-
 #include <Base/Exception.h>
 #include <Base/Writer.h>
 #include <Base/Reader.h>
@@ -337,11 +309,6 @@ void GeomPoint::Restore(Base::XMLReader &reader)
 
     // set the read geometry
     setPoint(Base::Vector3d(X,Y,Z) );
-}
-
-PyObject *GeomPoint::getPyObject(void)
-{
-    return new Base::VectorPy(getPoint());
 }
 
 // -------------------------------------------------
@@ -746,11 +713,6 @@ void GeomBezierCurve::Restore(Base::XMLReader& reader)
         Handle(Standard_Failure) e = Standard_Failure::Caught();
         throw Base::RuntimeError(e->GetMessageString());
     }
-}
-
-PyObject *GeomBezierCurve::getPyObject(void)
-{
-    return new BezierCurvePy((GeomBezierCurve*)this->clone());
 }
 
 // -------------------------------------------------
@@ -1257,11 +1219,6 @@ void GeomBSplineCurve::Restore(Base::XMLReader& reader)
 }
 
 
-PyObject *GeomBSplineCurve::getPyObject(void)
-{
-    return new BSplineCurvePy((GeomBSplineCurve*)this->clone());
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE_ABSTRACT(Part::GeomConic, Part::GeomCurve)
@@ -1747,11 +1704,6 @@ void GeomCircle::Restore(Base::XMLReader& reader)
     }
 }
 
-PyObject *GeomCircle::getPyObject(void)
-{
-    return new CirclePy(static_cast<GeomCircle*>(this->clone()));
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomArcOfCircle,Part::GeomArcOfConic)
@@ -1971,11 +1923,6 @@ void GeomArcOfCircle::Restore(Base::XMLReader &reader)
         Handle(Standard_Failure) e = Standard_Failure::Caught();
         throw Base::RuntimeError(e->GetMessageString());
     }
-}
-
-PyObject *GeomArcOfCircle::getPyObject(void)
-{
-    return new ArcOfCirclePy(static_cast<GeomArcOfCircle*>(this->clone()));
 }
 
 // -------------------------------------------------
@@ -2218,11 +2165,6 @@ void GeomEllipse::Restore(Base::XMLReader& reader)
         Handle(Standard_Failure) e = Standard_Failure::Caught();
         throw Base::RuntimeError(e->GetMessageString());
     }
-}
-
-PyObject *GeomEllipse::getPyObject(void)
-{
-    return new EllipsePy((GeomEllipse*)this->clone());
 }
 
 // -------------------------------------------------
@@ -2497,11 +2439,6 @@ void GeomArcOfEllipse::Restore(Base::XMLReader &reader)
     }
 }
 
-PyObject *GeomArcOfEllipse::getPyObject(void)
-{
-    return new ArcOfEllipsePy(static_cast<GeomArcOfEllipse*>(this->clone()));
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomHyperbola,Part::GeomConic)
@@ -2658,10 +2595,6 @@ void GeomHyperbola::Restore(Base::XMLReader& reader)
     }
 }
 
-PyObject *GeomHyperbola::getPyObject(void)
-{
-    return new HyperbolaPy(static_cast<GeomHyperbola*>(this->clone()));
-}
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomArcOfHyperbola,Part::GeomArcOfConic)
@@ -2927,10 +2860,6 @@ void GeomArcOfHyperbola::Restore(Base::XMLReader &reader)
     }
 }
 
-PyObject *GeomArcOfHyperbola::getPyObject(void)
-{
-    return new ArcOfHyperbolaPy(static_cast<GeomArcOfHyperbola*>(this->clone()));
-}
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomParabola,Part::GeomConic)
@@ -3065,11 +2994,6 @@ void GeomParabola::Restore(Base::XMLReader& reader)
         Handle(Standard_Failure) e = Standard_Failure::Caught();
         throw Base::RuntimeError(e->GetMessageString());
     }
-}
-
-PyObject *GeomParabola::getPyObject(void)
-{
-    return new ParabolaPy(static_cast<GeomParabola*>(this->clone()));
 }
 
 // -------------------------------------------------
@@ -3279,11 +3203,6 @@ void GeomArcOfParabola::Restore(Base::XMLReader &reader)
     }
 }
 
-PyObject *GeomArcOfParabola::getPyObject(void)
-{
-    return new ArcOfParabolaPy(static_cast<GeomArcOfParabola*>(this->clone()));
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomLine,Part::GeomCurve)
@@ -3388,11 +3307,6 @@ void GeomLine::Restore(Base::XMLReader &reader)
 
     // set the read geometry
     setLine(Base::Vector3d(PosX,PosY,PosZ),Base::Vector3d(DirX,DirY,DirZ) );
-}
-
-PyObject *GeomLine::getPyObject(void)
-{
-    return 0;
 }
 
 // -------------------------------------------------
@@ -3531,11 +3445,6 @@ void GeomLineSegment::Restore    (Base::XMLReader &reader)
     setPoints(Base::Vector3d(StartX,StartY,StartZ),Base::Vector3d(EndX,EndY,EndZ) );
 }
 
-PyObject *GeomLineSegment::getPyObject(void)
-{
-    return new LineSegmentPy(static_cast<GeomLineSegment*>(this->clone()));
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomOffsetCurve,Part::GeomCurve)
@@ -3580,11 +3489,6 @@ unsigned int GeomOffsetCurve::getMemSize (void) const               {assert(0); 
 void         GeomOffsetCurve::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomOffsetCurve::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
 
-PyObject *GeomOffsetCurve::getPyObject(void)
-{
-    return new OffsetCurvePy((GeomOffsetCurve*)this->clone());
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomTrimmedCurve,Part::GeomCurve)
@@ -3623,11 +3527,6 @@ Geometry *GeomTrimmedCurve::copy(void) const
 unsigned int GeomTrimmedCurve::getMemSize (void) const               {assert(0); return 0;/* not implemented yet */}
 void         GeomTrimmedCurve::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomTrimmedCurve::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
-
-PyObject *GeomTrimmedCurve::getPyObject(void)
-{
-    return 0;
-}
 
 // -------------------------------------------------
 
@@ -3723,11 +3622,6 @@ unsigned int GeomBezierSurface::getMemSize (void) const               {assert(0)
 void         GeomBezierSurface::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomBezierSurface::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
 
-PyObject *GeomBezierSurface::getPyObject(void)
-{
-    return new BezierSurfacePy((GeomBezierSurface*)this->clone());
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomBSplineSurface,Part::GeomSurface)
@@ -3782,11 +3676,6 @@ unsigned int GeomBSplineSurface::getMemSize (void) const               {assert(0
 void         GeomBSplineSurface::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomBSplineSurface::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
 
-PyObject *GeomBSplineSurface::getPyObject(void)
-{
-    return new BSplineSurfacePy((GeomBSplineSurface*)this->clone());
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomCylinder,Part::GeomSurface)
@@ -3828,11 +3717,6 @@ Geometry *GeomCylinder::copy(void) const
 unsigned int GeomCylinder::getMemSize (void) const               {assert(0); return 0;/* not implemented yet */}
 void         GeomCylinder::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomCylinder::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
-
-PyObject *GeomCylinder::getPyObject(void)
-{
-    return new CylinderPy((GeomCylinder*)this->clone());
-}
 
 // -------------------------------------------------
 
@@ -3876,11 +3760,6 @@ unsigned int GeomCone::getMemSize (void) const               {assert(0); return 
 void         GeomCone::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomCone::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
 
-PyObject *GeomCone::getPyObject(void)
-{
-    return new ConePy((GeomCone*)this->clone());
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomToroid,Part::GeomSurface)
@@ -3922,11 +3801,6 @@ Geometry *GeomToroid::copy(void) const
 unsigned int GeomToroid::getMemSize (void) const               {assert(0); return 0;/* not implemented yet */}
 void         GeomToroid::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomToroid::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
-
-PyObject *GeomToroid::getPyObject(void)
-{
-    return new ToroidPy((GeomToroid*)this->clone());
-}
 
 // -------------------------------------------------
 
@@ -3970,11 +3844,6 @@ unsigned int GeomSphere::getMemSize (void) const               {assert(0); retur
 void         GeomSphere::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomSphere::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
 
-PyObject *GeomSphere::getPyObject(void)
-{
-    return new SpherePy((GeomSphere*)this->clone());
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomPlane,Part::GeomSurface)
@@ -4016,11 +3885,6 @@ Geometry *GeomPlane::copy(void) const
 unsigned int GeomPlane::getMemSize (void) const               {assert(0); return 0;/* not implemented yet */}
 void         GeomPlane::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomPlane::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
-
-PyObject *GeomPlane::getPyObject(void)
-{
-    return new PlanePy((GeomPlane*)this->clone());
-}
 
 // -------------------------------------------------
 
@@ -4065,11 +3929,6 @@ Geometry *GeomOffsetSurface::copy(void) const
 unsigned int GeomOffsetSurface::getMemSize (void) const               {assert(0); return 0;/* not implemented yet */}
 void         GeomOffsetSurface::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomOffsetSurface::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
-
-PyObject *GeomOffsetSurface::getPyObject(void)
-{
-    return new OffsetSurfacePy((GeomOffsetSurface*)this->clone());
-}
 
 // -------------------------------------------------
 
@@ -4132,11 +3991,6 @@ void GeomPlateSurface::Restore(Base::XMLReader &/*reader*/)
     throw Base::NotImplementedError("GeomPlateSurface::Restore");
 }
 
-PyObject *GeomPlateSurface::getPyObject(void)
-{
-    return new PlateSurfacePy(static_cast<GeomPlateSurface*>(this->clone()));
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomTrimmedSurface,Part::GeomSurface)
@@ -4175,11 +4029,6 @@ Geometry *GeomTrimmedSurface::copy(void) const
 unsigned int GeomTrimmedSurface::getMemSize (void) const {assert(0); return 0;/* not implemented yet */}
 void         GeomTrimmedSurface::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomTrimmedSurface::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
-
-PyObject *GeomTrimmedSurface::getPyObject(void)
-{
-    return 0;
-}
 
 // -------------------------------------------------
 
@@ -4225,11 +4074,6 @@ unsigned int GeomSurfaceOfRevolution::getMemSize (void) const               {ass
 void         GeomSurfaceOfRevolution::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomSurfaceOfRevolution::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
 
-PyObject *GeomSurfaceOfRevolution::getPyObject(void)
-{
-    return new SurfaceOfRevolutionPy((GeomSurfaceOfRevolution*)this->clone());
-}
-
 // -------------------------------------------------
 
 TYPESYSTEM_SOURCE(Part::GeomSurfaceOfExtrusion,Part::GeomSurface)
@@ -4273,12 +4117,6 @@ Geometry *GeomSurfaceOfExtrusion::copy(void) const
 unsigned int GeomSurfaceOfExtrusion::getMemSize (void) const               {assert(0); return 0;/* not implemented yet */}
 void         GeomSurfaceOfExtrusion::Save       (Base::Writer &/*writer*/) const {assert(0);          /* not implemented yet */}
 void         GeomSurfaceOfExtrusion::Restore    (Base::XMLReader &/*reader*/)    {assert(0);          /* not implemented yet */}
-
-PyObject *GeomSurfaceOfExtrusion::getPyObject(void)
-{
-    return new SurfaceOfExtrusionPy((GeomSurfaceOfExtrusion*)this->clone());
-}
-
 
 // Helper functions for fillet tools
 // -------------------------------------------------

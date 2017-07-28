@@ -56,12 +56,7 @@
 #include <gp_Trsf.hxx>
 #include <Precision.hxx>
 
-#include <Base/Console.h>
 #include "TopoShape.h"
-#include "TopoShapePy.h"
-#include "TopoShapeEdgePy.h"
-#include "TopoShapeWirePy.h"
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H
@@ -164,7 +159,7 @@ PyObject* FT2FC(const Py_UNICODE *PyUString,
        PenPos += kern.x;
        WireList = getGlyphContours(FTFont,currchar,PenPos, scalefactor,i,tracking);
        if (!PyList_Size(WireList))                                  // empty ==> whitespace
-           Base::Console().Log("FT2FC char '0x%04x'/'%d' has no Wires!\n", currchar, currchar);
+           printf("FT2FC char '0x%04x'/'%d' has no Wires!\n", currchar, currchar);
        else
            PyList_Append(CharList, WireList);
        PenPos += cadv;
@@ -335,7 +330,7 @@ TopoDS_Wire edgesToWire(std::vector<TopoDS_Edge> Edges) {
     for (iEdge = Edges.begin(); iEdge != Edges.end(); ++iEdge){
         mkWire.Add(*iEdge);
         if (!mkWire.IsDone()) {
-            Base::Console().Message("FT2FC Trace edgesToWire failed to add wire\n");
+            printf("FT2FC Trace edgesToWire failed to add wire\n");
         }
     }
     occwire = mkWire.Wire();

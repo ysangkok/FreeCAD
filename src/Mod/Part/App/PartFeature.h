@@ -27,7 +27,6 @@
 #include "TopoShape.h"
 #include "PropertyTopoShape.h"
 #include <App/GeoFeature.h>
-#include <App/FeaturePython.h>
 #include <App/PropertyGeo.h>
 // includes for findAllFacesCutBy()
 #include <TopoDS_Face.hxx>
@@ -38,7 +37,6 @@ class BRepBuilderAPI_MakeShape;
 namespace Part
 {
 
-class PartFeaturePy;
 
 /** Base class of all shape feature classes in FreeCAD
  */
@@ -62,8 +60,6 @@ public:
     virtual const char* getViewProviderName(void) const;
     virtual const App::PropertyComplexGeoData* getPropertyOfGeometry() const;
 
-    virtual PyObject* getPyObject(void);
-    virtual std::vector<PyObject *> getPySubObjects(const std::vector<std::string>&) const;
 
     TopLoc_Location getLocation() const;
     
@@ -98,7 +94,6 @@ public:
     short mustExecute() const;
 };
 
-typedef App::FeaturePythonT<Feature> FeaturePython;
 
 
 /** Base class of all shape feature classes in FreeCAD

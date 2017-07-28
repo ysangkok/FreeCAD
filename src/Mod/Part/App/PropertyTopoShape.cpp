@@ -44,7 +44,6 @@
 #endif
 
 
-#include <Base/Console.h>
 #include <Base/Writer.h>
 #include <Base/Reader.h>
 #include <Base/Exception.h>
@@ -55,15 +54,6 @@
 #include <App/ObjectIdentifier.h>
 
 #include "PropertyTopoShape.h"
-#include "TopoShapePy.h"
-#include "TopoShapeFacePy.h"
-#include "TopoShapeEdgePy.h"
-#include "TopoShapeWirePy.h"
-#include "TopoShapeVertexPy.h"
-#include "TopoShapeSolidPy.h"
-#include "TopoShapeShellPy.h"
-#include "TopoShapeCompSolidPy.h"
-#include "TopoShapeCompoundPy.h"
 
 using namespace Part;
 
@@ -137,65 +127,6 @@ void PropertyPartShape::transformGeometry(const Base::Matrix4D &rclTrf)
     aboutToSetValue();
     _Shape.transformGeometry(rclTrf);
     hasSetValue();
-}
-
-PyObject *PropertyPartShape::getPyObject(void)
-{
-    Base::PyObjectBase* prop;
-    const TopoDS_Shape& sh = _Shape.getShape();
-    if (sh.IsNull()) {
-        prop = new TopoShapePy(new TopoShape(sh));
-    }
-    else {
-        TopAbs_ShapeEnum type = sh.ShapeType();
-        switch (type)
-        {
-        case TopAbs_COMPOUND:
-            prop = new TopoShapeCompoundPy(new TopoShape(sh));
-            break;
-        case TopAbs_COMPSOLID:
-            prop = new TopoShapeCompSolidPy(new TopoShape(sh));
-            break;
-        case TopAbs_SOLID:
-            prop = new TopoShapeSolidPy(new TopoShape(sh));
-            break;
-        case TopAbs_SHELL:
-            prop = new TopoShapeShellPy(new TopoShape(sh));
-            break;
-        case TopAbs_FACE:
-            prop = new TopoShapeFacePy(new TopoShape(sh));
-            break;
-        case TopAbs_WIRE:
-            prop = new TopoShapeWirePy(new TopoShape(sh));
-            break;
-        case TopAbs_EDGE:
-            prop = new TopoShapeEdgePy(new TopoShape(sh));
-            break;
-        case TopAbs_VERTEX:
-            prop = new TopoShapeVertexPy(new TopoShape(sh));
-            break;
-        case TopAbs_SHAPE:
-        default:
-            prop = new TopoShapePy(new TopoShape(sh));
-            break;
-        }
-    }
-
-    if (prop) prop->setConst();
-    return prop;
-}
-
-void PropertyPartShape::setPyObject(PyObject *value)
-{
-    if (PyObject_TypeCheck(value, &(TopoShapePy::Type))) {
-        TopoShapePy *pcObject = static_cast<TopoShapePy*>(value);
-        setValue(*pcObject->getTopoShapePtr());
-    }
-    else {
-        std::string error = std::string("type must be 'Shape', not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 App::Property *PropertyPartShape::Copy(void) const
@@ -298,11 +229,11 @@ void PropertyPartShape::SaveDocFile (Base::Writer &writer) const
                 App::PropertyContainer* father = this->getContainer();
                 if (father && father->isDerivedFrom(App::DocumentObject::getClassTypeId())) {
                     App::DocumentObject* obj = static_cast<App::DocumentObject*>(father);
-                    Base::Console().Error("Shape of '%s' cannot be written to BRep file '%s'\n", 
+                    printf("Shape of '%s' cannot be written to BRep file '%s'\n", 
                         obj->Label.getValue(),fi.filePath().c_str());
                 }
                 else {
-                    Base::Console().Error("Cannot save BRep file '%s'\n", fi.filePath().c_str());
+                    printf("Cannot save BRep file '%s'\n", fi.filePath().c_str());
                 }
 
                 std::stringstream ss;
@@ -377,11 +308,11 @@ void PropertyPartShape::RestoreDocFile(Base::Reader &reader)
                     App::PropertyContainer* father = this->getContainer();
                     if (father && father->isDerivedFrom(App::DocumentObject::getClassTypeId())) {
                         App::DocumentObject* obj = static_cast<App::DocumentObject*>(father);
-                        Base::Console().Error("BRep file '%s' with shape of '%s' seems to be empty\n", 
+                        printf("BRep file '%s' with shape of '%s' seems to be empty\n", 
                             fi.filePath().c_str(),obj->Label.getValue());
                     }
                     else {
-                        Base::Console().Warning("Loaded BRep file '%s' seems to be empty\n", fi.filePath().c_str());
+                        printf("Loaded BRep file '%s' seems to be empty\n", fi.filePath().c_str());
                     }
                 }
             }
@@ -424,15 +355,6 @@ void PropertyShapeHistory::setValues(const std::vector<ShapeHistory>& values)
     aboutToSetValue();
     _lValueList = values;
     hasSetValue();
-}
-
-PyObject *PropertyShapeHistory::getPyObject(void)
-{
-    return Py::new_reference_to(Py::None());
-}
-
-void PropertyShapeHistory::setPyObject(PyObject *)
-{
 }
 
 void PropertyShapeHistory::Save (Base::Writer &) const
@@ -492,47 +414,6 @@ void PropertyFilletEdges::setValues(const std::vector<FilletElement>& values)
     aboutToSetValue();
     _lValueList = values;
     hasSetValue();
-}
-
-PyObject *PropertyFilletEdges::getPyObject(void)
-{
-    Py::List list(getSize());
-    std::vector<FilletElement>::const_iterator it;
-    int index = 0;
-    for (it = _lValueList.begin(); it != _lValueList.end(); ++it) {
-        Py::Tuple ent(3);
-#if PY_MAJOR_VERSION >= 3
-        ent.setItem(0, Py::Long(it->edgeid));
-#else
-        ent.setItem(0, Py::Int(it->edgeid));
-#endif
-        ent.setItem(1, Py::Float(it->radius1));
-        ent.setItem(2, Py::Float(it->radius2));
-        list[index++] = ent;
-    }
-
-    return Py::new_reference_to(list);
-}
-
-void PropertyFilletEdges::setPyObject(PyObject *value)
-{
-    Py::Sequence list(value);
-    std::vector<FilletElement> values;
-    values.reserve(list.size());
-    for (Py::Sequence::iterator it = list.begin(); it != list.end(); ++it) {
-        FilletElement fe;
-        Py::Tuple ent(*it);
-#if PY_MAJOR_VERSION >= 3
-        fe.edgeid = (int)Py::Long(ent.getItem(0));
-#else
-        fe.edgeid = (int)Py::Int(ent.getItem(0));
-#endif
-        fe.radius1 = (double)Py::Float(ent.getItem(1));
-        fe.radius2 = (double)Py::Float(ent.getItem(2));
-        values.push_back(fe);
-    }
-
-    setValues(values);
 }
 
 void PropertyFilletEdges::Save (Base::Writer &writer) const

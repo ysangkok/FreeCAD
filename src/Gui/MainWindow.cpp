@@ -1007,14 +1007,19 @@ void MainWindow::delayedStartup()
     }
 
     // Create new document?
-    ParameterGrp::handle hGrp = WindowParameter::getDefaultParameter()->GetGroup("Document");
-    if (hGrp->GetBool("CreateNewDoc", false)) {
-        App::GetApplication().newDocument();
-    }
+    //ParameterGrp::handle hGrp = WindowParameter::getDefaultParameter()->GetGroup("Document");
+    //if (hGrp->GetBool("CreateNewDoc", true)) {
+    const auto doc = App::GetApplication().newDocument();
+    const auto group = new App::DocumentObjectGroup();
+    doc->addObject(group);
+    Base::Vector3d a(1.0, 2.0, 3.0);
+    //} else {
+    //    printf("not creating new document!\n");
+    //}
 
-    if (hGrp->GetBool("RecoveryEnabled", true)) {
-        Application::Instance->checkForPreviousCrashes();
-    }
+    //if (hGrp->GetBool("RecoveryEnabled", true)) {
+    //    Application::Instance->checkForPreviousCrashes();
+    //}
 }
 
 void MainWindow::appendRecentFile(const QString& filename)

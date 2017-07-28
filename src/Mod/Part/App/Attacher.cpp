@@ -59,7 +59,6 @@
 #include <GeomAPI_ProjectPointOnCurve.hxx>
 
 #include "Attacher.h"
-#include <Base/Console.h>
 #include <App/OriginFeature.h>
 #include <App/Application.h>
 #include <App/Document.h>
@@ -806,7 +805,7 @@ void AttachEngine::readLinks(const App::PropertyLinkSubList &references,
             storage.push_back( builder.Shape() );
             shapes[i] = &(storage[storage.size()-1]);
         } else {
-            Base::Console().Warning("Attacher: linked object %s is unexpected, assuming it has no shape.\n",geof->getNameInDocument());
+            printf("Attacher: linked object %s is unexpected, assuming it has no shape.\n",geof->getNameInDocument());
             storage.push_back(TopoDS_Shape());
             shapes[i] = &(storage[storage.size()-1]);
         }
@@ -1066,7 +1065,7 @@ Base::Placement AttachEngine3D::calculateAttachedPlacement(Base::Placement origP
         if (pr.HasSymmetryPoint())
             throw Base::ValueError("AttachEngine3D::calculateAttachedPlacement:InertialCS: inertia tensor is trivial, principal axes are undefined.");
         if (pr.HasSymmetryAxis()){
-            Base::Console().Warning("AttachEngine3D::calculateAttachedPlacement:InertialCS: inertia tensor has axis of symmetry. Second and third axes of inertia are undefined.\n");
+            printf("AttachEngine3D::calculateAttachedPlacement:InertialCS: inertia tensor has axis of symmetry. Second and third axes of inertia are undefined.\n");
             //find defined axis, and use it as Z axis
             //situation: we have two moments that are almost equal, and one
             //that is substantially different. The one that is different
@@ -1232,7 +1231,7 @@ Base::Placement AttachEngine3D::calculateAttachedPlacement(Base::Placement origP
             } catch (Standard_Failure &e){
                 //ignore. This is brobably due to insufficient continuity.
                 dd = gp_Vec(0., 0., 0.);
-                Base::Console().Warning("AttachEngine3D::calculateAttachedPlacement: can't calculate second derivative of curve. OCC error: %s\n", e.GetMessageString());
+                printf("AttachEngine3D::calculateAttachedPlacement: can't calculate second derivative of curve. OCC error: %s\n", e.GetMessageString());
             }
 
             gp_Vec T,N,B;//Frenet?Serret axes: tangent, normal, binormal
@@ -1242,7 +1241,7 @@ Base::Placement AttachEngine3D::calculateAttachedPlacement(Base::Placement origP
                 N.Normalize();
                 B = T.Crossed(N);
             } else {
-                Base::Console().Warning("AttachEngine3D::calculateAttachedPlacement: path curve second derivative is below 1e-14, can't align x axis.\n");
+                printf("AttachEngine3D::calculateAttachedPlacement: path curve second derivative is below 1e-14, can't align x axis.\n");
                 N = gp_Vec(0.,0.,0.);
                 B = gp_Vec(0.,0.,0.);//redundant, just for consistency
             }
@@ -1772,7 +1771,7 @@ Base::Placement AttachEngineLine::calculateAttachedPlacement(Base::Placement ori
             if (!distancer.IsDone())
                 throw Base::ValueError("AttachEngineLine::calculateAttachedPlacement: proximity calculation failed.");
             if (distancer.NbSolution()>1)
-                Base::Console().Warning("AttachEngineLine::calculateAttachedPlacement: proximity calculation gave %i solutions, ambiguous.\n",int(distancer.NbSolution()));
+                printf("AttachEngineLine::calculateAttachedPlacement: proximity calculation gave %i solutions, ambiguous.\n",int(distancer.NbSolution()));
             gp_Pnt p1 = distancer.PointOnShape1(1);
             gp_Pnt p2 = distancer.PointOnShape2(1);
             LineBasePoint = p1;
@@ -1945,7 +1944,7 @@ Base::Placement AttachEnginePoint::calculateAttachedPlacement(Base::Placement or
             if (!distancer.IsDone())
                 throw Base::ValueError("AttachEnginePoint::calculateAttachedPlacement: proximity calculation failed.");
             if (distancer.NbSolution()>1)
-                Base::Console().Warning("AttachEnginePoint::calculateAttachedPlacement: proximity calculation gave %i solutions, ambiguous.\n",int(distancer.NbSolution()));
+                printf("AttachEnginePoint::calculateAttachedPlacement: proximity calculation gave %i solutions, ambiguous.\n",int(distancer.NbSolution()));
             gp_Pnt p1 = distancer.PointOnShape1(1);
             gp_Pnt p2 = distancer.PointOnShape2(1);
             if (mmode == mm0ProximityPoint1)

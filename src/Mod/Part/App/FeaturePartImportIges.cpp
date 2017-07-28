@@ -26,7 +26,6 @@
 # include <fcntl.h>
 #endif
 
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/FileInfo.h>
 #include "FeaturePartImportIges.h"
@@ -53,7 +52,7 @@ App::DocumentObjectExecReturn *ImportIges::execute(void)
 {
     Base::FileInfo fi(FileName.getValue());
     if (!fi.isReadable()) {
-        Base::Console().Log("ImportIges::execute() not able to open %s!\n",FileName.getValue());
+        printf("ImportIges::execute() not able to open %s!\n",FileName.getValue());
         std::string error = std::string("Cannot open file ") + FileName.getValue();
         return new App::DocumentObjectExecReturn(error);
     }

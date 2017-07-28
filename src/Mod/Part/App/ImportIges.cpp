@@ -53,7 +53,6 @@
 #include <Quantity_Color.hxx>
 #include <TCollection_ExtendedString.hxx>
 
-#include <Base/Console.h>
 #include <Base/Sequencer.h>
 #include <App/Application.h>
 #include <App/Document.h>

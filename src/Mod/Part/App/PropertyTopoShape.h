@@ -69,12 +69,6 @@ public:
     Base::BoundBox3d getBoundingBox() const;
     //@}
 
-    /** @name Python interface */
-    //@{
-    PyObject* getPyObject(void);
-    void setPyObject(PyObject *value);
-    //@}
-
     /** @name Save/restore */
     //@{
     void Save (Base::Writer &writer) const;
@@ -132,9 +126,6 @@ public:
         return _lValueList;
     }
 
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
-
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);
 
@@ -184,9 +175,6 @@ public:
     const std::vector<FilletElement> &getValues(void) const {
         return _lValueList;
     }
-
-    virtual PyObject *getPyObject(void);
-    virtual void setPyObject(PyObject *);
 
     virtual void Save (Base::Writer &writer) const;
     virtual void Restore(Base::XMLReader &reader);

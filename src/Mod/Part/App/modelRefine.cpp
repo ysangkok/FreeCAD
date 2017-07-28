@@ -62,7 +62,6 @@
 #include <BRepAdaptor_Curve.hxx>
 #include <TColgp_SequenceOfPnt.hxx>
 #include <GeomAPI_ProjectPointOnSurf.hxx>
-#include <Base/Console.h>
 #include "modelRefine.h"
 
 using namespace ModelRefine;
@@ -900,13 +899,13 @@ bool FaceTypedBSpline::isEqual(const TopoDS_Face &faceOne, const TopoDS_Face &fa
       stream << "FaceTypedBSpline::isEqual: OCC Error: " << e->GetMessageString() << std::endl;
     else
       stream << "FaceTypedBSpline::isEqual: Unknown OCC Error" << std::endl;
-    Base::Console().Message(stream.str().c_str());
+    printf(stream.str().c_str());
   }
   catch (...)
   {
     std::ostringstream stream;
     stream << "FaceTypedBSpline::isEqual: Unknown Error" << std::endl;
-    Base::Console().Message(stream.str().c_str());
+    printf(stream.str().c_str());
   }
   
   return false;

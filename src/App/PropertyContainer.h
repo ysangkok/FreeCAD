@@ -234,7 +234,7 @@ public: \
 #define PROPERTY_SOURCE(_class_, _parentclass_) \
 TYPESYSTEM_SOURCE_P(_class_);\
 const ::App::PropertyData * _class_::getPropertyDataPtr(void){return nullptr;} \
-const ::App::PropertyData & _class_::getPropertyData(void) const{abort();} \
+const ::App::PropertyData & _class_::getPropertyData(void) const{static const ::App::PropertyData a = {}; return a;} \
 /*::App::PropertyData _class_::propertyData;*/ \
 void _class_::init(void){\
   initSubclass(_class_::classTypeId, #_class_ , #_parentclass_, &(_class_::create) ); \
@@ -244,7 +244,7 @@ void _class_::init(void){\
 #define PROPERTY_SOURCE_ABSTRACT(_class_, _parentclass_) \
 TYPESYSTEM_SOURCE_ABSTRACT_P(_class_);\
 const ::App::PropertyData * _class_::getPropertyDataPtr(void){return nullptr;} \
-const ::App::PropertyData & _class_::getPropertyData(void) const{abort();} \
+const ::App::PropertyData & _class_::getPropertyData(void) const{static const ::App::PropertyData a = {}; return a;} \
 /*::App::PropertyData _class_::propertyData;*/ \
 void _class_::init(void){\
   initSubclass(_class_::classTypeId, #_class_ , #_parentclass_, &(_class_::create) ); \

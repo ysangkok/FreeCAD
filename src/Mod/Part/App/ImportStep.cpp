@@ -69,7 +69,6 @@
 #include <StepBasic_ProductDefinition.hxx>
 #include <StepBasic_ProductDefinitionFormation.hxx>
 
-#include <Base/Console.h>
 #include <Base/Sequencer.h>
 #include <App/Application.h>
 #include <App/Document.h>
@@ -114,7 +113,7 @@ int Part::ImportStepParts(App::Document *pcDoc, const char* Name)
     Standard_Integer nbr = aReader.NbRootsForTransfer();
     //aReader.PrintCheckTransfer (failsonly, IFSelect_ItemsByEntity);
     for (Standard_Integer n = 1; n<= nbr; n++) {
-        Base::Console().Log("STEP: Transferring Root %d\n",n);
+        printf("STEP: Transferring Root %d\n",n);
         aReader.TransferRoot(n);
     }
     pi->EndScope();
@@ -134,7 +133,7 @@ int Part::ImportStepParts(App::Document *pcDoc, const char* Name)
         //ReadNames(aReader.WS());
 
         for (Standard_Integer i=1; i<=nbs; i++) {
-            Base::Console().Log("STEP:   Transferring Shape %d\n",i);
+            printf("STEP:   Transferring Shape %d\n",i);
             aShape = aReader.Shape(i);
 
             // load each solid as an own object
@@ -153,26 +152,6 @@ int Part::ImportStepParts(App::Document *pcDoc, const char* Name)
                 Part::Feature *pcFeature;
                 pcFeature = static_cast<Part::Feature*>(pcDoc->addObject("Part::Feature", name.c_str()));
                 pcFeature->Shape.setValue(aSolid);
-
-                // This is a trick to access the GUI via Python and set the color property
-                // of the associated view provider. If no GUI is up an exception is thrown
-                // and cleared immediately
-                std::map<int, Quantity_Color>::iterator it = hash_col.find(aSolid.HashCode(INT_MAX));
-                if (it != hash_col.end()) {
-                    try {
-                        Py::Object obj(pcFeature->getPyObject(), true);
-                        Py::Object vp(obj.getAttr("ViewObject"));
-                        Py::Tuple col(3);
-                        col.setItem(0, Py::Float(it->second.Red()));
-                        col.setItem(1, Py::Float(it->second.Green()));
-                        col.setItem(2, Py::Float(it->second.Blue()));
-                        vp.setAttr("ShapeColor", col);
-                        //Base::Console().Message("Set color to shape\n");
-                    }
-                    catch (Py::Exception& e) {
-                        e.clear();
-                    }
-                }
             }
             // load all non-solids now
             for (ex.Init(aShape, TopAbs_SHELL, TopAbs_SOLID); ex.More(); ex.Next())
@@ -364,19 +343,19 @@ bool Part::ReadColors (const Handle(XSControl_WorkSession) &WS, std::map<int, Qu
         if (!SurfCol.IsNull()) {
             Quantity_Color col;
             Styles.DecodeColor (SurfCol, col);
-            //Base::Console().Message("%d: (%.2f,%.2f,%.2f)\n",col.Name(),col.Red(),col.Green(),col.Blue());
+            //printf("%d: (%.2f,%.2f,%.2f)\n",col.Name(),col.Red(),col.Green(),col.Blue());
             hash_col[S.HashCode(INT_MAX)] = col;
         }
         if (!BoundCol.IsNull()) {
             Quantity_Color col;
             Styles.DecodeColor (BoundCol, col);
-            //Base::Console().Message("%d: (%.2f,%.2f,%.2f)\n",col.Name(),col.Red(),col.Green(),col.Blue());
+            //printf("%d: (%.2f,%.2f,%.2f)\n",col.Name(),col.Red(),col.Green(),col.Blue());
             hash_col[S.HashCode(INT_MAX)] = col;
         }
         if (!CurveCol.IsNull()) {
             Quantity_Color col;
             Styles.DecodeColor (CurveCol, col);
-            //Base::Console().Message("%d: (%.2f,%.2f,%.2f)\n",col.Name(),col.Red(),col.Green(),col.Blue());
+            //printf("%d: (%.2f,%.2f,%.2f)\n",col.Name(),col.Red(),col.Green(),col.Blue());
             hash_col[S.HashCode(INT_MAX)] = col;
         }
         if (!IsVisible) {
@@ -429,7 +408,7 @@ bool Part::ReadNames (const Handle(XSControl_WorkSession) &WS)
 
             // find proper label
             TCollection_ExtendedString str ( name->String() );
-            Base::Console().Message("Name: %s\n",name->String().ToCString());
+            printf("Name: %s\n",name->String().ToCString());
         }
 
         // for PD get name of associated product
@@ -442,7 +421,7 @@ bool Part::ReadNames (const Handle(XSControl_WorkSession) &WS)
             else name = Prod->Id();
 
             TCollection_ExtendedString str ( name->String() );
-            Base::Console().Message("Name: %s\n",name->String().ToCString());
+            printf("Name: %s\n",name->String().ToCString());
         }
         // set a name to the document
         //TCollection_ExtendedString str ( name->String() );

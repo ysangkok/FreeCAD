@@ -75,6 +75,9 @@ public:
     void setValue(const Base::Vector3d &vec);
     void setValue(double x, double y, double z);
 
+    /// Get valid paths for this property; used by auto completer
+    void getPaths(std::vector<ObjectIdentifier> &paths) const;
+
     /** This method returns a string representation of the property
      */
     const Base::Vector3d &getValue(void) const;
@@ -82,11 +85,8 @@ public:
         return "Gui::PropertyEditor::PropertyVectorItem";
     }
 
-    //virtual PyObject *getPyObject(void);
-    //virtual void setPyObject(PyObject *);
-
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(::Base::XMLReader &reader);
+    virtual void Restore(Base::XMLReader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -117,11 +117,60 @@ public:
      */
     virtual ~PropertyVectorDistance();
 
+    const boost::any getPathValue(const ObjectIdentifier &path) const;
+
     const char* getEditorName(void) const {
         return "Gui::PropertyEditor::PropertyVectorDistanceItem";
     }
 };
 
+class AppExport PropertyPosition: public PropertyVector
+{
+    TYPESYSTEM_HEADER();
+
+public:
+    /**
+     * A constructor.
+     * A more elaborate description of the constructor.
+     */
+    PropertyPosition();
+
+    /**
+     * A destructor.
+     * A more elaborate description of the destructor.
+     */
+    virtual ~PropertyPosition();
+
+    const boost::any getPathValue(const ObjectIdentifier &path) const;
+
+    const char* getEditorName(void) const {
+        return "Gui::PropertyEditor::PropertyPositionItem";
+    }
+};
+
+class AppExport PropertyDirection: public PropertyVector
+{
+    TYPESYSTEM_HEADER();
+
+public:
+    /**
+     * A constructor.
+     * A more elaborate description of the constructor.
+     */
+    PropertyDirection();
+
+    /**
+     * A destructor.
+     * A more elaborate description of the destructor.
+     */
+    virtual ~PropertyDirection();
+
+    const boost::any getPathValue(const ObjectIdentifier &path) const;
+
+    const char* getEditorName(void) const {
+        return "Gui::PropertyEditor::PropertyDirectionItem";
+    }
+};
 
 class AppExport PropertyVectorList: public PropertyLists
 {
@@ -165,14 +214,11 @@ public:
         return _lValueList;
     }
 
-    //virtual PyObject *getPyObject(void);
-    //virtual void setPyObject(PyObject *);
-
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(::Base::XMLReader &reader);
+    virtual void Restore(Base::XMLReader &reader);
 
     virtual void SaveDocFile (Base::Writer &writer) const;
-    virtual void RestoreDocFile(::Base::Reader &reader);
+    virtual void RestoreDocFile(Base::Reader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -215,11 +261,8 @@ public:
         return "Gui::PropertyEditor::PropertyMatrixItem";
     }
 
-    //virtual PyObject *getPyObject(void);
-    //virtual void setPyObject(PyObject *);
-
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(::Base::XMLReader &reader);
+    virtual void Restore(Base::XMLReader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -271,11 +314,8 @@ public:
         return "Gui::PropertyEditor::PropertyPlacementItem";
     }
 
-    //virtual PyObject *getPyObject(void);
-    //virtual void setPyObject(PyObject *);
-
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(::Base::XMLReader &reader);
+    virtual void Restore(Base::XMLReader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -355,14 +395,11 @@ public:
         return _lValueList;
     }
 
-    //virtual PyObject *getPyObject(void);
-    //virtual void setPyObject(PyObject *);
-
     virtual void Save (Base::Writer &writer) const;
-    virtual void Restore(::Base::XMLReader &reader);
+    virtual void Restore(Base::XMLReader &reader);
 
     virtual void SaveDocFile (Base::Writer &writer) const;
-    virtual void RestoreDocFile(::Base::Reader &reader);
+    virtual void RestoreDocFile(Base::Reader &reader);
 
     virtual Property *Copy(void) const;
     virtual void Paste(const Property &from);
@@ -377,7 +414,7 @@ private:
 /** The base class for all basic geometry properties.
  * @author Werner Mayer
  */
-class AppExport PropertyGeometry : public ::App::Property
+class AppExport PropertyGeometry : public App::Property
 {
     TYPESYSTEM_HEADER();
 

@@ -25,7 +25,6 @@
 #ifndef _PreComp_
 #endif
 
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/Sequencer.h>
 #include "FeaturePartCurveNet.h"
@@ -51,7 +50,7 @@ App::DocumentObjectExecReturn *CurveNet::execute(void)
 {
     Base::FileInfo fi(FileName.getValue());
     if (!fi.isReadable()) {
-        Base::Console().Log("CurveNet::execute() not able to open %s!\n",FileName.getValue());
+        printf("CurveNet::execute() not able to open %s!\n",FileName.getValue());
         std::string error = std::string("Cannot open file ") + FileName.getValue();
         return new App::DocumentObjectExecReturn(error);
     }

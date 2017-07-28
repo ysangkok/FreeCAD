@@ -44,7 +44,6 @@
 #endif
 
 
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Base/Reader.h>
 #include <App/Property.h>
@@ -53,8 +52,6 @@
 #include "Geometry.h"
 #include "DatumFeature.h"
 
-#include <App/FeaturePythonPyImp.h>
-#include <Mod/Part/App/Part2DObjectPy.h>
 
 using namespace Part;
 
@@ -232,7 +229,7 @@ void Part2DObject::Restore(Base::XMLReader &reader)
         try {
             if(prop){
                 if (strcmp(prop->getTypeId().getName(), TypeName) == 0){
-                    prop->Restore(reader);
+                    //prop->Restore(reader);
                 } else if (prop->isDerivedFrom(App::PropertyLinkSubList::getClassTypeId())){
                     //reading legacy Support - when the Support could only be a single flat face.
                     App::PropertyLinkSub tmp;
@@ -249,17 +246,17 @@ void Part2DObject::Restore(Base::XMLReader &reader)
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("PropertyContainer::Restore: Unknown C++ exception thrown");
+            printf("PropertyContainer::Restore: Unknown C++ exception thrown");
         }
 #endif
 
@@ -267,25 +264,3 @@ void Part2DObject::Restore(Base::XMLReader &reader)
     }
     reader.readEndElement("Properties");
 }
-
-// Python Drawing feature ---------------------------------------------------------
-
-namespace App {
-/// @cond DOXERR
-  PROPERTY_SOURCE_TEMPLATE(Part::Part2DObjectPython, Part::Part2DObject)
-  template<> const char* Part::Part2DObjectPython::getViewProviderName(void) const {
-    return "PartGui::ViewProvider2DObjectPython";
-  }
-  template<> PyObject* Part::Part2DObjectPython::getPyObject(void) {
-        if (PythonObject.is(Py::_None())) {
-            // ref counter is set to 1
-            PythonObject = Py::Object(new FeaturePythonPyT<Part::Part2DObjectPy>(this),true);
-        }
-        return Py::new_reference_to(PythonObject);
-  }
-/// @endcond
-
-// explicit template instantiation
-  template class PartExport FeaturePythonT<Part::Part2DObject>;
-}
-

@@ -27,13 +27,11 @@
 #include "TopoShape.h"
 #include "PropertyTopoShape.h"
 #include <App/GeoFeature.h>
-#include <App/FeaturePython.h>
 #include <App/PropertyLinks.h>
 
 namespace Part
 {
 
-class PartFeaturePy;
 
 /** Base class of all shape feature classes in FreeCAD
  */

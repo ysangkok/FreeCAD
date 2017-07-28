@@ -28,7 +28,6 @@
 #endif
 
 
-#include <Base/Console.h>
 #include <Base/Reader.h>
 #include "FeaturePartBox.h"
 
@@ -162,8 +161,8 @@ void Box::Restore(Base::XMLReader &reader)
         std::string tn = TypeName;
         if (strcmp(TypeName,"PropertyDistance") == 0) // missing prefix App::
             tn = std::string("App::") + tn;
-        if (prop && strcmp(prop->getTypeId().getName(), tn.c_str()) == 0)
-            prop->Restore(reader);
+        //if (prop && strcmp(prop->getTypeId().getName(), tn.c_str()) == 0)
+        //    prop->Restore(reader);
 
         reader.readEndElement("Property");
     }

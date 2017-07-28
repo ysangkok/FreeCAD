@@ -177,14 +177,10 @@
 #include <Base/FileInfo.h>
 #include <Base/Exception.h>
 #include <Base/Tools.h>
-#include <Base/Console.h>
 
 
 #include "TopoShape.h"
 #include "CrossSection.h"
-#include "TopoShapeFacePy.h"
-#include "TopoShapeEdgePy.h"
-#include "TopoShapeVertexPy.h"
 #include "ProgressIndicator.h"
 #include "modelRefine.h"
 #include "Tools.h"
@@ -330,23 +326,6 @@ unsigned long TopoShape::countSubShapes(const char* Type) const
     }
 
     return 0;
-}
-
-PyObject * TopoShape::getPySubShape(const char* Type) const
-{
-    // get the shape
-    TopoDS_Shape Shape = getSubShape(Type);
-    // destinquish the return type
-    std::string shapetype(Type);
-    if (shapetype.size() > 4 && shapetype.substr(0,4) == "Face") 
-        return new TopoShapeFacePy(new TopoShape(Shape));
-    else if (shapetype.size() > 4 && shapetype.substr(0,4) == "Edge") 
-        return new TopoShapeEdgePy(new TopoShape(Shape));
-    else if (shapetype.size() > 6 && shapetype.substr(0,6) == "Vertex") 
-        return new TopoShapeVertexPy(new TopoShape(Shape));
-    else 
-        return 0;
-
 }
 
 void TopoShape::operator = (const TopoShape& sh)
@@ -2130,7 +2109,7 @@ TopoDS_Shape TopoShape::makeLoft(const TopTools_ListOfShape& profiles,
             - W1-W2-W3-V1     ==> W1-W2-W3-V1-W1     invalid closed
             - W1-W2-W3        ==> W1-W2-W3-W1        valid closed*/
             if (profiles.Last().ShapeType() == TopAbs_VERTEX)  {
-                Base::Console().Message("TopoShape::makeLoft: can't close Loft with Vertex as last profile. 'Closed' ignored.\n"); }
+                printf("TopoShape::makeLoft: can't close Loft with Vertex as last profile. 'Closed' ignored.\n"); }
             else {
                 // repeat Add logic above for first profile
                 const TopoDS_Shape& firstProfile = profiles.First();
@@ -2156,7 +2135,7 @@ TopoDS_Shape TopoShape::makeLoft(const TopTools_ListOfShape& profiles,
     if (!aGenerator.IsDone())
         Standard_Failure::Raise("Failed to create loft face");
     
-    //Base::Console().Message("DEBUG: TopoShape::makeLoft returns.\n");
+    //printf("DEBUG: TopoShape::makeLoft returns.\n");
     return aGenerator.Shape();
 }
 
@@ -2199,7 +2178,7 @@ TopoDS_Shape TopoShape::revolve(const gp_Ax1& axis, double d, Standard_Boolean i
     }        
     
     if (convertFailed) {
-        Base::Console().Message("TopoShape::revolve could not make Solid from Wire/Edge.\n");}
+        printf("TopoShape::revolve could not make Solid from Wire/Edge.\n");}
 
     BRepPrimAPI_MakeRevol mkRevol(base, axis,d);
     return mkRevol.Shape();

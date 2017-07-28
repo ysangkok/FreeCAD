@@ -133,7 +133,7 @@ public:
     //returns first of type (or derived from) and throws otherwise
     template<typename ExtensionT>
     ExtensionT* getExtensionByType() const {
-        abort();
+        return dynamic_cast<ExtensionT*>(getExtension(ExtensionT::getExtensionClassTypeId()));
     };
     
     //get all extensions which have the given base class

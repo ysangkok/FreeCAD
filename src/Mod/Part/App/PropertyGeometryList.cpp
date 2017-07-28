@@ -34,7 +34,6 @@
 #include <Base/Writer.h>
 
 #include "Geometry.h"
-#include "GeometryPy.h"
 
 #include "PropertyGeometryList.h"
 #include "Part2DObject.h"
@@ -102,52 +101,6 @@ void PropertyGeometryList::setValues(const std::vector<Geometry*>& lValue)
     for (unsigned int i = 0; i < oldVals.size(); i++)
         delete oldVals[i];
     hasSetValue();
-}
-
-PyObject *PropertyGeometryList::getPyObject(void)
-{
-    PyObject* list = PyList_New(getSize());
-    for (int i = 0; i < getSize(); i++)
-        PyList_SetItem( list, i, _lValueList[i]->getPyObject());
-    return list;
-}
-
-void PropertyGeometryList::setPyObject(PyObject *value)
-{
-    // check container of this property to notify about changes
-    Part2DObject* part2d = dynamic_cast<Part2DObject*>(this->getContainer());
-
-    if (PyList_Check(value)) {
-        Py_ssize_t nSize = PyList_Size(value);
-        std::vector<Geometry*> values;
-        values.resize(nSize);
-
-        for (Py_ssize_t i=0; i < nSize; ++i) {
-            PyObject* item = PyList_GetItem(value, i);
-            if (!PyObject_TypeCheck(item, &(GeometryPy::Type))) {
-                std::string error = std::string("types in list must be 'Geometry', not ");
-                error += item->ob_type->tp_name;
-                throw Base::TypeError(error);
-            }
-
-            values[i] = static_cast<GeometryPy*>(item)->getGeometryPtr();
-        }
-
-        setValues(values);
-        if (part2d)
-            part2d->acceptGeometry();
-    }
-    else if (PyObject_TypeCheck(value, &(GeometryPy::Type))) {
-        GeometryPy  *pcObject = static_cast<GeometryPy*>(value);
-        setValue(pcObject->getGeometryPtr());
-        if (part2d)
-            part2d->acceptGeometry();
-    }
-    else {
-        std::string error = std::string("type must be 'Geometry' or list of 'Geometry', not ");
-        error += value->ob_type->tp_name;
-        throw Base::TypeError(error);
-    }
 }
 
 void PropertyGeometryList::Save(Writer &writer) const
