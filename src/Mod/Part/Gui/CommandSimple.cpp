@@ -245,7 +245,7 @@ void CmdPartRefineShape::activated(int iMsg)
             copyVisual("ActiveObject", "PointColor", (*it)->getNameInDocument());
         }
         catch (const Base::Exception& e) {
-            Base::Console().Warning("%s: %s\n", (*it)->Label.getValue(), e.what());
+            printf("%s: %s\n", (*it)->Label.getValue(), e.what());
         }
     }
     commitCommand();

@@ -41,9 +41,9 @@
 #include "ui_DlgExtrusion.h"
 #include "DlgExtrusion.h"
 #include "../App/PartFeature.h"
-#include <Base/Console.h>
-#include <Base/UnitsApi.h>
-#include <Base/Interpreter.h>
+//#include <Base/Console.h>
+//#include <Base/UnitsApi.h>
+//#include <Base/Interpreter.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/DocumentObject.h>
@@ -101,9 +101,9 @@ DlgExtrusion::DlgExtrusion(QWidget* parent, Qt::WindowFlags fl)
 {
     ui->setupUi(this);
     ui->statusLabel->clear();
-    ui->dirX->setDecimals(Base::UnitsApi::getDecimals());
-    ui->dirY->setDecimals(Base::UnitsApi::getDecimals());
-    ui->dirZ->setDecimals(Base::UnitsApi::getDecimals());
+    ui->dirX->setDecimals(4);
+    ui->dirY->setDecimals(4);
+    ui->dirZ->setDecimals(4);
     ui->spinLenFwd->setUnit(Base::Unit::Length);
     ui->spinLenFwd->setValue(10.0);
     ui->spinLenRev->setUnit(Base::Unit::Length);
@@ -172,7 +172,6 @@ void DlgExtrusion::on_btnSelectEdge_clicked()
         ui->btnSelectEdge->setText(tr("Selecting..."));
 
         //visibility automation
-        try{
             QString code = QString::fromLatin1(
                         "import TempoVis\n"
                         "tv = TempoVis.TempoVis(App.ActiveDocument)\n"
@@ -188,21 +187,16 @@ void DlgExtrusion::on_btnSelectEdge_clicked()
                 features_to_hide.append(QString::fromLatin1(", \n"));
             }
             QByteArray code_2 = code.arg(features_to_hide).toLatin1();
-            Base::Interpreter().runString(code_2.constData());
-        } catch (Base::PyException &e){
-            e.ReportException();
-        }
+            printf("would execute script\n");
+            printf("%s", code_2.constData());
+            printf("\n");
     } else {
         Gui::Selection().rmvSelectionGate();
         filter = nullptr;
         ui->btnSelectEdge->setText(tr("Select"));
 
         //visibility automation
-        try{
-            Base::Interpreter().runString("del(tv)");
-        } catch (Base::PyException &e){
-            e.ReportException();
-        }
+            printf("del(tv)\n");
     }
 }
 
@@ -426,7 +420,7 @@ void DlgExtrusion::apply()
             if (!sourceObj->isDerivedFrom(Part::Feature::getClassTypeId())){
                 std::stringstream errmsg;
                 errmsg << "Object " << sourceObj->getNameInDocument() << " is not Part object (has no OCC shape). Can't extrude it.\n";
-                Base::Console().Error(errmsg.str().c_str());
+                printf(errmsg.str().c_str());
                 continue;
             }
 

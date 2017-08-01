@@ -66,8 +66,6 @@
 #include <Inventor/engines/SoComposeRotation.h>
 #include <Inventor/nodes/SoMaterial.h>
 
-#include <Base/Console.h>
-#include <Base/UnitsApi.h>
 #include "../App/PartFeature.h"
 #include <Gui/Application.h>
 #include <Gui/Selection.h>
@@ -195,7 +193,7 @@ void PartGui::dumpLinearResults(const BRepExtrema_DistShapeShape &measure)
            "      shape type on object2 is: " << typeNames.at(measure.SupportTypeShape2(index)) << std::endl;
   }
   out << std::endl;
-  Base::Console().Message(out.str().c_str());
+  printf(out.str().c_str());
 }
 
 Gui::View3DInventorViewer * PartGui::getViewer()
@@ -527,12 +525,12 @@ void PartGui::TaskMeasureLinear::buildDimension()
   TopoDS_Shape shape1, shape2;
   if (!getShapeFromStrings(shape1, current1.documentName, current1.objectName, current1.subObjectName))
   {
-    Base::Console().Message("\nFailed to get shape\n\n");
+    printf("\nFailed to get shape\n\n");
     return;
   }
   if (!getShapeFromStrings(shape2, current2.documentName, current2.objectName, current2.subObjectName))
   {
-    Base::Console().Message("\nFailed to get shape\n\n");
+    printf("\nFailed to get shape\n\n");
     return;
   }
   goDimensionLinearNoTask(shape1, shape2);
@@ -792,7 +790,7 @@ bool PartGui::evaluateAngularPreSelection(VectorAdapter &vector1Out, VectorAdapt
     //can't use selections without a pick point.
     if (pickPoint.IsEqual(gp_Vec(0.0, 0.0, 0.0), Precision::Confusion(), Precision::Angular()))
     {
-      Base::Console().Message("Can't use selections without a pick point.\n");
+      printf("Can't use selections without a pick point.\n");
       continue;
     }
     
@@ -834,7 +832,7 @@ bool PartGui::evaluateAngularPreSelection(VectorAdapter &vector1Out, VectorAdapt
   //making sure pick points are not equal
   if ((vector1Out.getPickPoint() - vector2Out.getPickPoint()).Magnitude() < std::numeric_limits<float>::epsilon())
   {
-    Base::Console().Message("pick points are equal\n");
+    printf("pick points are equal\n");
     return false;
   }
   
@@ -860,7 +858,7 @@ void PartGui::goDimensionAngularNoTask(const VectorAdapter &vector1Adapter, cons
     stream << std::setprecision(std::numeric_limits<double>::digits10 + 1) << 
     "supplement in radians is: " << M_PI - angle << std::endl <<
     "supplement in degrees is: " << 180 - 180 * angle / M_PI << std::endl;
-  Base::Console().Message(stream.str().c_str());
+  printf(stream.str().c_str());
   
   SbMatrix dimSys;
   double radius;
@@ -875,7 +873,7 @@ void PartGui::goDimensionAngularNoTask(const VectorAdapter &vector1Adapter, cons
     GeomAPI_ProjectPointOnCurve projection(tempPoint, heapLine2);
     if (projection.NbPoints() < 1)
     {
-      Base::Console().Message("parallel vectors: couldn't project onto line\n");
+      printf("parallel vectors: couldn't project onto line\n");
       return;
     }
     gp_Vec newPoint2;
@@ -933,7 +931,7 @@ void PartGui::goDimensionAngularNoTask(const VectorAdapter &vector1Adapter, cons
     
     if (extrema.NbExtrema() < 1)
     {
-      Base::Console().Message("couldn't get extrema\n");
+      printf("couldn't get extrema\n");
       return;
     }
     
@@ -1578,7 +1576,7 @@ void PartGui::TaskMeasureAngular::buildDimension()
   
   if (!adapt1.isValid() || !adapt2.isValid())
   {
-    Base::Console().Message("\ncouldn't build adapter\n\n");
+    printf("\ncouldn't build adapter\n\n");
     return;
   }
   goDimensionAngularNoTask(adapt1, adapt2);

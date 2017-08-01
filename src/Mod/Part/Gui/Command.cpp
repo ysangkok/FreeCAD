@@ -37,7 +37,6 @@
 # include <TopoDS_TCompound.hxx>
 #endif
 
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <App/Document.h>
 #include <App/DocumentObjectGroup.h>
@@ -1036,7 +1035,7 @@ void CmdPartMakeSolid::activated(int iMsg)
             TopAbs_ShapeEnum type = shape.ShapeType();
             QString str;
             if (type == TopAbs_SOLID) {
-                Base::Console().Message("%s is ignored because it is already a solid.\n",
+                printf("%s is ignored because it is already a solid.\n",
                     (*it)->Label.getValue());
             }
             else if (type == TopAbs_COMPOUND || type == TopAbs_COMPSOLID) {
@@ -1064,7 +1063,7 @@ void CmdPartMakeSolid::activated(int iMsg)
                     .arg(QLatin1String((*it)->Label.getValue()));
             }
             else {
-                Base::Console().Message("%s is ignored because it is neither a shell nor a compound.\n",
+                printf("%s is ignored because it is neither a shell nor a compound.\n",
                     (*it)->Label.getValue());
             }
 
@@ -1073,7 +1072,7 @@ void CmdPartMakeSolid::activated(int iMsg)
                     runCommand(Doc, str.toLatin1());
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Cannot convert %s because %s.\n",
+                printf("Cannot convert %s because %s.\n",
                     (*it)->Label.getValue(), e.what());
             }
         }
@@ -1127,7 +1126,7 @@ void CmdPartReverseShape::activated(int iMsg)
                     runCommand(Doc, str.toLatin1());
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Cannot convert %s because %s.\n",
+                printf("Cannot convert %s because %s.\n",
                     (*it)->Label.getValue(), e.what());
             }
         }

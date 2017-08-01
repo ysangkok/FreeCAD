@@ -56,7 +56,7 @@
 #include <Gui/View3DInventor.h>
 #include <Gui/View3DInventorViewer.h>
 #include <Base/Sequencer.h>
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 
 using namespace PartGui;
 #undef CS_FUTURE // multi-threading causes some problems

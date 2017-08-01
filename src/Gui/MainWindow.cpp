@@ -116,6 +116,9 @@
 #include "View3DInventor.h"
 #include "View3DInventorViewer.h"
 
+// Part MOD (JANUS)
+#include "PartFeature.h"
+
 #if defined(Q_OS_WIN32)
 #define slots
 //#include <private/qmainwindowlayout_p.h>
@@ -1012,6 +1015,8 @@ void MainWindow::delayedStartup()
     const auto doc = App::GetApplication().newDocument();
     const auto group = new App::DocumentObjectGroup();
     doc->addObject(group);
+    const auto feature = new Part::Feature();
+    doc->addObject(feature);
     Base::Vector3d a(1.0, 2.0, 3.0);
     //} else {
     //    printf("not creating new document!\n");

@@ -36,7 +36,6 @@
 #endif
 
 /// Here the FreeCAD includes sorted by Base,App,Gui......
-#include <Base/Console.h>
 #include <Base/Parameter.h>
 #include <Base/Reader.h>
 #include <Base/ViewProj.h>
@@ -268,7 +267,7 @@ void ViewProvider2DObject::Restore(Base::XMLReader &reader)
 
         try {
             if (prop && strcmp(prop->getTypeId().getName(), TypeName) == 0) {
-                prop->Restore(reader);
+                //prop->Restore(reader);
             }
             else if (prop) {
                 Base::Type inputType = Base::Type::fromName(TypeName);
@@ -286,17 +285,17 @@ void ViewProvider2DObject::Restore(Base::XMLReader &reader)
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("Primitive::Restore: Unknown C++ exception thrown");
+            printf("Primitive::Restore: Unknown C++ exception thrown");
         }
 #endif
 
@@ -340,15 +339,4 @@ std::vector<std::string> ViewProvider2DObject::getDisplayModes(void) const
 const char* ViewProvider2DObject::getDefaultDisplayMode() const
 {
   return "Wireframe";
-}
-
-// -----------------------------------------------------------------------
-
-namespace Gui {
-/// @cond DOXERR
-PROPERTY_SOURCE_TEMPLATE(PartGui::ViewProvider2DObjectPython, PartGui::ViewProvider2DObject)
-/// @endcond
-
-// explicit template instantiation
-template class PartGuiExport ViewProviderPythonFeatureT<PartGui::ViewProvider2DObject>;
 }

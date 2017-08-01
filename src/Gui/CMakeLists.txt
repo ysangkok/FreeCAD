@@ -32,12 +32,16 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/Quarter
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Mod/Part/App
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Mod/Part/Gui
+    ${CMAKE_CURRENT_BINARY_DIR}/../Mod/Part/Gui
     ${CMAKE_CURRENT_BINARY_DIR}/..
     ${CMAKE_CURRENT_BINARY_DIR}/Language
     ${CMAKE_CURRENT_BINARY_DIR}/propertyeditor
     ${CMAKE_CURRENT_BINARY_DIR}/TaskView
     ${CMAKE_CURRENT_BINARY_DIR}/Quarter
     ${CMAKE_CURRENT_BINARY_DIR}/DAGView
+    ${OCC_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${COIN3D_INCLUDE_DIRS}
     ${PYTHON_INCLUDE_DIRS}
@@ -46,12 +50,16 @@ include_directories(
     ${ZLIB_INCLUDE_DIR}
     ${3DCONNEXION_INCLUDE_DIR}
 )
+link_directories(${OCC_LIBRARY_DIR})
+
 
 if(MSVC)
     set(FreeCADGui_LIBS
          FreeCADApp
          ${COIN3D_LIBRARIES}
          ${OPENGL_gl_LIBRARY}
+         ${OCC_LIBRARIES}
+         ${OCC_DEBUG_LIBRARIES}
     )
 else(MSVC)
     set(FreeCADGui_LIBS
@@ -60,6 +68,8 @@ else(MSVC)
         ${Boost_LIBRARIES}
         ${OPENGL_gl_LIBRARY}
         ${3DCONNEXION_LINKFLAGS}
+        ${OCC_LIBRARIES}
+        ${OCC_DEBUG_LIBRARIES}
     )
 endif(MSVC)
 
@@ -1131,6 +1141,332 @@ SET(FreeCADGui_SRCS
     WinNativeGestureRecognizers.h
 )
 
+SET(Features_SRCS
+    ../Mod/Part/App/FeaturePartBoolean.cpp
+    ../Mod/Part/App/FeaturePartBoolean.h
+    ../Mod/Part/App/FeaturePartBox.cpp
+    ../Mod/Part/App/FeaturePartBox.h
+    ../Mod/Part/App/FeaturePartCircle.cpp
+    ../Mod/Part/App/FeaturePartCircle.h
+    ../Mod/Part/App/FeaturePartCommon.cpp
+    ../Mod/Part/App/FeaturePartCommon.h
+    ../Mod/Part/App/FeaturePartCurveNet.cpp
+    ../Mod/Part/App/FeaturePartCurveNet.h
+    ../Mod/Part/App/FeaturePartCut.cpp
+    ../Mod/Part/App/FeaturePartCut.h
+    ../Mod/Part/App/FeaturePartFuse.cpp
+    ../Mod/Part/App/FeaturePartFuse.h
+    ../Mod/Part/App/FeaturePartImportBrep.cpp
+    ../Mod/Part/App/FeaturePartImportBrep.h
+    ../Mod/Part/App/FeaturePartImportIges.cpp
+    ../Mod/Part/App/FeaturePartImportIges.h
+    ../Mod/Part/App/FeaturePartImportStep.cpp
+    ../Mod/Part/App/FeaturePartImportStep.h
+    ../Mod/Part/App/FeaturePartPolygon.cpp
+    ../Mod/Part/App/FeaturePartPolygon.h
+    ../Mod/Part/App/FeaturePartSection.cpp
+    ../Mod/Part/App/FeaturePartSection.h
+    ../Mod/Part/App/FeaturePartSpline.cpp
+    ../Mod/Part/App/FeaturePartSpline.h
+    ../Mod/Part/App/FeatureChamfer.cpp
+    ../Mod/Part/App/FeatureChamfer.h
+    ../Mod/Part/App/FeatureCompound.cpp
+    ../Mod/Part/App/FeatureCompound.h
+    ../Mod/Part/App/FeatureExtrusion.cpp
+    ../Mod/Part/App/FeatureExtrusion.h
+    ../Mod/Part/App/FeatureFace.cpp
+    ../Mod/Part/App/FeatureFace.h
+    ../Mod/Part/App/FeatureFillet.cpp
+    ../Mod/Part/App/FeatureFillet.h
+    ../Mod/Part/App/FeatureMirroring.cpp
+    ../Mod/Part/App/FeatureMirroring.h
+    ../Mod/Part/App/FeatureRevolution.cpp
+    ../Mod/Part/App/FeatureRevolution.h
+    ../Mod/Part/App/FeatureOffset.cpp
+    ../Mod/Part/App/FeatureOffset.h
+    ../Mod/Part/App/PartFeatures.cpp
+    ../Mod/Part/App/PartFeatures.h
+    ../Mod/Part/App/PartFeature.cpp
+    ../Mod/Part/App/PartFeature.h
+    ../Mod/Part/App/PartFeatureReference.cpp
+    ../Mod/Part/App/PartFeatureReference.h
+    ../Mod/Part/App/Part2DObject.cpp
+    ../Mod/Part/App/Part2DObject.h
+    ../Mod/Part/App/PrimitiveFeature.cpp
+    ../Mod/Part/App/PrimitiveFeature.h
+    ../Mod/Part/App/FeatureGeometrySet.h
+    ../Mod/Part/App/FeatureGeometrySet.cpp
+    ../Mod/Part/App/CustomFeature.cpp
+    ../Mod/Part/App/CustomFeature.h
+    ../Mod/Part/App/BodyBase.h
+    ../Mod/Part/App/BodyBase.cpp
+    ../Mod/Part/App/DatumFeature.cpp
+    ../Mod/Part/App/DatumFeature.h
+    ../Mod/Part/App/AttachExtension.h
+    ../Mod/Part/App/AttachExtension.cpp
+)
+SET(Properties_SRCS
+    ../Mod/Part/App/PropertyTopoShape.cpp
+    ../Mod/Part/App/PropertyTopoShape.h
+    ../Mod/Part/App/PropertyGeometryList.cpp
+    ../Mod/Part/App/PropertyGeometryList.h
+)
+
+SET(Part_SRCS
+    ${Features_SRCS}
+    ${Properties_SRCS}
+#    ${Python_SRCS}
+#    ${Geom2dPy_SRCS}
+    ../Mod/Part/App/Attacher.cpp
+    ../Mod/Part/App/Attacher.h
+    ../Mod/Part/App/AppPart.cpp
+    ../Mod/Part/App/AppPartPy.cpp
+    ../Mod/Part/App/BSplineCurveBiArcs.cpp
+    ../Mod/Part/App/CrossSection.cpp
+    ../Mod/Part/App/CrossSection.h
+    ../Mod/Part/App/Geometry.cpp
+    ../Mod/Part/App/Geometry.h
+    ../Mod/Part/App/Geometry2d.cpp
+    ../Mod/Part/App/Geometry2d.h
+    ../Mod/Part/App/ImportIges.cpp
+    ../Mod/Part/App/ImportIges.h
+    ../Mod/Part/App/ImportStep.cpp
+    ../Mod/Part/App/ImportStep.h
+    ../Mod/Part/App/PreCompiled.cpp
+    ../Mod/Part/App/PreCompiled.h
+    ../Mod/Part/App/ProgressIndicator.cpp
+    ../Mod/Part/App/ProgressIndicator.h
+    ../Mod/Part/App/TopoShape.cpp
+    ../Mod/Part/App/TopoShape.h
+    ../Mod/Part/App/edgecluster.cpp
+    ../Mod/Part/App/edgecluster.h
+    ../Mod/Part/App/modelRefine.cpp
+    ../Mod/Part/App/modelRefine.h
+    ../Mod/Part/App/Tools.cpp
+    ../Mod/Part/App/Tools.h
+    ../Mod/Part/App/encodeFilename.h
+    ../Mod/Part/App/OCCError.h
+    ../Mod/Part/App/FT2FC.cpp
+    ../Mod/Part/App/FT2FC.h
+    ../Mod/Part/App/FaceMaker.cpp
+    ../Mod/Part/App/FaceMaker.h
+    ../Mod/Part/App/FaceMakerCheese.cpp
+    ../Mod/Part/App/FaceMakerCheese.h
+    ../Mod/Part/App/FaceMakerBullseye.cpp
+    ../Mod/Part/App/FaceMakerBullseye.h
+)
+
+set(PartGui_MOC_HDRS
+    ../Mod/Part/Gui/CrossSections.h
+    ../Mod/Part/Gui/Mirroring.h
+    ../Mod/Part/Gui/DlgBooleanOperation.h
+    ../Mod/Part/Gui/DlgExtrusion.h
+    ../Mod/Part/Gui/DlgFilletEdges.h
+    ../Mod/Part/Gui/DlgPartBoxImp.h
+    ../Mod/Part/Gui/DlgPartCylinderImp.h
+    ../Mod/Part/Gui/DlgPartImportIgesImp.h
+    ../Mod/Part/Gui/DlgPartImportStepImp.h
+    ../Mod/Part/Gui/DlgPrimitives.h
+    ../Mod/Part/Gui/DlgRevolution.h
+    ../Mod/Part/Gui/DlgSettings3DViewPartImp.h
+    ../Mod/Part/Gui/DlgSettingsGeneral.h
+    ../Mod/Part/Gui/DlgSettingsObjectColor.h
+    ../Mod/Part/Gui/TaskFaceColors.h
+    ../Mod/Part/Gui/TaskShapeBuilder.h
+    ../Mod/Part/Gui/TaskLoft.h
+    ../Mod/Part/Gui/TaskOffset.h
+    ../Mod/Part/Gui/TaskSweep.h
+    ../Mod/Part/Gui/TaskThickness.h
+    ../Mod/Part/Gui/TaskDimension.h
+    ../Mod/Part/Gui/TaskCheckGeometry.h
+    ../Mod/Part/Gui/TaskAttacher.h
+)
+fc_wrap_cpp(PartGui_MOC_SRCS ${PartGui_MOC_HDRS})
+SOURCE_GROUP("Moc" FILES ${PartGui_MOC_SRCS})
+
+if (BUILD_QT5)
+    qt5_add_resources(PartGui_QRC_SRCS ../Mod/Part/Gui/Resources/Part.qrc)
+else()
+    qt4_add_resources(PartGui_QRC_SRCS ../Mod/Part/Gui/Resources/Part.qrc)
+endif()
+
+set(PartGui_UIC_SRCS
+    ../Mod/Part/Gui/CrossSections.ui
+    ../Mod/Part/Gui/Mirroring.ui
+    ../Mod/Part/Gui/DlgBooleanOperation.ui
+    ../Mod/Part/Gui/DlgExtrusion.ui
+    ../Mod/Part/Gui/DlgFilletEdges.ui
+    ../Mod/Part/Gui/DlgImportExportIges.ui
+    ../Mod/Part/Gui/DlgImportExportStep.ui
+    ../Mod/Part/Gui/DlgPartBox.ui
+    ../Mod/Part/Gui/DlgPartCylinder.ui
+    ../Mod/Part/Gui/DlgPartImportIges.ui
+    ../Mod/Part/Gui/DlgPartImportStep.ui
+    ../Mod/Part/Gui/DlgPrimitives.ui
+    ../Mod/Part/Gui/Location.ui
+    ../Mod/Part/Gui/DlgRevolution.ui
+    ../Mod/Part/Gui/DlgSettings3DViewPart.ui
+    ../Mod/Part/Gui/DlgSettingsGeneral.ui
+    ../Mod/Part/Gui/DlgSettingsObjectColor.ui
+    ../Mod/Part/Gui/TaskFaceColors.ui
+    ../Mod/Part/Gui/TaskShapeBuilder.ui
+    ../Mod/Part/Gui/TaskLoft.ui
+    ../Mod/Part/Gui/TaskOffset.ui
+    ../Mod/Part/Gui/TaskSweep.ui
+    ../Mod/Part/Gui/TaskAttacher.ui
+)
+
+if (BUILD_QT5)
+    qt5_wrap_ui(PartGui_UIC_HDRS ${PartGui_UIC_SRCS})
+else()
+    qt4_wrap_ui(PartGui_UIC_HDRS ${PartGui_UIC_SRCS})
+endif()
+
+
+SET(PartGui_SRCS
+    ${PartGui_QRC_SRCS}
+    ${PartGui_UIC_HDRS}
+    ../Mod/Part/Gui/AppPartGui.cpp
+    ../Mod/Part/Gui/AttacherTexts.h
+    ../Mod/Part/Gui/AttacherTexts.cpp
+    ../Mod/Part/Gui/Command.cpp
+    ../Mod/Part/Gui/CommandSimple.cpp
+    ../Mod/Part/Gui/CommandParametric.cpp
+    ../Mod/Part/Gui/CrossSections.cpp
+    ../Mod/Part/Gui/CrossSections.h
+    ../Mod/Part/Gui/CrossSections.ui
+    ../Mod/Part/Gui/Mirroring.cpp
+    ../Mod/Part/Gui/Mirroring.h
+    ../Mod/Part/Gui/Mirroring.ui
+    ../Mod/Part/Gui/DlgBooleanOperation.cpp
+    ../Mod/Part/Gui/DlgBooleanOperation.h
+    ../Mod/Part/Gui/DlgBooleanOperation.ui
+    ../Mod/Part/Gui/DlgExtrusion.cpp
+    ../Mod/Part/Gui/DlgExtrusion.h
+    ../Mod/Part/Gui/DlgExtrusion.ui
+    ../Mod/Part/Gui/DlgFilletEdges.cpp
+    ../Mod/Part/Gui/DlgFilletEdges.h
+    ../Mod/Part/Gui/DlgFilletEdges.ui
+    ../Mod/Part/Gui/DlgImportExportIges.ui
+    ../Mod/Part/Gui/DlgImportExportStep.ui
+    ../Mod/Part/Gui/DlgPartBox.ui
+    ../Mod/Part/Gui/DlgPartBoxImp.cpp
+    ../Mod/Part/Gui/DlgPartBoxImp.h
+    ../Mod/Part/Gui/DlgPartCylinderImp.cpp
+    ../Mod/Part/Gui/DlgPartCylinderImp.h
+    ../Mod/Part/Gui/DlgPartCylinder.ui
+    ../Mod/Part/Gui/DlgPartImportIges.ui
+    ../Mod/Part/Gui/DlgPartImportIgesImp.cpp
+    ../Mod/Part/Gui/DlgPartImportIgesImp.h
+    ../Mod/Part/Gui/DlgPartImportStep.ui
+    ../Mod/Part/Gui/DlgPartImportStepImp.cpp
+    ../Mod/Part/Gui/DlgPartImportStepImp.h
+    ../Mod/Part/Gui/DlgPrimitives.cpp
+    ../Mod/Part/Gui/DlgPrimitives.h
+    ../Mod/Part/Gui/DlgPrimitives.ui
+    ../Mod/Part/Gui/Location.ui
+    ../Mod/Part/Gui/DlgRevolution.cpp
+    ../Mod/Part/Gui/DlgRevolution.h
+    ../Mod/Part/Gui/DlgRevolution.ui
+    ../Mod/Part/Gui/DlgSettings3DViewPart.ui
+    ../Mod/Part/Gui/DlgSettings3DViewPartImp.cpp
+    ../Mod/Part/Gui/DlgSettings3DViewPartImp.h
+    ../Mod/Part/Gui/DlgSettingsGeneral.cpp
+    ../Mod/Part/Gui/DlgSettingsGeneral.h
+    ../Mod/Part/Gui/DlgSettingsGeneral.ui
+    ../Mod/Part/Gui/DlgSettingsObjectColor.cpp
+    ../Mod/Part/Gui/DlgSettingsObjectColor.h
+    ../Mod/Part/Gui/DlgSettingsObjectColor.ui
+    ../Mod/Part/Gui/Resources/Part.qrc
+    ../Mod/Part/Gui/PreCompiled.cpp
+    ../Mod/Part/Gui/PreCompiled.h
+    ../Mod/Part/Gui/SoFCShapeObject.cpp
+    ../Mod/Part/Gui/SoFCShapeObject.h
+    ../Mod/Part/Gui/SoBrepEdgeSet.cpp
+    ../Mod/Part/Gui/SoBrepEdgeSet.h
+    ../Mod/Part/Gui/SoBrepFaceSet.cpp
+    ../Mod/Part/Gui/SoBrepFaceSet.h
+    ../Mod/Part/Gui/SoBrepPointSet.cpp
+    ../Mod/Part/Gui/SoBrepPointSet.h
+    ../Mod/Part/Gui/ViewProvider.cpp
+    ../Mod/Part/Gui/ViewProvider.h
+    ../Mod/Part/Gui/ViewProviderExt.cpp
+    ../Mod/Part/Gui/ViewProviderExt.h
+    ../Mod/Part/Gui/ViewProviderReference.cpp
+    ../Mod/Part/Gui/ViewProviderReference.h
+    ../Mod/Part/Gui/ViewProviderBox.cpp
+    ../Mod/Part/Gui/ViewProviderBox.h
+    ../Mod/Part/Gui/ViewProviderCompound.cpp
+    ../Mod/Part/Gui/ViewProviderCompound.h
+    ../Mod/Part/Gui/ViewProviderCircleParametric.cpp
+    ../Mod/Part/Gui/ViewProviderCircleParametric.h
+    ../Mod/Part/Gui/ViewProviderLineParametric.cpp
+    ../Mod/Part/Gui/ViewProviderLineParametric.h
+    ../Mod/Part/Gui/ViewProviderPointParametric.cpp
+    ../Mod/Part/Gui/ViewProviderPointParametric.h
+    ../Mod/Part/Gui/ViewProviderEllipseParametric.cpp
+    ../Mod/Part/Gui/ViewProviderEllipseParametric.h
+    ../Mod/Part/Gui/ViewProviderHelixParametric.cpp
+    ../Mod/Part/Gui/ViewProviderHelixParametric.h
+    ../Mod/Part/Gui/ViewProviderPlaneParametric.cpp
+    ../Mod/Part/Gui/ViewProviderPlaneParametric.h
+    ../Mod/Part/Gui/ViewProviderSphereParametric.cpp
+    ../Mod/Part/Gui/ViewProviderSphereParametric.h
+    ../Mod/Part/Gui/ViewProviderCylinderParametric.cpp
+    ../Mod/Part/Gui/ViewProviderCylinderParametric.h
+    ../Mod/Part/Gui/ViewProviderConeParametric.cpp
+    ../Mod/Part/Gui/ViewProviderConeParametric.h
+    ../Mod/Part/Gui/ViewProviderPrism.cpp
+    ../Mod/Part/Gui/ViewProviderPrism.h
+    ../Mod/Part/Gui/ViewProviderRegularPolygon.cpp
+    ../Mod/Part/Gui/ViewProviderRegularPolygon.h
+    ../Mod/Part/Gui/ViewProviderTorusParametric.cpp
+    ../Mod/Part/Gui/ViewProviderTorusParametric.h
+    ../Mod/Part/Gui/ViewProviderCurveNet.cpp
+    ../Mod/Part/Gui/ViewProviderCurveNet.h
+    ../Mod/Part/Gui/ViewProviderSpline.cpp
+    ../Mod/Part/Gui/ViewProviderSpline.h
+    ../Mod/Part/Gui/ViewProviderImport.cpp
+    ../Mod/Part/Gui/ViewProviderImport.h
+    ../Mod/Part/Gui/ViewProviderExtrusion.cpp
+    ../Mod/Part/Gui/ViewProviderExtrusion.h
+    ../Mod/Part/Gui/ViewProvider2DObject.cpp
+    ../Mod/Part/Gui/ViewProvider2DObject.h
+    ../Mod/Part/Gui/ViewProviderMirror.cpp
+    ../Mod/Part/Gui/ViewProviderMirror.h
+    ../Mod/Part/Gui/ViewProviderPython.cpp
+    ../Mod/Part/Gui/ViewProviderPython.h
+    ../Mod/Part/Gui/ViewProviderBoolean.cpp
+    ../Mod/Part/Gui/ViewProviderBoolean.h
+    ../Mod/Part/Gui/ViewProviderRuledSurface.cpp
+    ../Mod/Part/Gui/ViewProviderRuledSurface.h
+    ../Mod/Part/Gui/Workbench.cpp
+    ../Mod/Part/Gui/Workbench.h
+    ../Mod/Part/Gui/TaskFaceColors.cpp
+    ../Mod/Part/Gui/TaskFaceColors.h
+    ../Mod/Part/Gui/TaskFaceColors.ui
+    ../Mod/Part/Gui/TaskShapeBuilder.cpp
+    ../Mod/Part/Gui/TaskShapeBuilder.h
+    ../Mod/Part/Gui/TaskShapeBuilder.ui
+    ../Mod/Part/Gui/TaskLoft.cpp
+    ../Mod/Part/Gui/TaskLoft.h
+    ../Mod/Part/Gui/TaskLoft.ui
+    ../Mod/Part/Gui/TaskOffset.cpp
+    ../Mod/Part/Gui/TaskOffset.h
+    ../Mod/Part/Gui/TaskOffset.ui
+    ../Mod/Part/Gui/TaskSweep.cpp
+    ../Mod/Part/Gui/TaskSweep.h
+    ../Mod/Part/Gui/TaskSweep.ui
+    ../Mod/Part/Gui/TaskThickness.cpp
+    ../Mod/Part/Gui/TaskThickness.h
+    ../Mod/Part/Gui/TaskDimension.cpp
+    ../Mod/Part/Gui/TaskDimension.h
+    ../Mod/Part/Gui/TaskCheckGeometry.cpp
+    ../Mod/Part/Gui/TaskCheckGeometry.h
+    ../Mod/Part/Gui/TaskAttacher.h 
+    ../Mod/Part/Gui/TaskAttacher.cpp 
+)
+
 SET(FreeCADGui_SRCS
     ${FreeCADGui_SDK_SRCS}
     ${FreeCADGui_CPP_SRCS}
@@ -1161,7 +1497,10 @@ SET(FreeCADGui_SRCS
     ${Workbench_SRCS}
     ${Selection_SRCS}
     ${FreeCADGui_SRCS}
+    ${Part_SRCS}
+    ${PartGui_SRCS}
 )
+
 
 if(MSVC)
     add_definitions(-D_PreComp_)

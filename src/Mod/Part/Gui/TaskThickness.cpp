@@ -40,8 +40,8 @@
 #include <Gui/SelectionFilter.h>
 #include <Gui/ViewProvider.h>
 
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
+//#include <Base/Console.h>
+//#include <Base/Interpreter.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/DocumentObject.h>

@@ -59,7 +59,7 @@
 #include "../App/PartFeature.h"
 #include "../App/FeatureFillet.h"
 #include "../App/FeatureChamfer.h"
-#include <Base/UnitsApi.h>
+//#include <Base/UnitsApi.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/DocumentObject.h>
@@ -921,8 +921,8 @@ bool DlgFilletEdges::accept()
             code += QString::fromLatin1(
                 "__fillets__.append((%1,%2,%3))\n")
                 .arg(id)
-                .arg(r1.getValue(),0,'f',Base::UnitsApi::getDecimals())
-                .arg(r2.getValue(),0,'f',Base::UnitsApi::getDecimals());
+                .arg(r1.getValue(),0,'f',4)
+                .arg(r2.getValue(),0,'f',4);
             todo = true;
         }
     }

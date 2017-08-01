@@ -43,7 +43,6 @@
 #endif
 
 /// Here the FreeCAD includes sorted by Base,App,Gui......
-#include <Base/Console.h>
 #include <Base/Parameter.h>
 #include <Base/Exception.h>
 #include <Base/Sequencer.h>
@@ -125,7 +124,7 @@ void ViewProviderCurveNet::updateData(const App::Property* prop)
             computeVertices(VertexRoot,cShape);
         }
         catch (...){
-            Base::Console().Error("ViewProviderPart::create() Cannot compute Inventor representation for the actual shape");
+            printf("ViewProviderPart::create() Cannot compute Inventor representation for the actual shape");
         }
     }
 }
@@ -196,7 +195,7 @@ bool ViewProviderCurveNet::handleEvent(const SoEvent * const ev, Gui::View3DInve
         switch (button) {
             case SoMouseButtonEvent::BUTTON1:
                 if (press) {
-                    Base::Console().Log("ViewProviderCurveNet::handleEvent() press left\n");
+                    printf("ViewProviderCurveNet::handleEvent() press left\n");
 
                     bool bIsNode =  false;
                     for (std::list<Node>::iterator It = NodeList.begin();It != NodeList.end(); It++)
@@ -220,7 +219,7 @@ bool ViewProviderCurveNet::handleEvent(const SoEvent * const ev, Gui::View3DInve
                     else if(Viewer.pickPoint(pos,point,norm))
                     {
                         Node n;
-                        Base::Console().Log("Picked(%f,%f,%f)\n",point[0],point[1],point[2]);
+                        printf("Picked(%f,%f,%f)\n",point[0],point[1],point[2]);
 
                         SoSeparator *TransRoot = new SoSeparator();
                         n.pcTransform          = new SoTransform();

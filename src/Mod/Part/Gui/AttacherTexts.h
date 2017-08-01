@@ -33,7 +33,7 @@
 #include <vector>
 #include <QString>
 #include <QStringList>
-#include <CXX/Objects.hxx>
+//#include <CXX/Objects.hxx>
 #include <Mod/Part/App/Attacher.h>
 
 
@@ -55,15 +55,5 @@ TextSet PartGuiExport getUIStrings(Base::Type attacherType, Attacher::eMapMode m
 QString PartGuiExport getShapeTypeText(Attacher::eRefType type);
 
 QStringList PartGuiExport getRefListForMode(Attacher::AttachEngine &attacher, Attacher::eMapMode mmode);
-
-
-// Python interface
-class PartGuiExport AttacherGuiPy{
-public:
-    static PyMethodDef    Methods[];
-    static PyObject* sGetModeStrings(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/);
-    static PyObject* sGetRefTypeUserFriendlyName(PyObject * /*self*/, PyObject *args, PyObject * /*kwd*/);
-};
-
 }
 #endif

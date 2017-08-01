@@ -42,7 +42,6 @@
 #include <Base/Parameter.h>
 #include <Base/Matrix.h>
 #include <Base/Vector3D.h>
-#include <Base/Interpreter.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/Annotation.h>
@@ -192,11 +191,11 @@ void DraftDxfRead::OnReadInsert(const double* point, const double* scale, const 
 void DraftDxfRead::OnReadDimension(const double* s, const double* e, const double* point, double /*rotation*/)
 {
     if (optionImportAnnotations) {
-        Base::Interpreter().runString("import Draft");
-        Base::Interpreter().runStringArg("p1=FreeCAD.Vector(%f,%f,%f)",s[0]*optionScaling,s[1]*optionScaling,s[2]*optionScaling);
-        Base::Interpreter().runStringArg("p2=FreeCAD.Vector(%f,%f,%f)",e[0]*optionScaling,e[1]*optionScaling,e[2]*optionScaling);
-        Base::Interpreter().runStringArg("p3=FreeCAD.Vector(%f,%f,%f)",point[0]*optionScaling,point[1]*optionScaling,point[2]*optionScaling);
-        Base::Interpreter().runString("Draft.makeDimension(p1,p2,p3)");
+        printf("import Draft");
+        printf("p1=FreeCAD.Vector(%f,%f,%f)",s[0]*optionScaling,s[1]*optionScaling,s[2]*optionScaling);
+        printf("p2=FreeCAD.Vector(%f,%f,%f)",e[0]*optionScaling,e[1]*optionScaling,e[2]*optionScaling);
+        printf("p3=FreeCAD.Vector(%f,%f,%f)",point[0]*optionScaling,point[1]*optionScaling,point[2]*optionScaling);
+        printf("Draft.makeDimension(p1,p2,p3)");
     }
 }
 

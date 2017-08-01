@@ -83,7 +83,6 @@ namespace Part {
 using namespace Part;
 
 
-
 Primitive::Primitive(void) 
 {
     AttachExtension::initExtension(this);

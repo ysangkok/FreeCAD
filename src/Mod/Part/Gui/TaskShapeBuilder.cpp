@@ -42,8 +42,6 @@
 #include <Gui/Selection.h>
 #include <Gui/SelectionFilter.h>
 
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/DocumentObject.h>
@@ -160,7 +158,7 @@ void ShapeBuilderWidget::on_createButton_clicked()
         Gui::Selection().clearSelection();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
     }
 }
 

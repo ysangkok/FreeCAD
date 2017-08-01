@@ -53,8 +53,6 @@
 #include <Gui/WaitCursor.h>
 #include <Mod/Part/App/Tools.h>
 #include <Mod/Part/App/FeatureRevolution.h>
-#include <Base/Console.h>
-#include <Base/UnitsApi.h>
 
 
 

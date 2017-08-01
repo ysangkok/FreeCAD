@@ -26,7 +26,6 @@
 #ifndef _PreComp_
 #endif
 
-#include <Base/Console.h>
 #include <Base/Exception.h>
 #include <Gui/Command.h>
 
@@ -59,7 +58,7 @@ bool ViewProviderPart::doubleClicked(void)
         return true;
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         return false;
     }
 }

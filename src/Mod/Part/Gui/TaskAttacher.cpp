@@ -33,8 +33,6 @@
 # include <boost/bind.hpp>
 #endif
 
-#include <Base/Console.h>
-#include <Base/Interpreter.h>
 #include <App/Application.h>
 #include <App/Document.h>
 #include <App/Origin.h>
@@ -874,7 +872,9 @@ void TaskAttacher::visibilityAutomation(bool opening_not_closing)
                 QString::fromLatin1("App.ActiveDocument.") +
                 QString::fromLatin1(ViewProvider->getObject()->getNameInDocument())
                 ).toLatin1();
-                Base::Interpreter().runString(code_2.constData());
+                printf("would run\n");
+                printf(code_2.constData());
+                printf("\n");
         }
         catch (Base::Exception &e){
             e.ReportException();
@@ -882,7 +882,7 @@ void TaskAttacher::visibilityAutomation(bool opening_not_closing)
     }
     else {
         try {
-            Base::Interpreter().runString("del(tv)");
+            printf("del(tv)\n");
         }
         catch (Base::Exception &e) {
             e.ReportException();
@@ -944,7 +944,7 @@ bool TaskDlgAttacher::accept()
 
         Gui::Command::doCommand(Gui::Command::Doc,"App.ActiveDocument.%s.MapReversed = %s", name.c_str(), pcAttach->MapReversed.getValue() ? "True" : "False");
 
-        Gui::Command::doCommand(Gui::Command::Doc,"App.ActiveDocument.%s.Support = %s", name.c_str(), pcAttach->Support.getPyReprString().c_str());
+        Gui::Command::doCommand(Gui::Command::Doc,"App.ActiveDocument.%s.Support = %s", name.c_str(), "pcAttach->Support.getPyReprString().c_str()");
 
         Gui::Command::doCommand(Gui::Command::Doc,"App.ActiveDocument.%s.MapMode = '%s'", name.c_str(), AttachEngine::getModeName(eMapMode(pcAttach->MapMode.getValue())).c_str());
 

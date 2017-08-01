@@ -19,33 +19,3 @@
  *   Suite 330, Boston, MA  02111-1307, USA                                *
  *                                                                         *
  ***************************************************************************/
-
-
-#include "PreCompiled.h"
-#ifndef _PreComp_
-# include <Python.h>
-#endif
-
-#include <Base/Console.h>
-#include <Base/PyObjectBase.h>
-#include <Base/Interpreter.h>
-
-namespace DraftUtils {
-extern PyObject* initModule();
-}
-
-/* Python entry */
-PyMOD_INIT_FUNC(DraftUtils)
-{
-    // load dependent module
-    try {
-        Base::Interpreter().loadModule("Part");
-    }
-    catch(const Base::Exception& e) {
-        PyErr_SetString(PyExc_ImportError, e.what());
-        PyMOD_Return(0);
-    }
-    PyObject* mod = DraftUtils::initModule();
-    Base::Console().Log("Loading DraftUtils module... done\n");
-    PyMOD_Return(mod);
-}

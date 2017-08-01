@@ -98,7 +98,6 @@
 #endif
 
 /// Here the FreeCAD includes sorted by Base,App,Gui......
-#include <Base/Console.h>
 #include <Base/Parameter.h>
 #include <Base/Exception.h>
 #include <Base/TimeInfo.h>
@@ -1190,13 +1189,13 @@ void ViewProviderPartExt::updateVisual(const TopoDS_Shape& inputShape)
         lineset ->coordIndex  .finishEditing();
     }
     catch (...) {
-        Base::Console().Error("Cannot compute Inventor representation for the shape of %s.\n",pcObject->getNameInDocument());
+        printf("Cannot compute Inventor representation for the shape of %s.\n",pcObject->getNameInDocument());
     }
 
 #   ifdef FC_DEBUG
         // printing some informations
-        Base::Console().Log("ViewProvider update time: %f s\n",Base::TimeInfo::diffTimeF(start_time,Base::TimeInfo()));
-        Base::Console().Log("Shape tria info: Faces:%d Edges:%d Nodes:%d Triangles:%d IdxVec:%d\n",numFaces,numEdges,numNodes,numTriangles,numLines);
+        printf("ViewProvider update time: %f s\n",Base::TimeInfo::diffTimeF(start_time,Base::TimeInfo()));
+        printf("Shape tria info: Faces:%d Edges:%d Nodes:%d Triangles:%d IdxVec:%d\n",numFaces,numEdges,numNodes,numTriangles,numLines);
 #   endif
     VisualTouched = false;
 }
