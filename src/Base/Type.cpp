@@ -30,6 +30,8 @@
 #include "Type.h"
 #include "Exception.h"
 
+// JANUS
+#include "ViewProvider.h"
 
 using namespace Base;
 using namespace std;
@@ -88,6 +90,9 @@ void *Type::createInstance(void)
 
 void *Type::createInstanceByName(const char* TypeName, bool bLoadModule)
 {
+  if (std::string(TypeName) == "PartGui::ViewProviderPart") {
+      return new PartGui::ViewProviderPart();
+  }
   // if not already, load the module
   if(bLoadModule)
     importModule(TypeName);
