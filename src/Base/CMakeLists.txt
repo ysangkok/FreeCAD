@@ -13,6 +13,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../Mod/Part/Gui
     ${CMAKE_CURRENT_SOURCE_DIR}/../App
     ${CMAKE_CURRENT_SOURCE_DIR}/../Gui
+    ${CMAKE_CURRENT_BINARY_DIR}/../Base
     ${CMAKE_CURRENT_BINARY_DIR}/../Gui
     ${CMAKE_CURRENT_BINARY_DIR}/../Gui/DAGView
     ${CMAKE_CURRENT_BINARY_DIR}/../Gui/TaskView
@@ -705,7 +706,7 @@ SET(Document_CPP_SRCS
     ../App/Path.cpp
     ../App/InventorObject.cpp
     ../App/MeasureDistance.cpp
-    ../App/Placement.cpp
+    ../App/AppPlacement.cpp
     ../App/OriginFeature.cpp
     ../App/Range.cpp
     ../App/Transactions.cpp
@@ -743,7 +744,7 @@ SET(Document_HPP_SRCS
     ../App/Path.h
     ../App/InventorObject.h
     ../App/MeasureDistance.h
-    ../App/Placement.h
+    ../App/AppPlacement.h
     ../App/OriginFeature.h
     ../App/Range.h
     ../App/Transactions.h
@@ -828,117 +829,117 @@ SET(FreeCADApp_SRCS
     ../App/PreCompiled.h
 )
 set(Gui_MOC_HDRS
-    Action.h
-    ActionFunction.h
-    Assistant.h
-    AutoSaver.h
-    CallTips.h
-    CombiView.h
-    Control.h
-    Clipping.h
-    DemoMode.h
-    DownloadItem.h
-    DownloadManager.h
-    DlgActionsImp.h
-    DlgActivateWindowImp.h
-    DlgUnitsCalculatorImp.h
-    DlgCommandsImp.h
-    DlgCustomizeImp.h
-    DlgCustomizeSpaceball.h
-    DlgCustomizeSpNavSettings.h
-    DlgDisplayPropertiesImp.h
-    DlgEditorImp.h
-    DlgGeneralImp.h
-    DlgInputDialogImp.h
-    DlgKeyboardImp.h
-    DlgMacroExecuteImp.h
-    DlgMacroRecordImp.h
-    DlgRunExternal.h
-    DlgEditFileIncludeProptertyExternal.h
-    DlgMaterialPropertiesImp.h
-    DlgOnlineHelpImp.h
-    DlgParameterImp.h
-    DlgPreferencesImp.h
-    DlgProjectInformationImp.h
-    DlgProjectUtility.h
-    DlgPropertyLink.h
-    DlgReportViewImp.h
-    DlgSettings3DViewImp.h
-    DlgSettingsViewColor.h
-    DlgSettingsColorGradientImp.h
-    DlgSettingsDocumentImp.h
-    DlgSettingsImageImp.h
-    DlgSettingsMacroImp.h
-    DlgSettingsUnitsImp.h
-    DlgCheckableMessageBox.h
-    DlgToolbarsImp.h
-    DlgWorkbenchesImp.h
-    TaskDlgRelocation.h
-    TaskCSysDragger.h
-    DlgUndoRedo.h
-    DockWindow.h
-    DockWindowManager.h
-    DocumentRecovery.h
-    EditorView.h
-    TextDocumentEditorView.h
-    ExpressionCompleter.h
-    DlgExpressionInput.h
-    FileDialog.h
-    Flag.h
-    GraphicsViewZoom.h
-    GraphvizView.h
-    GuiApplication.h
-    GuiApplicationNativeEventAware.h
-    InputVector.h
-    MainWindow.h
-    ManualAlignment.h
-    MDIView.h
-    NetworkRetriever.h
-    OnlineDocumentation.h
-    Placement.h
-    InputField.h
-    PrefWidgets.h
-    ProgressBar.h
-    PropertyPage.h
-    PropertyView.h
-    PythonConsole.h
-    PythonDebugger.h
-    PythonEditor.h
-    QuantitySpinBox.h
-    QListWidgetCustom.h
-    QuantitySpinBox_p.h
-    ReportView.h
-    SceneInspector.h
-    SelectionView.h
-    SpinBox.h
-    Splashscreen.h
-    TextEdit.h
-    TextureMapping.h
-    ToolBox.h
-    Transform.h
-    Tree.h
-    TreeView.h
-    ProjectView.h
-    View3DInventor.h
-    WidgetFactory.h
-    Widgets.h
-    Language/Translator.h
-    propertyeditor/PropertyEditor.h
-    propertyeditor/PropertyItem.h
-    propertyeditor/PropertyItemDelegate.h
-    propertyeditor/PropertyModel.h
-    TaskView/TaskAppearance.h
-    TaskView/TaskSelectLinkProperty.h
-    TaskView/TaskDialog.h
-    TaskView/TaskWatcher.h
-    TaskView/TaskEditControl.h
-    TaskView/TaskView.h
-    DAGView/DAGView.h
-    DAGView/DAGModel.h
+    ../Gui/Action.h
+    ../Gui/ActionFunction.h
+    ../Gui/Assistant.h
+    ../Gui/AutoSaver.h
+    ../Gui/CallTips.h
+    ../Gui/CombiView.h
+    ../Gui/Control.h
+    ../Gui/Clipping.h
+    ../Gui/DemoMode.h
+    ../Gui/DownloadItem.h
+    ../Gui/DownloadManager.h
+    ../Gui/DlgActionsImp.h
+    ../Gui/DlgActivateWindowImp.h
+    ../Gui/DlgUnitsCalculatorImp.h
+    ../Gui/DlgCommandsImp.h
+    ../Gui/DlgCustomizeImp.h
+    ../Gui/DlgCustomizeSpaceball.h
+    ../Gui/DlgCustomizeSpNavSettings.h
+    ../Gui/DlgDisplayPropertiesImp.h
+    ../Gui/DlgEditorImp.h
+    ../Gui/DlgGeneralImp.h
+    ../Gui/DlgInputDialogImp.h
+    ../Gui/DlgKeyboardImp.h
+    ../Gui/DlgMacroExecuteImp.h
+    ../Gui/DlgMacroRecordImp.h
+    ../Gui/DlgRunExternal.h
+    ../Gui/DlgEditFileIncludeProptertyExternal.h
+    ../Gui/DlgMaterialPropertiesImp.h
+    ../Gui/DlgOnlineHelpImp.h
+    ../Gui/DlgParameterImp.h
+    ../Gui/DlgPreferencesImp.h
+    ../Gui/DlgProjectInformationImp.h
+    ../Gui/DlgProjectUtility.h
+    ../Gui/DlgPropertyLink.h
+    ../Gui/DlgReportViewImp.h
+    ../Gui/DlgSettings3DViewImp.h
+    ../Gui/DlgSettingsViewColor.h
+    ../Gui/DlgSettingsColorGradientImp.h
+    ../Gui/DlgSettingsDocumentImp.h
+    ../Gui/DlgSettingsImageImp.h
+    ../Gui/DlgSettingsMacroImp.h
+    ../Gui/DlgSettingsUnitsImp.h
+    ../Gui/DlgCheckableMessageBox.h
+    ../Gui/DlgToolbarsImp.h
+    ../Gui/DlgWorkbenchesImp.h
+    ../Gui/TaskDlgRelocation.h
+    ../Gui/TaskCSysDragger.h
+    ../Gui/DlgUndoRedo.h
+    ../Gui/DockWindow.h
+    ../Gui/DockWindowManager.h
+    ../Gui/DocumentRecovery.h
+    ../Gui/EditorView.h
+    ../Gui/TextDocumentEditorView.h
+    ../Gui/ExpressionCompleter.h
+    ../Gui/DlgExpressionInput.h
+    ../Gui/FileDialog.h
+    ../Gui/Flag.h
+    ../Gui/GraphicsViewZoom.h
+    ../Gui/GraphvizView.h
+    ../Gui/GuiApplication.h
+    ../Gui/GuiApplicationNativeEventAware.h
+    ../Gui/InputVector.h
+    ../Gui/MainWindow.h
+    ../Gui/ManualAlignment.h
+    ../Gui/MDIView.h
+    ../Gui/NetworkRetriever.h
+    ../Gui/OnlineDocumentation.h
+    ../Gui/GuiPlacement.h
+    ../Gui/InputField.h
+    ../Gui/PrefWidgets.h
+    ../Gui/ProgressBar.h
+    ../Gui/PropertyPage.h
+    ../Gui/PropertyView.h
+    ../Gui/PythonConsole.h
+    ../Gui/PythonDebugger.h
+    ../Gui/PythonEditor.h
+    ../Gui/QuantitySpinBox.h
+    ../Gui/QListWidgetCustom.h
+    ../Gui/QuantitySpinBox_p.h
+    ../Gui/ReportView.h
+    ../Gui/SceneInspector.h
+    ../Gui/SelectionView.h
+    ../Gui/SpinBox.h
+    ../Gui/Splashscreen.h
+    ../Gui/TextEdit.h
+    ../Gui/TextureMapping.h
+    ../Gui/ToolBox.h
+    ../Gui/Transform.h
+    ../Gui/Tree.h
+    ../Gui/TreeView.h
+    ../Gui/ProjectView.h
+    ../Gui/View3DInventor.h
+    ../Gui/WidgetFactory.h
+    ../Gui/Widgets.h
+    ../Gui/Language/Translator.h
+    ../Gui/propertyeditor/PropertyEditor.h
+    ../Gui/propertyeditor/PropertyItem.h
+    ../Gui/propertyeditor/PropertyItemDelegate.h
+    ../Gui/propertyeditor/PropertyModel.h
+    ../Gui/TaskView/TaskAppearance.h
+    ../Gui/TaskView/TaskSelectLinkProperty.h
+    ../Gui/TaskView/TaskDialog.h
+    ../Gui/TaskView/TaskWatcher.h
+    ../Gui/TaskView/TaskEditControl.h
+    ../Gui/TaskView/TaskView.h
+    ../Gui/DAGView/DAGView.h
+    ../Gui/DAGView/DAGModel.h
 )
 
 fc_wrap_cpp(Gui_MOC_SRCS ${Gui_MOC_HDRS})
-#SOURCE_GROUP("Moc" FILES ${Gui_MOC_SRCS})
+SOURCE_GROUP("Moc" FILES ${Gui_MOC_SRCS})
 
 if (BUILD_QT5)
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/moc_GraphvizView-internal.cpp
@@ -1001,7 +1002,7 @@ SET(Gui_UIC_SRCS
     ../Gui/MouseButtons.ui
     ../Gui/SceneInspector.ui
     ../Gui/InputVector.ui
-    ../Gui/Placement.ui
+    ../Gui/GuiPlacement.ui
     ../Gui/TextureMapping.ui
     ../Gui/TaskView/TaskAppearance.ui
     ../Gui/TaskView/TaskSelectLinkProperty.ui
@@ -1067,7 +1068,7 @@ SET(Dialog_CPP_SRCS
     ../Gui/TaskCSysDragger.cpp
     ../Gui/DlgUndoRedo.cpp
     ../Gui/InputVector.cpp
-    ../Gui/Placement.cpp
+    ../Gui/GuiPlacement.cpp
     ../Gui/PropertyPage.cpp
     ../Gui/SceneInspector.cpp
     ../Gui/TextureMapping.cpp
@@ -1099,7 +1100,7 @@ SET(Dialog_HPP_SRCS
     ../Gui/TaskCSysDragger.h
     ../Gui/DlgUndoRedo.h
     ../Gui/InputVector.h
-    ../Gui/Placement.h
+    ../Gui/GuiPlacement.h
     ../Gui/PropertyPage.h
     ../Gui/SceneInspector.h
     ../Gui/TextureMapping.h
@@ -1138,7 +1139,7 @@ SET(Dialog_SRCS
     ../Gui/DocumentRecovery.ui
     ../Gui/MouseButtons.ui
     ../Gui/InputVector.ui
-    ../Gui/Placement.ui
+    ../Gui/GuiPlacement.ui
     ../Gui/SceneInspector.ui
     ../Gui/TextureMapping.ui
 )

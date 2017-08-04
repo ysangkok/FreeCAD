@@ -26,8 +26,8 @@
 #include <QDockWidget>
 #include <QMessageBox>
 
-#include "Placement.h"
-#include "ui_Placement.h"
+#include "GuiPlacement.h"
+#include "ui_GuiPlacement.h"
 #include <Gui/DockWindowManager.h>
 #include <Gui/Application.h>
 #include <Gui/Command.h>
@@ -624,4 +624,4 @@ void TaskPlacement::clicked(int id)
     }
 }
 
-#include "moc_Placement.cpp"
+#include "__/Gui/moc_GuiPlacement.cpp"

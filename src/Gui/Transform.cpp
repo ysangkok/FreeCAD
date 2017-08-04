@@ -28,7 +28,7 @@
 #include "Transform.h"
 #include "Selection.h"
 #include "ViewProvider.h"
-#include "ui_Placement.h"
+#include "ui_GuiPlacement.h"
 #include "Application.h"
 #include "Document.h"
 #include "WaitCursor.h"

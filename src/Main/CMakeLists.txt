@@ -30,7 +30,7 @@ if(BUILD_GUI)
     )
 
     SET(FreeCAD_LIBS
-        FreeCADGui
+        FreeCADBase
     )
 
     if (MSVC AND NOT BUILD_QT5)
@@ -68,7 +68,7 @@ SET(FreeCADMainCmd_SRCS
 add_executable(FreeCADMainCmd ${FreeCADMainCmd_SRCS})
 
 SET(FreeCADMainCmd_LIBS
-    FreeCADApp
+    FreeCADBase
 )
 
 if (BUILD_QT5)
@@ -104,59 +104,3 @@ else()
         RUNTIME DESTINATION bin
     )
 endif()
-
-######################## FreeCADMainPy ########################
-
-SET(FreeCADMainPy_SRCS
-    MainPy.cpp
-)
-
-add_library(FreeCADMainPy SHARED ${FreeCADMainPy_SRCS})
-
-target_link_libraries(FreeCADMainPy FreeCADApp)
-
-SET_BIN_DIR(FreeCADMainPy FreeCAD)
-SET_PYTHON_PREFIX_SUFFIX(FreeCADMainPy)
-
-if(WIN32)
-    INSTALL(TARGETS FreeCADMainPy
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-else(WIN32)
-    INSTALL(TARGETS FreeCADMainPy
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-endif(WIN32)
-
-######################## FreeCADGuiPy ########################
-if(BUILD_GUI)
-
-    SET(FreeCADGuiPy_SRCS
-        FreeCADGuiPy.cpp
-    )
-
-    add_library(FreeCADGuiPy SHARED ${FreeCADGuiPy_SRCS})
-
-    target_link_libraries(FreeCADGuiPy FreeCADGui)
-
-    SET_BIN_DIR(FreeCADGuiPy FreeCADGui)
-    SET_PYTHON_PREFIX_SUFFIX(FreeCADGuiPy)
-    if(WIN32)
-        # Name clash with target "FreeCADGui"
-        # Must be called "FreeCADGuiPy_d" and "FreeCADGuiPy" to work so override default
-        set_target_properties(FreeCADGuiPy PROPERTIES PDB_NAME_DEBUG "FreeCADGuiPy_d")
-        set_target_properties(FreeCADGuiPy PROPERTIES PDB_NAME_RELEASE "FreeCADGuiPy")
-    endif(WIN32)
-    
-    if(WIN32)
-        INSTALL(TARGETS FreeCADGuiPy
-            RUNTIME DESTINATION bin
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        )
-    else(WIN32)
-        INSTALL(TARGETS FreeCADGuiPy
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        )
-    endif(WIN32)
-endif(BUILD_GUI)

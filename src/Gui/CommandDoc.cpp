@@ -59,7 +59,7 @@
 #include "DlgProjectInformationImp.h"
 #include "DlgProjectUtility.h"
 #include "Transform.h"
-#include "Placement.h"
+#include "GuiPlacement.h"
 #include "ManualAlignment.h"
 #include "WaitCursor.h"
 #include "ViewProvider.h"

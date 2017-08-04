@@ -99,7 +99,7 @@
 #include "VRMLObject.h"
 #include "Annotation.h"
 #include "MeasureDistance.h"
-#include "Placement.h"
+#include "AppPlacement.h"
 #include "GeoFeatureGroupExtension.h"
 #include "OriginGroupExtension.h"
 #include "Part.h"

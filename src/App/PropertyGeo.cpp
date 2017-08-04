@@ -37,7 +37,7 @@
 #include <Base/Quantity.h>
 #include <Base/Tools.h>
 
-#include "Placement.h"
+#include "AppPlacement.h"
 #include "PropertyGeo.h"
 #include "ObjectIdentifier.h"
 

@@ -267,7 +267,7 @@ set(Gui_MOC_HDRS
     MDIView.h
     NetworkRetriever.h
     OnlineDocumentation.h
-    Placement.h
+    GuiPlacement.h
     InputField.h
     PrefWidgets.h
     ProgressBar.h
@@ -373,7 +373,7 @@ SET(Gui_UIC_SRCS
     MouseButtons.ui
     SceneInspector.ui
     InputVector.ui
-    Placement.ui
+    GuiPlacement.ui
     TextureMapping.ui
     TaskView/TaskAppearance.ui
     TaskView/TaskSelectLinkProperty.ui
@@ -439,7 +439,7 @@ SET(Dialog_CPP_SRCS
     TaskCSysDragger.cpp
     DlgUndoRedo.cpp
     InputVector.cpp
-    Placement.cpp
+    GuiPlacement.cpp
     PropertyPage.cpp
     SceneInspector.cpp
     TextureMapping.cpp
@@ -471,7 +471,7 @@ SET(Dialog_HPP_SRCS
     TaskCSysDragger.h
     DlgUndoRedo.h
     InputVector.h
-    Placement.h
+    GuiPlacement.h
     PropertyPage.h
     SceneInspector.h
     TextureMapping.h
@@ -510,7 +510,7 @@ SET(Dialog_SRCS
     DocumentRecovery.ui
     MouseButtons.ui
     InputVector.ui
-    Placement.ui
+    GuiPlacement.ui
     SceneInspector.ui
     TextureMapping.ui
 )
