@@ -52,7 +52,7 @@
 #include <Gui/Document.h>
 #include <Gui/Selection.h>
 #include <Gui/ViewProviderDocumentObject.h>
-#include <Gui/Placement.h>
+#include <Gui/GuiPlacement.h>
 #include <Gui/FileDialog.h>
 #include <Gui/DlgPropertyLink.h>
 #include <Gui/QuantitySpinBox.h>

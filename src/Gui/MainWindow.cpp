@@ -117,7 +117,54 @@
 #include "View3DInventorViewer.h"
 
 // Part MOD (JANUS)
+#include <memory>
+
 #include "PartFeature.h"
+//#include "PartArc.h"
+#include "TopoShape.h"
+#include "Geometry.h"
+#include <GC_MakeArcOfCircle.hxx>
+#include <GC_MakeSegment.hxx>
+#include <BRepBuilderAPI_MakeEdge.hxx>
+
+#define PartGuiExport
+#include "SoBrepFaceSet.h"
+#include "SoBrepEdgeSet.h"
+#include "SoBrepPointSet.h"
+#include "SoFCShapeObject.h"
+#include "ViewProvider.h"
+#include "ViewProviderExt.h"
+#include "ViewProviderPython.h"
+#include "ViewProviderBox.h"
+#include "ViewProviderCurveNet.h"
+#include "ViewProviderImport.h"
+#include "ViewProviderExtrusion.h"
+#include "ViewProvider2DObject.h"
+#include "ViewProviderMirror.h"
+#include "ViewProviderBoolean.h"
+#include "ViewProviderCompound.h"
+#include "ViewProviderCircleParametric.h"
+#include "ViewProviderLineParametric.h"
+#include "ViewProviderPointParametric.h"
+#include "ViewProviderEllipseParametric.h"
+#include "ViewProviderHelixParametric.h"
+#include "ViewProviderPlaneParametric.h"
+#include "ViewProviderSphereParametric.h"
+#include "ViewProviderCylinderParametric.h"
+#include "ViewProviderConeParametric.h"
+#include "ViewProviderTorusParametric.h"
+#include "ViewProviderRuledSurface.h"
+#include "ViewProviderPrism.h"
+#include "ViewProviderSpline.h"
+#include "ViewProviderRegularPolygon.h"
+#include "TaskDimension.h"
+#include "DlgSettingsGeneral.h"
+#include "DlgSettingsObjectColor.h"
+#include "DlgSettings3DViewPartImp.h"
+#include "../Mod/Part/Gui/Workbench.h"
+
+
+// End Part MOD (JANUS
 
 #if defined(Q_OS_WIN32)
 #define slots
@@ -992,6 +1039,54 @@ void MainWindow::processMessages(const QList<QByteArray> & msg)
         }
 }
 
+template<typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
+std::unique_ptr<Part::GeomTrimmedCurve> PartArc(Base::Vector3d V1, Base::Vector3d VC1, Base::Vector3d V4) {
+  GC_MakeArcOfCircle MAOCC1(gp_Pnt(V1.x, V1.y, V1.z),gp_Pnt(VC1.x, VC1.y, VC1.z),gp_Pnt(V4.x, V4.y, V4.z));
+  auto C1 = new Part::GeomTrimmedCurve();
+  C1->setHandle(MAOCC1.Value());
+  return std::unique_ptr<Part::GeomTrimmedCurve>(C1);
+}
+
+TopoDS_Shape PartLineSegment(Base::Vector3d v1, Base::Vector3d v2) {
+  // Create line out of two points
+  double distance = Base::Distance(v1, v2);
+  if (distance < gp::Resolution())
+      Standard_Failure::Raise("Both points are equal");
+  GC_MakeSegment ms(gp_Pnt(v1.x,v1.y,v1.z),
+                    gp_Pnt(v2.x,v2.y,v2.z));
+  if (!ms.IsDone()) {
+    abort();
+  }
+
+  Handle_Geom_TrimmedCurve that_curv = ms.Value();
+  //auto that_line = Handle(Geom_Line)::DownCast(that_curv->BasisCurve());
+  //gp_Lin lin = that_line->Lin();
+
+  Handle(Geom_Curve) c = Handle(Geom_Curve)::DownCast(that_curv);
+  double u,v;
+  u=that_curv->FirstParameter();
+  v=that_curv->LastParameter();
+  BRepBuilderAPI_MakeEdge mkBuilder(c, u, v);
+  TopoDS_Shape sh = mkBuilder.Shape();
+  return sh;
+}
+
+Part::TopoShape PartShape(std::vector<TopoDS_Shape> shapes) {
+  auto it = shapes.begin();
+  TopoDS_Shape shape = *it;
+  Part::TopoShape build;
+  build.setShape(shape);
+  shapes.erase(it);
+  for (auto i : shapes) {
+    build.setShape(build.fuse(i));
+  }
+  return build;
+}
+
 void MainWindow::delayedStartup()
 {
     // processing all command line files
@@ -1009,15 +1104,131 @@ void MainWindow::delayedStartup()
         return;
     }
 
+
+
+
+    PartGui::SoBrepFaceSet                  ::initClass();
+    PartGui::SoBrepEdgeSet                  ::initClass();
+    PartGui::SoBrepPointSet                 ::initClass();
+    PartGui::SoFCControlPoints              ::initClass();
+    PartGui::ViewProviderPartExt            ::init();
+    PartGui::ViewProviderPart               ::init();
+    PartGui::ViewProviderEllipsoid          ::init();
+    //PartGui::ViewProviderPython             ::init();
+    PartGui::ViewProviderBox                ::init();
+    PartGui::ViewProviderPrism              ::init();
+    PartGui::ViewProviderRegularPolygon     ::init();
+    PartGui::ViewProviderWedge              ::init();
+    PartGui::ViewProviderImport             ::init();
+    PartGui::ViewProviderCurveNet           ::init();
+    PartGui::ViewProviderExtrusion          ::init();
+    PartGui::ViewProvider2DObject           ::init();
+    //PartGui::ViewProvider2DObjectPython     ::init();
+    PartGui::ViewProviderMirror             ::init();
+    PartGui::ViewProviderFillet             ::init();
+    PartGui::ViewProviderChamfer            ::init();
+    PartGui::ViewProviderRevolution         ::init();
+    PartGui::ViewProviderLoft               ::init();
+    PartGui::ViewProviderSweep              ::init();
+    PartGui::ViewProviderOffset             ::init();
+    PartGui::ViewProviderOffset2D           ::init();
+    PartGui::ViewProviderThickness          ::init();
+    //PartGui::ViewProviderCustom             ::init();
+    //PartGui::ViewProviderCustomPython       ::init();
+    PartGui::ViewProviderBoolean            ::init();
+    PartGui::ViewProviderMultiFuse          ::init();
+    PartGui::ViewProviderMultiCommon        ::init();
+    PartGui::ViewProviderCompound           ::init();
+    PartGui::ViewProviderSpline             ::init();
+    PartGui::ViewProviderCircleParametric   ::init();
+    PartGui::ViewProviderLineParametric     ::init();
+    PartGui::ViewProviderPointParametric    ::init();
+    PartGui::ViewProviderEllipseParametric  ::init();
+    PartGui::ViewProviderHelixParametric    ::init();
+    PartGui::ViewProviderSpiralParametric   ::init();
+    PartGui::ViewProviderPlaneParametric    ::init();
+    PartGui::ViewProviderSphereParametric   ::init();
+    PartGui::ViewProviderCylinderParametric ::init();
+    PartGui::ViewProviderConeParametric     ::init();
+    PartGui::ViewProviderTorusParametric    ::init();
+    PartGui::ViewProviderRuledSurface       ::init();
+    PartGui::ViewProviderFace               ::init();
+    PartGui::DimensionLinear                ::initClass();
+    PartGui::DimensionAngular               ::initClass();
+    PartGui::ArcEngine                      ::initClass();
+
+    //PartGui::Workbench                      ::init();
+
+
+
+
+
+
     // Create new document?
     //ParameterGrp::handle hGrp = WindowParameter::getDefaultParameter()->GetGroup("Document");
     //if (hGrp->GetBool("CreateNewDoc", true)) {
     const auto doc = App::GetApplication().newDocument();
     const auto group = new App::DocumentObjectGroup();
     doc->addObject(group);
-    const auto feature = new Part::Feature();
-    doc->addObject(feature);
-    Base::Vector3d a(1.0, 2.0, 3.0);
+
+    //const auto feature = new Part::Feature();
+    //group->addObject(feature);
+    //Base::Vector3d a(1.0, 2.0, 3.0);
+
+
+	Base::Vector3d V1(0,10,0);
+	auto V2 = Base::Vector3d(30,10,0);
+	auto V3 = Base::Vector3d(30,-10,0);
+	auto V4 = Base::Vector3d(0,-10,0);
+	auto VC1 = Base::Vector3d(-10,0,0);
+  auto C1 = PartArc(V1, VC1, V4);
+	//# and the second one
+	auto VC2 = Base::Vector3d(40,0,0);
+	auto C2 = PartArc(V2,VC2,V3);
+	auto L1 = PartLineSegment(V1,V2);
+	//# and the second one
+	auto L2 = PartLineSegment(V4,V3);
+  auto shapes = std::vector<TopoDS_Shape>{{C1->toShape(),C2->toShape(),L1,L2}};
+	auto S1 = PartShape(shapes);
+
+	//W=Part.Wire(S1.Edges)
+	//F=Part.Face(W)
+	//P=F.extrude(Base::Vector3d(0,0,5))
+
+	////# add objects with the shape
+	//Wire=Group.newObject("Part::Feature","Wire")
+	//Wire.Shape=W
+	//Face=Group.newObject("Part::Feature","Face")
+	//Face.Shape=F
+	//Prism=Group.newObject("Part::Feature","Extrude")
+	//Prism.Shape=P
+
+	//c=Part.Circle(Base::Vector3d(0,0,-1),Base::Vector3d(0,0,1),2.0)
+	//w=Part.Wire(c.toShape())
+	//f=Part.Face(w)
+	//p=f.extrude(Base::Vector3d(0,0,7))
+	//P=P.cut(p)
+
+	////# add first borer
+	//Bore1=Group.newObject("Part::Feature","Borer_1")
+	//Bore1.Shape=p
+	//Hole1=Group.newObject("Part::Feature","Borer_Hole1")
+	//Hole1.Shape=P
+
+	//c=Part.Circle(Base::Vector3d(0,-11,2.5),Base::Vector3d(0,1,0),1.0)
+	//w=Part.Wire(c.toShape())
+	//f=Part.Face(w)
+	//p=f.extrude(Base::Vector3d(0,22,0))
+	//P=P.cut(p)
+
+	////# add second borer
+	//Bore2=Group.newObject("Part::Feature","Borer_2")
+	//Bore2.Shape=p
+	//Hole2=Group.newObject("Part::Feature","Borer_Hole2")
+	//Hole2.Shape=P
+
+
+
     //} else {
     //    printf("not creating new document!\n");
     //}
