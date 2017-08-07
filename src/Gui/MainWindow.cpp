@@ -125,7 +125,16 @@
 #include "Geometry.h"
 #include <GC_MakeArcOfCircle.hxx>
 #include <GC_MakeSegment.hxx>
+#include <GC_MakeCircle.hxx>
 #include <BRepBuilderAPI_MakeEdge.hxx>
+#include <BRepBuilderAPI_MakeWire.hxx>
+#include <BRepBuilderAPI_MakeFace.hxx>
+#include <BRepBuilderAPI_MakeEdge2d.hxx>
+#include <TopoDS.hxx>
+#include <gp_Circ.hxx>
+//#include <TopTools_ListIteratorOfListOfShape.hxx>
+#include <TopTools_IndexedMapOfShape.hxx>
+#include <TopExp_Explorer.hxx>
 
 #define PartGuiExport
 #include "SoBrepFaceSet.h"
@@ -1038,75 +1047,7 @@ void MainWindow::processMessages(const QList<QByteArray> & msg)
             FileDialog::setWorkingDirectory(filename);
         }
 }
-
-template<typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&&... args) {
-    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-}
-
-std::unique_ptr<Part::GeomTrimmedCurve> PartArc(Base::Vector3d V1, Base::Vector3d VC1, Base::Vector3d V4) {
-  GC_MakeArcOfCircle MAOCC1(gp_Pnt(V1.x, V1.y, V1.z),gp_Pnt(VC1.x, VC1.y, VC1.z),gp_Pnt(V4.x, V4.y, V4.z));
-  auto C1 = new Part::GeomTrimmedCurve();
-  C1->setHandle(MAOCC1.Value());
-  return std::unique_ptr<Part::GeomTrimmedCurve>(C1);
-}
-
-TopoDS_Shape PartLineSegment(Base::Vector3d v1, Base::Vector3d v2) {
-  // Create line out of two points
-  double distance = Base::Distance(v1, v2);
-  if (distance < gp::Resolution())
-      Standard_Failure::Raise("Both points are equal");
-  GC_MakeSegment ms(gp_Pnt(v1.x,v1.y,v1.z),
-                    gp_Pnt(v2.x,v2.y,v2.z));
-  if (!ms.IsDone()) {
-    abort();
-  }
-
-  Handle_Geom_TrimmedCurve that_curv = ms.Value();
-  //auto that_line = Handle(Geom_Line)::DownCast(that_curv->BasisCurve());
-  //gp_Lin lin = that_line->Lin();
-
-  Handle(Geom_Curve) c = Handle(Geom_Curve)::DownCast(that_curv);
-  double u,v;
-  u=that_curv->FirstParameter();
-  v=that_curv->LastParameter();
-  BRepBuilderAPI_MakeEdge mkBuilder(c, u, v);
-  TopoDS_Shape sh = mkBuilder.Shape();
-  return sh;
-}
-
-Part::TopoShape PartShape(std::vector<TopoDS_Shape> shapes) {
-  auto it = shapes.begin();
-  TopoDS_Shape shape = *it;
-  Part::TopoShape build;
-  build.setShape(shape);
-  shapes.erase(it);
-  for (auto i : shapes) {
-    build.setShape(build.fuse(i));
-  }
-  return build;
-}
-
-void MainWindow::delayedStartup()
-{
-    // processing all command line files
-        std::list<std::string> files = App::Application::getCmdLineFiles();
-        files = App::Application::processFiles(files);
-        for (std::list<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
-            QString filename = QString::fromUtf8(it->c_str(), it->size());
-            FileDialog::setWorkingDirectory(filename);
-        }
-
-    const std::map<std::string,std::string>& cfg = App::Application::Config();
-    std::map<std::string,std::string>::const_iterator it = cfg.find("StartHidden");
-    if (it != cfg.end()) {
-        QApplication::quit();
-        return;
-    }
-
-
-
-
+void initAll() {
     PartGui::SoBrepFaceSet                  ::initClass();
     PartGui::SoBrepEdgeSet                  ::initClass();
     PartGui::SoBrepPointSet                 ::initClass();
@@ -1158,24 +1099,173 @@ void MainWindow::delayedStartup()
     PartGui::ArcEngine                      ::initClass();
 
     //PartGui::Workbench                      ::init();
+}
+
+//template<typename T, typename... Args>
+//std::unique_ptr<T> make_unique(Args&&... args) {
+//    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+//}
+
+std::unique_ptr<Part::GeomTrimmedCurve> PartArc(Base::Vector3d V1, Base::Vector3d VC1, Base::Vector3d V4) {
+  GC_MakeArcOfCircle MAOCC1(gp_Pnt(V1.x, V1.y, V1.z),gp_Pnt(VC1.x, VC1.y, VC1.z),gp_Pnt(V4.x, V4.y, V4.z));
+  auto C1 = new Part::GeomTrimmedCurve();
+  C1->setHandle(MAOCC1.Value());
+  return std::unique_ptr<Part::GeomTrimmedCurve>(C1);
+}
+
+TopoDS_Shape PartLineSegment(Base::Vector3d v1, Base::Vector3d v2) {
+  // Create line out of two points
+  double distance = Base::Distance(v1, v2);
+  if (distance < gp::Resolution())
+      Standard_Failure::Raise("Both points are equal");
+  GC_MakeSegment ms(gp_Pnt(v1.x,v1.y,v1.z),
+                    gp_Pnt(v2.x,v2.y,v2.z));
+  if (!ms.IsDone()) {
+    abort();
+  }
+
+  Handle_Geom_TrimmedCurve that_curv = ms.Value();
+  //auto that_line = Handle(Geom_Line)::DownCast(that_curv->BasisCurve());
+  //gp_Lin lin = that_line->Lin();
+
+  Handle(Geom_Curve) c = Handle(Geom_Curve)::DownCast(that_curv);
+  double u,v;
+  u=that_curv->FirstParameter();
+  v=that_curv->LastParameter();
+  BRepBuilderAPI_MakeEdge mkBuilder(c, u, v);
+  TopoDS_Shape sh = mkBuilder.Shape();
+  return sh;
+}
+
+Part::TopoShape PartShape(std::vector<TopoDS_Shape> shapes) {
+  auto it = shapes.begin();
+  TopoDS_Shape shape = *it;
+  Part::TopoShape build;
+  build.setShape(shape);
+  shapes.erase(it);
+  for (auto i : shapes) {
+    build.setShape(build.fuse(i));
+  }
+  return build;
+}
+
+std::vector<Part::TopoShape> getEdges(TopoDS_Shape sh) {
+    TopTools_IndexedMapOfShape M;
+
+    TopExp_Explorer Ex(sh ,TopAbs_EDGE);
+    while (Ex.More()) 
+    {
+        M.Add(Ex.Current());
+        Ex.Next();
+    }
 
 
+    std::vector<Part::TopoShape> ret;
+    for (Standard_Integer k = 1; k <= M.Extent(); k++)
+    {
+        const TopoDS_Shape& shape = M(k);
+        ret.push_back(shape);
+    }
+
+    return ret;
+}
+
+Part::TopoShape PartWire(std::vector<Part::TopoShape> edges) {
+  BRepBuilderAPI_MakeWire mkWire;
+  for (const auto& i  : edges) {
+    const auto sh = i.getShape();
+    if (sh.IsNull()) {
+      // "given shape is invalid"
+      abort();
+    }
+    if (sh.ShapeType() == TopAbs_EDGE)
+      mkWire.Add(TopoDS::Edge(sh));
+    else if (sh.ShapeType() == TopAbs_WIRE)
+      mkWire.Add(TopoDS::Wire(sh));
+    else {
+      // "shape is neither edge nor wire"
+      abort();
+    }
+  }
+  Part::TopoShape build;
+  build.setShape(mkWire.Wire());
+  return build;
+}
+
+Part::TopoShape PartFace(Part::TopoShape tsh) {
+  TopoDS_Shape sh = tsh.getShape();
+  if (sh.ShapeType() == TopAbs_WIRE) {
+    BRepBuilderAPI_MakeFace mkFace(TopoDS::Wire(sh));
+    if (!mkFace.IsDone()) {
+      // "Failed to create face from wire"
+      abort();
+    }
+    Part::TopoShape build;
+    build.setShape(mkFace.Face());
+    return build;
+  } else if (sh.ShapeType() == TopAbs_FACE) {
+    return sh;
+  }
+  abort();
+}
+
+TopoDS_Shape extrude(Part::TopoShape thisShape, Base::Vector3d vec) {
+  TopoDS_Shape shape = thisShape.makePrism(gp_Vec(vec.x,vec.y,vec.z));
+  TopAbs_ShapeEnum type = shape.ShapeType();
+  switch (type)
+  {
+  case TopAbs_COMPOUND:
+  case TopAbs_COMPSOLID:
+  case TopAbs_SOLID:
+  case TopAbs_SHELL:
+  case TopAbs_FACE:
+  case TopAbs_EDGE:
+      return shape;
+  case TopAbs_WIRE:
+  case TopAbs_VERTEX:
+  case TopAbs_SHAPE:
+  default:
+      break;
+  }
+
+  // "extrusion for this shape type not supported"
+  abort();
+}
+
+TopoDS_Shape cut(Part::TopoShape p1, Part::TopoShape p2) {
+  return p1.cut(p2.getShape());
+}
+
+Part::Feature* newObjectWithShape(App::DocumentObjectGroup* group, const char* name, Part::TopoShape shape) {
+  auto feature = new Part::Feature();
+  group->addObject(feature);
+  feature->Shape.setValue(shape);
+  return feature;
+}
 
 
+Part::TopoShape PartCircle(Base::Vector3d v1, Base::Vector3d v2, double dist) {
+  GC_MakeCircle mc(gp_Pnt(v1.x,v1.y,v1.z),
+                   gp_Dir(v2.x,v2.y,v2.z),
+                   dist);
+  if (!mc.IsDone()) {
+    abort();
+  }
+  auto mcv = mc.Value();
+  Handle(Geom_Curve) curve = Handle(Geom_Curve)::DownCast(mcv);
+  auto c = mcv->Circ();
+  double u,v;
+  u=curve->FirstParameter();
+  v=curve->LastParameter();
+  BRepBuilderAPI_MakeEdge mkBuilder(c, u, v);
+  TopoDS_Shape sh = mkBuilder.Shape();
 
+  Part::TopoShape build;
+  build.setShape(sh);
+  return build;
+}
 
-    // Create new document?
-    //ParameterGrp::handle hGrp = WindowParameter::getDefaultParameter()->GetGroup("Document");
-    //if (hGrp->GetBool("CreateNewDoc", true)) {
-    const auto doc = App::GetApplication().newDocument();
-    const auto group = new App::DocumentObjectGroup();
-    doc->addObject(group);
-
-    //const auto feature = new Part::Feature();
-    //group->addObject(feature);
-    //Base::Vector3d a(1.0, 2.0, 3.0);
-
-
+void makeBoreHole(App::DocumentObjectGroup* group) {
 	Base::Vector3d V1(0,10,0);
 	auto V2 = Base::Vector3d(30,10,0);
 	auto V3 = Base::Vector3d(30,-10,0);
@@ -1191,43 +1281,77 @@ void MainWindow::delayedStartup()
   auto shapes = std::vector<TopoDS_Shape>{{C1->toShape(),C2->toShape(),L1,L2}};
 	auto S1 = PartShape(shapes);
 
-	//W=Part.Wire(S1.Edges)
-	//F=Part.Face(W)
-	//P=F.extrude(Base::Vector3d(0,0,5))
+	auto W = PartWire(getEdges(S1.getShape()));
+	auto F = PartFace(W);
+	auto P = extrude(F, Base::Vector3d(0,0,5));
 
 	////# add objects with the shape
-	//Wire=Group.newObject("Part::Feature","Wire")
-	//Wire.Shape=W
-	//Face=Group.newObject("Part::Feature","Face")
-	//Face.Shape=F
-	//Prism=Group.newObject("Part::Feature","Extrude")
-	//Prism.Shape=P
+	auto Wire = newObjectWithShape(group, "Wire", W);
+  auto Face = newObjectWithShape(group, "Face", F);
+  auto Prism = newObjectWithShape(group, "Extrude", P);
 
-	//c=Part.Circle(Base::Vector3d(0,0,-1),Base::Vector3d(0,0,1),2.0)
-	//w=Part.Wire(c.toShape())
-	//f=Part.Face(w)
-	//p=f.extrude(Base::Vector3d(0,0,7))
-	//P=P.cut(p)
+	auto c=PartCircle(Base::Vector3d(0,0,-1),Base::Vector3d(0,0,1),2.0);
+	auto w=PartWire(std::vector<Part::TopoShape>{c});
+	auto f=PartFace(w);
+	auto p=extrude(f, Base::Vector3d(0,0,7));
+	auto P2 = cut(P, p);
 
 	////# add first borer
-	//Bore1=Group.newObject("Part::Feature","Borer_1")
-	//Bore1.Shape=p
-	//Hole1=Group.newObject("Part::Feature","Borer_Hole1")
-	//Hole1.Shape=P
+  auto Bore1 = newObjectWithShape(group, "Borer_1", p);
+	//Bore1=group->addObject("Part::Feature","Borer_1");
+	//Bore1.Shape=p;
+  auto Hole1 = newObjectWithShape(group, "Borer_Hole1", P2);
+	//Hole1=group->addObject("Part::Feature","Borer_Hole1");
+	//Hole1.Shape=P;
 
-	//c=Part.Circle(Base::Vector3d(0,-11,2.5),Base::Vector3d(0,1,0),1.0)
-	//w=Part.Wire(c.toShape())
-	//f=Part.Face(w)
-	//p=f.extrude(Base::Vector3d(0,22,0))
-	//P=P.cut(p)
+	auto c5=PartCircle(Base::Vector3d(0,-11,2.5),Base::Vector3d(0,1,0),1.0);
+	auto w5=PartWire(std::vector<Part::TopoShape>{c5});
+	auto f5=PartFace(w5);
+	auto p5=extrude(f5, Base::Vector3d(0,22,0));
+	auto P3 = cut(P2, p5);
 
 	////# add second borer
-	//Bore2=Group.newObject("Part::Feature","Borer_2")
-	//Bore2.Shape=p
-	//Hole2=Group.newObject("Part::Feature","Borer_Hole2")
-	//Hole2.Shape=P
+  auto Bore2 = newObjectWithShape(group, "Borer_2", p5);
+	//Bore2=group->addObject("Part::Feature","Borer_2");
+	//Bore2.Shape=p;
+  auto Hole2 = newObjectWithShape(group, "Borer_Hole2", P3);
+	//Hole2=group->addObject("Part::Feature","Borer_Hole2");
+	//Hole2.Shape=P;
 
+}
 
+void MainWindow::delayedStartup()
+{
+    // processing all command line files
+        std::list<std::string> files = App::Application::getCmdLineFiles();
+        files = App::Application::processFiles(files);
+        for (std::list<std::string>::iterator it = files.begin(); it != files.end(); ++it) {
+            QString filename = QString::fromUtf8(it->c_str(), it->size());
+            FileDialog::setWorkingDirectory(filename);
+        }
+
+    const std::map<std::string,std::string>& cfg = App::Application::Config();
+    std::map<std::string,std::string>::const_iterator it = cfg.find("StartHidden");
+    if (it != cfg.end()) {
+        QApplication::quit();
+        return;
+    }
+
+    initAll();
+
+    // Create new document?
+    //ParameterGrp::handle hGrp = WindowParameter::getDefaultParameter()->GetGroup("Document");
+    //if (hGrp->GetBool("CreateNewDoc", true)) {
+
+    //const auto feature = new Part::Feature();
+    //group->addObject(feature);
+    //Base::Vector3d a(1.0, 2.0, 3.0);
+
+    const auto doc = App::GetApplication().newDocument();
+    const auto group = new App::DocumentObjectGroup();
+    doc->addObject(group);
+    makeBoreHole(group);
+    doc->recompute();
 
     //} else {
     //    printf("not creating new document!\n");
