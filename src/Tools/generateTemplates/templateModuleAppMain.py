@@ -39,7 +39,7 @@ extern struct PyMethodDef @self.module.Name@_methods[];
 extern "C" {
 void App@self.module.Name@Export init@self.module.Name@() {
 
-  Base::Console().Log("Mod: Loading @self.module.Name@ module... done\\n");
+  printf("Mod: Loading @self.module.Name@ module... done\\n");
   PyObject* partModule = Py_InitModule3("@self.module.Name@", @self.module.Name@_methods, module_@self.module.Name@_doc);   /* mod name, table ptr */
 
 + for i in self.module.Content.Feature:

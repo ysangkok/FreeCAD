@@ -916,7 +916,7 @@ void ViewProviderMesh::partMeshCallback(void * ud, SoEventCallback * cb)
     // create a tool shape from these points
     std::vector<MeshCore::MeshGeomFacet> aFaces;
     if (!ViewProviderMesh::createToolMesh(clPoly, vol, cNormal, aFaces))
-        Base::Console().Message("The picked polygon seems to have self-overlappings. This could lead to strange results.");
+        printf("The picked polygon seems to have self-overlappings. This could lead to strange results.");
 
     MeshCore::MeshKernel toolMesh;
     bool locked = Base::Sequencer().setLocked(true);
@@ -973,7 +973,7 @@ void ViewProviderMesh::segmMeshCallback(void * ud, SoEventCallback * cb)
     // create a tool shape from these points
     std::vector<MeshCore::MeshGeomFacet> aFaces;
     if (!ViewProviderMesh::createToolMesh(clPoly, vol, cNormal, aFaces))
-        Base::Console().Message("The picked polygon seems to have self-overlappings. This could lead to strange results.");
+        printf("The picked polygon seems to have self-overlappings. This could lead to strange results.");
 
     MeshCore::MeshKernel toolMesh;
     bool locked = Base::Sequencer().setLocked(true);
@@ -1105,7 +1105,7 @@ void ViewProviderMesh::getFacetsFromPolygon(const std::vector<SbVec2f>& picked,
     }
 
     if (!ok) // note: the mouse grabbing needs to be released
-        Base::Console().Message("The picked polygon seems to have self-overlappings. This could lead to strange results.");
+        printf("The picked polygon seems to have self-overlappings. This could lead to strange results.");
 }
 
 std::vector<unsigned long> ViewProviderMesh::getFacetsOfRegion(const SbViewportRegion& select,
@@ -1390,7 +1390,7 @@ void ViewProviderMesh::faceInfoCallback(void * ud, SoEventCallback * n)
     else if (mbe->getButton() == SoMouseButtonEvent::BUTTON1 && mbe->getState() == SoButtonEvent::DOWN) {
         const SoPickedPoint * point = n->getPickedPoint();
         if (point == NULL) {
-            Base::Console().Message("No facet picked.\n");
+            printf("No facet picked.\n");
             return;
         }
 
@@ -1447,7 +1447,7 @@ void ViewProviderMesh::fillHoleCallback(void * ud, SoEventCallback * n)
     else if (mbe->getButton() == SoMouseButtonEvent::BUTTON1 && mbe->getState() == SoButtonEvent::DOWN) {
         const SoPickedPoint * point = n->getPickedPoint();
         if (point == NULL) {
-            Base::Console().Message("No facet picked.\n");
+            printf("No facet picked.\n");
             return;
         }
 
@@ -1513,7 +1513,7 @@ void ViewProviderMesh::markPartCallback(void * ud, SoEventCallback * n)
         else if (mbe->getButton() == SoMouseButtonEvent::BUTTON1 && mbe->getState() == SoButtonEvent::DOWN) {
             const SoPickedPoint * point = n->getPickedPoint();
             if (point == NULL) {
-                Base::Console().Message("No facet picked.\n");
+                printf("No facet picked.\n");
                 return;
             }
 
@@ -1543,7 +1543,7 @@ void ViewProviderMesh::faceInfo(unsigned long uFacet)
     if (uFacet < facets.size()) {
         MeshCore::MeshFacet face = facets[uFacet];
         MeshCore::MeshGeomFacet tria = rKernel.GetFacet(face);
-        Base::Console().Message("Mesh: %s Facet %lu: Points: <%lu, %lu, %lu>, Neighbours: <%lu, %lu, %lu>\n"
+        printf("Mesh: %s Facet %lu: Points: <%lu, %lu, %lu>, Neighbours: <%lu, %lu, %lu>\n"
             "Triangle: <[%.6f, %.6f, %.6f], [%.6f, %.6f, %.6f], [%.6f, %.6f, %.6f]>\n", fea->getNameInDocument(), uFacet, 
             face._aulPoints[0], face._aulPoints[1], face._aulPoints[2], 
             face._aulNeighbours[0], face._aulNeighbours[1], face._aulNeighbours[2],

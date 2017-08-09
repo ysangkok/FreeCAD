@@ -112,7 +112,7 @@ void ViewProviderFemConstraintBearing::updateData(const App::Property* prop)
     Fem::ConstraintBearing* pcConstraint = static_cast<Fem::ConstraintBearing*>(this->getObject());
 
     if (strcmp(prop->getName(),"References") == 0)
-        Base::Console().Error("\n"); // enable a breakpoint here
+        printf("\n"); // enable a breakpoint here
 
     if (strcmp(prop->getName(),"BasePoint") == 0) {
         // Remove and recreate the symbol

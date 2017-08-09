@@ -262,7 +262,7 @@ void ViewProviderAddSub::updateAddSubShapeIndicator() {
         previewFaceSet ->partIndex   .finishEditing();
     }
     catch (...) {
-        Base::Console().Error("Cannot compute Inventor representation for the shape of %s.\n",pcObject->getNameInDocument());
+        printf("Cannot compute Inventor representation for the shape of %s.\n",pcObject->getNameInDocument());
     }
 }
 

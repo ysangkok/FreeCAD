@@ -749,7 +749,7 @@ bool MeshAlgorithm::FillupHole(const std::vector<unsigned long>& boundary,
 
         // in case the reference facet has not an open edge print a log message 
         if (ref_side == USHRT_MAX || tri_side == USHRT_MAX) {
-            Base::Console().Log("MeshAlgorithm::FillupHole: Expected open edge for facet <%d, %d, %d>\n", 
+            printf("MeshAlgorithm::FillupHole: Expected open edge for facet <%d, %d, %d>\n", 
                 rFace._aulPoints[0], rFace._aulPoints[1], rFace._aulPoints[2]);
             rFaces.clear();
             rPoints.clear();

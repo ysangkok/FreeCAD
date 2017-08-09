@@ -80,7 +80,7 @@ PartExport extern PyObject* PartExceptionOCCDimensionError;
         str += " ";                                                 \
         if (msg) {str += msg;}                                      \
         else     {str += "No OCCT Exception Message";}              \
-        Base::Console().Error(str.c_str());                         \
+        printf(str.c_str());                         \
         Py_Error(Part::PartExceptionOCCError,str.c_str());          \
     }                                                               \
     catch(Base::Exception &e)                                       \
@@ -98,7 +98,7 @@ PartExport extern PyObject* PartExceptionOCCDimensionError;
         str += "STL exception thrown (";                            \
         str += e.what();                                            \
         str += ")";                                                 \
-        Base::Console().Error(str.c_str());                         \
+        printf(str.c_str());                         \
         Py_Error(Base::BaseExceptionFreeCADError,str.c_str());      \
     }                                                               \
     catch(const Py::Exception&)                                     \
@@ -124,7 +124,7 @@ PartExport extern PyObject* PartExceptionOCCDimensionError;
         str += " ";                                                 \
         if (msg) {str += msg;}                                      \
         else     {str += "No OCCT Exception Message";}              \
-        Base::Console().Error(str.c_str());                         \
+        printf(str.c_str());                         \
         Py_Error(Part::PartExceptionOCCError,str.c_str());          \
     }                                                               \
     catch(Base::Exception &e)                                       \
@@ -142,7 +142,7 @@ PartExport extern PyObject* PartExceptionOCCDimensionError;
         str += "STL exception thrown (";                            \
         str += e.what();                                            \
         str += ")";                                                 \
-        Base::Console().Error(str.c_str());                         \
+        printf(str.c_str());                         \
         Py_Error(Base::BaseExceptionFreeCADError,str.c_str());      \
     }                                                               \
     catch(const Py::Exception&)                                     \

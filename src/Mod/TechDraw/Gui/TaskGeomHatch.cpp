@@ -82,7 +82,7 @@ void TaskGeomHatch::initUi()
     if (nameIndex > -1) {
         ui->cbName->setCurrentIndex(nameIndex);
     } else {
-        Base::Console().Warning("Warning - Pattern name not found in current PAT File\n");
+        printf("Warning - Pattern name not found in current PAT File\n");
     }
     ui->sbScale->setValue(m_scale);
     ui->sbWeight->setValue(m_weight);

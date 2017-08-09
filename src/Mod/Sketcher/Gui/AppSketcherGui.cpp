@@ -97,7 +97,7 @@ PyMOD_INIT_FUNC(SketcherGui)
     }
 
     PyObject* mod = SketcherGui::initModule();
-    Base::Console().Log("Loading GUI of Sketcher module... done\n");
+    printf("Loading GUI of Sketcher module... done\n");
 
     // instantiating the commands
     CreateSketcherCommands();

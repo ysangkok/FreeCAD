@@ -123,7 +123,7 @@
 //#include "TaskView/TaskDialogPython.h"
 #include <Gui/Quarter/Quarter.h>
 //#include "View3DViewerPy.h"
-#include <Gui/GuiInitScript.h>
+//#include <Gui/GuiInitScript.h>
 
 
 using namespace Gui;
@@ -538,10 +538,10 @@ void Application::createStandardOperations()
 
 void Application::slotNewDocument(const App::Document& Doc)
 {
-#ifdef FC_DEBUG
+//#ifdef FC_DEBUG
     std::map<const App::Document*, Gui::Document*>::const_iterator it = d->documents.find(&Doc);
     assert(it==d->documents.end());
-#endif
+//#endif
     Gui::Document* pDoc = new Gui::Document(const_cast<App::Document*>(&Doc),this);
     d->documents[&Doc] = pDoc;
 
@@ -711,10 +711,10 @@ void Application::setActiveDocument(Gui::Document* pcDocument)
     // May be useful for error detection
     if (d->activeDocument) {
         App::Document* doc = d->activeDocument->getDocument();
-        Base::Console().Log("Active document is %s (at %p)\n",doc->getName(), doc);
+        printf("Active document is %s (at %p)\n",doc->getName(), doc);
     }
     else {
-        Base::Console().Log("No active document\n");
+        printf("No active document\n");
     }
 #endif
 
@@ -794,7 +794,7 @@ void Application::viewActivated(MDIView* pcView)
 {
 #ifdef FC_DEBUG
     // May be useful for error detection
-    Base::Console().Log("Active view is %s (at %p)\n",
+    printf("Active view is %s (at %p)\n",
                  (const char*)pcView->windowTitle().toUtf8(),pcView);
 #endif
 
@@ -948,8 +948,8 @@ bool Application::activateWorkbench(const char* name)
     //        pos = rx.indexIn(msg);
     //    }
 
-    //    Base::Console().Error("%s\n", (const char*)msg.toLatin1());
-    //    Base::Console().Error("%s\n", e.getStackTrace().c_str());
+    //    printf("%s\n", (const char*)msg.toLatin1());
+    //    printf("%s\n", e.getStackTrace().c_str());
     //    if (!d->startingUp) {
     //        wc.restoreCursor();
     //        QMessageBox::critical(getMainWindow(), QObject::tr("Workbench failure"), 
@@ -1082,16 +1082,16 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
     case QtInfoMsg:
 #endif
     case QtDebugMsg:
-        Base::Console().Message("%s\n", msg.toUtf8().constData());
+        printf("%s\n", msg.toUtf8().constData());
         break;
     case QtWarningMsg:
-        Base::Console().Warning("%s\n", msg.toUtf8().constData());
+        printf("%s\n", msg.toUtf8().constData());
         break;
     case QtCriticalMsg:
-        Base::Console().Error("%s\n", msg.toUtf8().constData());
+        printf("%s\n", msg.toUtf8().constData());
         break;
     case QtFatalMsg:
-        Base::Console().Error("%s\n", msg.toUtf8().constData());
+        printf("%s\n", msg.toUtf8().constData());
         abort();                    // deliberately core dump
     }
 #ifdef FC_OS_WIN32
@@ -1101,7 +1101,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 #else
     // do not stress user with Qt internals but write to log file if enabled
     Q_UNUSED(type);
-    Base::Console().Log("%s\n", msg.toUtf8().constData());
+    printf("%s\n", msg.toUtf8().constData());
 #endif
 }
 #else
@@ -1111,16 +1111,16 @@ void messageHandler(QtMsgType type, const char *msg)
     switch (type)
     {
     case QtDebugMsg:
-        Base::Console().Message("%s\n", msg);
+        printf("%s\n", msg);
         break;
     case QtWarningMsg:
-        Base::Console().Warning("%s\n", msg);
+        printf("%s\n", msg);
         break;
     case QtCriticalMsg:
-        Base::Console().Error("%s\n", msg);
+        printf("%s\n", msg);
         break;
     case QtFatalMsg:
-        Base::Console().Error("%s\n", msg);
+        printf("%s\n", msg);
         abort();                    // deliberately core dump
     }
 #ifdef FC_OS_WIN32
@@ -1144,13 +1144,13 @@ void messageHandlerCoin(const SoError * error, void * /*userdata*/)
         switch (dbg->getSeverity())
         {
         case SoDebugError::INFO:
-            Base::Console().Message("%s\n", msg);
+            printf("%s\n", msg);
             break;
         case SoDebugError::WARNING:
-            Base::Console().Warning("%s\n", msg);
+            printf("%s\n", msg);
             break;
         default: // error
-            Base::Console().Error("%s\n", msg);
+            printf("%s\n", msg);
             break;
         }
 #ifdef FC_OS_WIN32
@@ -1164,7 +1164,7 @@ void messageHandlerCoin(const SoError * error, void * /*userdata*/)
     }
     else if (error) {
         const char* msg = error->getDebugString().getString();
-        Base::Console().Log( msg );
+        printf( msg );
     }
 }
 
@@ -1260,7 +1260,7 @@ void Application::runApplication(void)
     std::map<std::string,std::string>::const_iterator it;
 
     // A new QApplication
-    //Base::Console().Log("Init: Creating Gui::Application and QApplication\n");
+    //printf("Init: Creating Gui::Application and QApplication\n");
     // if application not yet created by the splasher
     int argc = App::Application::GetARGC();
     GUISingleApplication mainApp(argc, App::Application::GetARGV());
@@ -1413,16 +1413,16 @@ void Application::runApplication(void)
         if (context.create()) {
             context.makeCurrent(&window);
             if (!context.functions()->hasOpenGLFeature(QOpenGLFunctions::Framebuffers)) {
-                Base::Console().Log("This system does not support framebuffer objects\n");
+                printf("This system does not support framebuffer objects\n");
             }
             if (!context.functions()->hasOpenGLFeature(QOpenGLFunctions::NPOTTextures)) {
-                Base::Console().Log("This system does not support NPOT textures\n");
+                printf("This system does not support NPOT textures\n");
             }
 
             int major = context.format().majorVersion();
             int minor = context.format().minorVersion();
             const char* glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-            Base::Console().Log("OpenGL version is: %d.%d (%s)\n", major, minor, glVersion);
+            printf("OpenGL version is: %d.%d (%s)\n", major, minor, glVersion);
         }
     }
 #endif
@@ -1589,7 +1589,7 @@ void Application::runApplication(void)
         fi.deleteFile();
     }
     //catch (const Base::SystemExitException&) {
-    //    Base::Console().Message("System exit\n");
+    //    printf("System exit\n");
     //    throw;
     //}
     catch (const std::exception& e) {

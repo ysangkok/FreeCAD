@@ -87,7 +87,7 @@ void TaskDlgEdge2Trac::clicked(int button)
         }
     }
     catch (const Base::Exception& e) {
-        Base::Console().Warning("TaskDlgEdge2Trac::clicked(): %s\n", e.what());
+        printf("TaskDlgEdge2Trac::clicked(): %s\n", e.what());
     }
 }
 
@@ -106,7 +106,7 @@ bool TaskDlgEdge2Trac::accept()
             QApplication::beep();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Warning("TaskDlgEdge2Trac::accept(): %s\n", e.what());
+        printf("TaskDlgEdge2Trac::accept(): %s\n", e.what());
     }
 
     return false;

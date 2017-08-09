@@ -175,7 +175,7 @@ void TaskLinearPatternParameters::setupUI()
             vpOrigin = static_cast<ViewProviderOrigin*>(Gui::Application::Instance->getViewProvider(origin));
             vpOrigin->setTemporaryVisibility(true, false);
         } catch (const Base::Exception &ex) {
-            Base::Console().Error ("%s\n", ex.what () );
+            printf ("%s\n", ex.what () );
         }
     }
 
@@ -383,7 +383,7 @@ TaskLinearPatternParameters::~TaskLinearPatternParameters()
         }
     }
     catch (const Base::Exception &ex) {
-        Base::Console().Error ("%s\n", ex.what () );
+        printf ("%s\n", ex.what () );
     }
 
     delete ui;

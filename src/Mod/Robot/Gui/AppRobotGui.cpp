@@ -103,7 +103,7 @@ PyMOD_INIT_FUNC(RobotGui)
         PyMOD_Return(0);
     }
     PyObject* mod = RobotGui::initModule();
-    Base::Console().Log("Loading GUI of Robot module... done\n");
+    printf("Loading GUI of Robot module... done\n");
 
     // instantiating the commands
     CreateRobotCommands();

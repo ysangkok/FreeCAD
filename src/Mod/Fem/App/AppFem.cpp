@@ -86,7 +86,7 @@ PyMOD_INIT_FUNC(Fem)
         PyMOD_Return(0);
     }
     PyObject* femModule = Fem::initModule();
-    Base::Console().Log("Loading Fem module... done\n");
+    printf("Loading Fem module... done\n");
 
     Fem::StdMeshers_Arithmetic1DPy              ::init_type(femModule);
     Fem::StdMeshers_AutomaticLengthPy           ::init_type(femModule);

@@ -65,7 +65,7 @@ extern "C"
         }
 
         (void) Py_InitModule("CamGui", CamGui_methods);   /* mod name, table ptr */
-        Base::Console().Log("Loading GUI of Cam module... done\n");
+        printf("Loading GUI of Cam module... done\n");
 
         CamGui::Workbench           ::init();
 

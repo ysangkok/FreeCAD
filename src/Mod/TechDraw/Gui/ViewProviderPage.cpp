@@ -149,7 +149,7 @@ bool ViewProviderPage::onDelete(const std::vector<std::string> &items)
         m_mdiView->deleteLater(); // Delete the drawing m_mdiView;
     } else {
         // MDIViewPage is not displayed yet so don't try to delete it!
-        Base::Console().Log("INFO - ViewProviderPage::onDelete - Page object deleted when viewer not displayed\n");
+        printf("INFO - ViewProviderPage::onDelete - Page object deleted when viewer not displayed\n");
     }
     Gui::Selection().clearSelection();
     return ViewProviderDocumentObject::onDelete(items);
@@ -256,7 +256,7 @@ void ViewProviderPage::unsetEdit(int ModNum)
 MDIViewPage* ViewProviderPage::getMDIViewPage()
 {
     if (m_mdiView.isNull()) {
-        Base::Console().Log("INFO - ViewProviderPage::getMDIViewPage has no m_mdiView!\n");
+        printf("INFO - ViewProviderPage::getMDIViewPage has no m_mdiView!\n");
         return 0;
     } else {
         return m_mdiView;
@@ -341,7 +341,7 @@ TechDraw::DrawPage* ViewProviderPage::getDrawPage() const
 {
     //during redo, pcObject can become invalid, but non-zero??
     if (!pcObject) {
-        Base::Console().Message("TROUBLE - VPPage::getDrawPage - no Page Object!\n");
+        printf("TROUBLE - VPPage::getDrawPage - no Page Object!\n");
         return nullptr;
     }
     return dynamic_cast<TechDraw::DrawPage*>(pcObject);

@@ -133,7 +133,7 @@ void CmdTechDrawNewPageDef::activated(int iMsg)
             dvp->show();
         }
         else {
-            Base::Console().Log("INFO - Template: %s for Page: %s NOT Found\n", PageName.c_str(),TemplateName.c_str());
+            printf("INFO - Template: %s for Page: %s NOT Found\n", PageName.c_str(),TemplateName.c_str());
         }
     } else {
         QMessageBox::critical(Gui::getMainWindow(),
@@ -212,7 +212,7 @@ void CmdTechDrawNewPage::activated(int iMsg)
             dvp->show();
         }
         else {
-            Base::Console().Log("INFO - Template: %s for Page: %s NOT Found\n", PageName.c_str(),TemplateName.c_str());
+            printf("INFO - Template: %s for Page: %s NOT Found\n", PageName.c_str(),TemplateName.c_str());
         }
     }
     else {

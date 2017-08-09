@@ -100,7 +100,7 @@ PyMOD_INIT_FUNC(FemGui)
     }
 
     PyObject* mod = FemGui::initModule();
-    Base::Console().Log("Loading GUI of Fem module... done\n");
+    printf("Loading GUI of Fem module... done\n");
 
     // instantiating the commands
     CreateFemCommands();

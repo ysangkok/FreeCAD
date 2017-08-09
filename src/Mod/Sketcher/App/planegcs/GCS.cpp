@@ -1330,7 +1330,7 @@ int System::solve_BFGS(SubSystem *subsys, bool /*isFine*/, bool isRedundantsolvi
                 << ", maxIter: "            << maxIterNumber  << "\n";
 
         const std::string tmp = stream.str();
-        Base::Console().Log(tmp.c_str());
+        printf(tmp.c_str());
     }
 
     double divergingLim = 1e6*err + 1e12;
@@ -1346,7 +1346,7 @@ int System::solve_BFGS(SubSystem *subsys, bool /*isFine*/, bool isRedundantsolvi
                         << ", h_norm: "           << h_norm  << "\n";
 
                 const std::string tmp = stream.str();
-                Base::Console().Log(tmp.c_str());
+                printf(tmp.c_str());
             }
             break;
         }
@@ -1358,7 +1358,7 @@ int System::solve_BFGS(SubSystem *subsys, bool /*isFine*/, bool isRedundantsolvi
                         << ", divergingLim: "            << divergingLim  << "\n";
 
                 const std::string tmp = stream.str();
-                Base::Console().Log(tmp.c_str());
+                printf(tmp.c_str());
             }
             break;
         }
@@ -1395,7 +1395,7 @@ int System::solve_BFGS(SubSystem *subsys, bool /*isFine*/, bool isRedundantsolvi
                     << ", h_norm: "                 << h_norm << "\n";
 
             const std::string tmp = stream.str();
-            Base::Console().Log(tmp.c_str());
+            printf(tmp.c_str());
         }
     }
 
@@ -1451,7 +1451,7 @@ int System::solve_LM(SubSystem* subsys, bool isRedundantsolving)
                 << ", maxIter: "        << maxIterNumber  << "\n";
 
         const std::string tmp = stream.str();
-        Base::Console().Log(tmp.c_str());
+        printf(tmp.c_str());
     }
 
     double nu=2, mu=0;
@@ -1565,7 +1565,7 @@ int System::solve_LM(SubSystem* subsys, bool isRedundantsolving)
                     << ", h_norm: "                 << h_norm << "\n";
 
             const std::string tmp = stream.str();
-            Base::Console().Log(tmp.c_str());
+            printf(tmp.c_str());
         }
     }
 
@@ -1610,7 +1610,7 @@ int System::solve_DL(SubSystem* subsys, bool isRedundantsolving)
                 << ", maxIter: "        << maxIterNumber  << "\n";
 
         const std::string tmp = stream.str();
-        Base::Console().Log(tmp.c_str());
+        printf(tmp.c_str());
     }
 
     Eigen::VectorXd x(xsize), x_new(xsize);
@@ -1765,7 +1765,7 @@ int System::solve_DL(SubSystem* subsys, bool isRedundantsolving)
                     << ", err(divergingLim): "  << err  << "\n";
 
             const std::string tmp = stream.str();
-            Base::Console().Log(tmp.c_str());
+            printf(tmp.c_str());
         }
 
         // count this iteration and start again
@@ -1779,7 +1779,7 @@ int System::solve_DL(SubSystem* subsys, bool isRedundantsolving)
         stream  << "DL: stopcode: "     << stop << ((stop == 1) ? ", Success" : ", Failed") << "\n";
 
         const std::string tmp = stream.str();
-        Base::Console().Log(tmp.c_str());
+        printf(tmp.c_str());
     }
 
     return (stop == 1) ? Success : Failed;
@@ -3554,7 +3554,7 @@ int System::diagnose(Algorithm alg)
     Eigen::SparseQR<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int> > SqrJT;
 #else
     if(qrAlgorithm==EigenSparseQR){
-        Base::Console().Warning("SparseQR not supported by you current version of Eigen. It requires Eigen 3.2.2 or higher. Falling back to Dense QR\n");
+        printf("SparseQR not supported by you current version of Eigen. It requires Eigen 3.2.2 or higher. Falling back to Dense QR\n");
         qrAlgorithm=EigenDenseQR;
     }
 #endif
@@ -3569,7 +3569,7 @@ int System::diagnose(Algorithm alg)
 
     const std::string tmp = stream.str();
 
-    Base::Console().Log(tmp.c_str());
+    printf(tmp.c_str());
     // Debug code ends
 #endif
 
@@ -3649,7 +3649,7 @@ int System::diagnose(Algorithm alg)
         }
 
         const std::string tmp = stream.str();
-        Base::Console().Log(tmp.c_str());
+        printf(tmp.c_str());
     }
 
     if (J.rows() > 0) {
@@ -3663,7 +3663,7 @@ int System::diagnose(Algorithm alg)
 
         const std::string tmp = stream.str();
 
-        Base::Console().Log(tmp.c_str());
+        printf(tmp.c_str());
         // Debug code ends
 #endif
 
@@ -3771,7 +3771,7 @@ int System::diagnose(Algorithm alg)
                         break;
                 }
 
-                Base::Console().Log("Sketcher::RedundantSolving-%s-\n",solvername.c_str());
+                printf("Sketcher::RedundantSolving-%s-\n",solvername.c_str());
             }
 
             if (res == Success) {
@@ -3785,7 +3785,7 @@ int System::diagnose(Algorithm alg)
                 resetToReference();
 
                 if(debugMode==Minimal || debugMode==IterationLevel) {
-                    Base::Console().Log("Sketcher Redundant solving: %d redundants\n",redundant.size());
+                    printf("Sketcher Redundant solving: %d redundants\n",redundant.size());
                 }
 
                 std::vector< std::vector<Constraint *> > conflictGroupsOrig=conflictGroups;

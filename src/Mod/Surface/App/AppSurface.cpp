@@ -71,7 +71,7 @@ PyMOD_INIT_FUNC(Surface)
     }
 
     PyObject* mod = Surface::initModule();
-    Base::Console().Log("Loading Surface module... done\n");
+    printf("Loading Surface module... done\n");
 
     // Add types to module
     Surface::Filling         ::init();

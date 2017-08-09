@@ -102,7 +102,7 @@
  *
  * Actually, any negative log level behave the same, which is for tags
  * that are not previously configured by user. The actual log level applied is
- * controlled by \c Base::Console().SetDefaultLogLevel(). Python
+ * controlled by \c printfDefaultLogLevel(). Python
  * developers/end-users can configure the default log level by calling
  *
  * \code{.py}
@@ -154,7 +154,7 @@
  * \endcode
  *
  * The logging macros correspond to existing Base::Console() output functions,
- * and \c FC_TRACE uses Base::Console().Log(), same as \c FC_LOG. These macros
+ * and \c FC_TRACE uses printf(), same as \c FC_LOG. These macros
  * checks the log level defined in \c FC_LOG_LEVEL_INIT to decide whether to
  * print log or not. \c msg here shall be a C++ streaming expression. End of
  * line will be automatically appended by default. 
@@ -300,7 +300,7 @@
  * function returns a pointer to an integer representing the log level. Python
  * developer or end-user can set/get the same tag based log level using
  * FreeCAD.setLogLevel/getLogLevel. Any change to the log level is reflected
- * through the pointer returned by Base::Console().GetLogLevel(). What 
+ * through the pointer returned by printfLogLevel(). What 
  * \c FC_LOG_LEVEL_INIT(tag) does is to define a class Base::LogLevel, and then
  * a file static instance of that class to store the pointer to the desired tag
  * log level. The class and instance name is predefined. Various log macros
@@ -356,7 +356,7 @@
         if(_instance.add_eol) \
             str<<std::endl;\
         Base::Console()._func("%s",str.str().c_str());\
-        if(_instance.refresh) Base::Console().Refresh();\
+        if(_instance.refresh) printf();\
     }\
 }while(0)
 
@@ -484,7 +484,7 @@ public:
  *  instance of the class from every where in c++ by simply using:
  *  \code
  *  #include <Base/Console.h>
- *  Base::Console().Log("Stage: %d",i);
+ *  printf("Stage: %d",i);
  *  \endcode
  *  \par
  *  ConsoleSingleton is able to switch between several modes to, e.g. switch

@@ -150,10 +150,10 @@ void Chamfer::Restore(Base::XMLReader &reader)
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         reader.readEndElement("Property");
     }

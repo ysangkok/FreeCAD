@@ -27,7 +27,7 @@ PyObject* DrawViewClipPy::addView(PyObject* args)
     PyObject *pcDocObj;
 
     if (!PyArg_ParseTuple(args, "O!", &(App::DocumentObjectPy::Type), &pcDocObj)) {
-        Base::Console().Error("Error: DrawViewClipPy::addView - Bad Arg - not DocumentObject\n");
+        printf("Error: DrawViewClipPy::addView - Bad Arg - not DocumentObject\n");
         return NULL;
         //TODO: sb PyErr??
         //PyErr_SetString(PyExc_TypeError,"addView expects a DrawView");
@@ -51,7 +51,7 @@ PyObject* DrawViewClipPy::removeView(PyObject* args)
     PyObject *pcDocObj;
 
     if (!PyArg_ParseTuple(args, "O!", &(App::DocumentObjectPy::Type), &pcDocObj)) {
-        Base::Console().Error("Error: DrawViewClipPy::removeView - Bad Arg - not DocumentObject\n");
+        printf("Error: DrawViewClipPy::removeView - Bad Arg - not DocumentObject\n");
         return NULL;
         //TODO: sb PyErr??
         //PyErr_SetString(PyExc_TypeError,"removeView expects a DrawView");

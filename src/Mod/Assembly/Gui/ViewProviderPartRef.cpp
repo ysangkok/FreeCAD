@@ -271,7 +271,7 @@ void ViewProviderPartRef::onChanged(const App::Property* prop) {
 
             str<<"Local PVPoint: "<<(ssrTransform.inverse()*pv[0]).transpose()<<std::endl;
 
-            Base::Console().Message(str.str().c_str());
+            printf(str.str().c_str());
 
         }
         else {

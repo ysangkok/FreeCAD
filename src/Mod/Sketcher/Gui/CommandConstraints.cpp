@@ -392,7 +392,7 @@ void SketcherGui::makeTangentToEllipseviaNewPoint(const Sketcher::SketchObject* 
             Obj->getNameInDocument(), geoId1, geoId2 ,GeoIdPoint, Sketcher::start);
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         Gui::Command::abortCommand();
         
         ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -466,7 +466,7 @@ void SketcherGui::makeTangentToArcOfEllipseviaNewPoint(const Sketcher::SketchObj
             Obj->getNameInDocument(), geoId1, geoId2 ,GeoIdPoint, Sketcher::start);
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         Gui::Command::abortCommand();
         
         ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -557,7 +557,7 @@ void SketcherGui::makeTangentToArcOfHyperbolaviaNewPoint(const Sketcher::SketchO
                                 Obj->getNameInDocument(), geoId1, geoId2 ,GeoIdPoint, Sketcher::start);
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         Gui::Command::abortCommand();
 
         ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -653,7 +653,7 @@ void SketcherGui::makeTangentToArcOfParabolaviaNewPoint(const Sketcher::SketchOb
                                 Obj->getNameInDocument(), geoId1, geoId2 ,GeoIdPoint, Sketcher::start);
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         Gui::Command::abortCommand();
 
         ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -3507,7 +3507,7 @@ void CmdSketcherConstrainPerpendicular::activated(int iMsg)
                     Doc,"App.ActiveDocument.%s.addConstraint(Sketcher.Constraint('PerpendicularViaPoint',%d,%d,%d,%d)) ",
                     selection[0].getFeatName(),GeoId1,GeoId2,GeoId3,PosId3);
             } catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 QMessageBox::warning(Gui::getMainWindow(),
                                      QObject::tr("Error"),
                                      QString::fromLatin1(e.what()));
@@ -3739,7 +3739,7 @@ void CmdSketcherConstrainPerpendicular::activated(int iMsg)
 
                 }
                 catch (const Base::Exception& e) {
-                    Base::Console().Error("%s\n", e.what());
+                    printf("%s\n", e.what());
                     Gui::Command::abortCommand();
 
                     ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -3926,7 +3926,7 @@ void CmdSketcherConstrainPerpendicular::applyConstraint(std::vector<SelIdPair> &
                 commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -4010,7 +4010,7 @@ void CmdSketcherConstrainPerpendicular::applyConstraint(std::vector<SelIdPair> &
                 Doc,"App.ActiveDocument.%s.addConstraint(Sketcher.Constraint('PerpendicularViaPoint',%d,%d,%d,%d)) ",
                 Obj->getNameInDocument(),GeoId1,GeoId2,GeoId3,PosId3);
         } catch (const Base::Exception& e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
             QMessageBox::warning(Gui::getMainWindow(),
                                  QObject::tr("Error"),
                                  QString::fromLatin1(e.what()));
@@ -4174,7 +4174,7 @@ void CmdSketcherConstrainTangent::activated(int iMsg)
                     Doc,"App.ActiveDocument.%s.addConstraint(Sketcher.Constraint('TangentViaPoint',%d,%d,%d,%d)) ",
                     selection[0].getFeatName(),GeoId1,GeoId2,GeoId3,PosId3);
             } catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 QMessageBox::warning(Gui::getMainWindow(),
                                      QObject::tr("Error"),
                                      QString::fromLatin1(e.what()));
@@ -4641,7 +4641,7 @@ void CmdSketcherConstrainTangent::applyConstraint(std::vector<SelIdPair> &selSeq
                 Doc,"App.ActiveDocument.%s.addConstraint(Sketcher.Constraint('TangentViaPoint',%d,%d,%d,%d)) ",
                 Obj->getNameInDocument(), GeoId1,GeoId2,GeoId3,PosId3);
         } catch (const Base::Exception& e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
             QMessageBox::warning(Gui::getMainWindow(),
                                  QObject::tr("Error"),
                                  QString::fromLatin1(e.what()));

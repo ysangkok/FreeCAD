@@ -60,6 +60,6 @@ PyMOD_INIT_FUNC(Raytracing)
 
 
     PyObject* mod = Raytracing::initModule();
-    Base::Console().Log("Loading Raytracing module... done\n");
+    printf("Loading Raytracing module... done\n");
     PyMOD_Return(mod);
 }

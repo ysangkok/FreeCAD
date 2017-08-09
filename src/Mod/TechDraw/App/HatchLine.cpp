@@ -216,7 +216,7 @@ Base::Vector3d LineSet::getPatternStartPoint(TechDrawGeometry::BaseGeom* g, doub
                 offset = offset * patternLength;
             }
         } else {
-            Base::Console().Log("ERROR - HL::getPatternStart - something has gone wrong!\n");
+            printf("ERROR - HL::getPatternStart - something has gone wrong!\n");
         }
     }
     return result;
@@ -251,7 +251,7 @@ void PATLineSpec::load(std::string& lineSpec)
 {
     std::vector<double> values = split(lineSpec);
     if (values.size() < 5) {
-        Base::Console().Message( "PATLineSpec::load(%s) invalid entry in pattern\n",lineSpec.c_str() );
+        printf( "PATLineSpec::load(%s) invalid entry in pattern\n",lineSpec.c_str() );
         return;
     }
     m_angle    = values[0];
@@ -277,7 +277,7 @@ std::vector<double> PATLineSpec::split(std::string line)
             result.push_back(std::stod(cell));
         }
         catch (const std::invalid_argument& ia) {
-            Base::Console().Warning("Invalid number in cell: %s (%s) \n",cell.c_str(),ia.what());
+            printf("Invalid number in cell: %s (%s) \n",cell.c_str(),ia.what());
             result.push_back(0.0);
         }
     }
@@ -286,17 +286,17 @@ std::vector<double> PATLineSpec::split(std::string line)
 
 void PATLineSpec::dump(char* title)
 {
-    Base::Console().Message( "DUMP: %s\n",title);
-    Base::Console().Message( "Angle: %.3f\n", m_angle);
-    Base::Console().Message( "Origin: %s\n",DrawUtil::formatVector(m_origin).c_str());
-    Base::Console().Message( "Offset: %.3f\n",m_offset);
-    Base::Console().Message( "Interval: %.3f\n",m_interval);
+    printf( "DUMP: %s\n",title);
+    printf( "Angle: %.3f\n", m_angle);
+    printf( "Origin: %s\n",DrawUtil::formatVector(m_origin).c_str());
+    printf( "Offset: %.3f\n",m_offset);
+    printf( "Interval: %.3f\n",m_interval);
 //    std::stringstream ss;
 //    for (auto& d: m_dashParms) {
 //        ss << d << ", ";
 //    }
 //    ss << "end";
-//    Base::Console().Message( "DashSpec: %s\n",ss.str().c_str());
+//    printf( "DashSpec: %s\n",ss.str().c_str());
     m_dashParms.dump("dashspec");
 }
 
@@ -308,7 +308,7 @@ std::vector<PATLineSpec> PATLineSpec::getSpecsForPattern(std::string& parmFile, 
     std::ifstream inFile;
     inFile.open (parmFile, std::ifstream::in);
     if(!inFile.is_open()) {
-        Base::Console().Message( "Cannot open input file.\n");
+        printf( "Cannot open input file.\n");
         return result;
     }
 
@@ -317,7 +317,7 @@ std::vector<PATLineSpec> PATLineSpec::getSpecsForPattern(std::string& parmFile, 
     if (status) {
         lineSpecs = loadPatternDef(inFile);
     } else {
-        Base::Console().Message( "Could not find pattern: %s\n",parmName.c_str() );
+        printf( "Could not find pattern: %s\n",parmName.c_str() );
         return result;
     }
     
@@ -386,7 +386,7 @@ std::vector<std::string> PATLineSpec::getPatternList(std::string& parmFile)
     std::ifstream inFile;
     inFile.open (parmFile, std::ifstream::in);
     if(!inFile.is_open()) {
-        Base::Console().Message( "Cannot open input file.\n");
+        printf( "Cannot open input file.\n");
         return result;
     }
 
@@ -482,7 +482,7 @@ void DashSpec::dump(char* title)
     for (auto& p: m_parms) {
         ss << p << ", ";
     }
-    Base::Console().Message("DUMP - DashSpec - %s\n",ss.str().c_str());
+    printf("DUMP - DashSpec - %s\n",ss.str().c_str());
 }
  
 

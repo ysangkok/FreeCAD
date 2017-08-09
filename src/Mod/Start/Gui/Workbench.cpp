@@ -80,7 +80,7 @@ void StartGui::Workbench::activated()
 #endif
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
     }
 }
 

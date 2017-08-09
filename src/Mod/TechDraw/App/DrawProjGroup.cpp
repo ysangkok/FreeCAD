@@ -732,7 +732,7 @@ TechDraw::DrawProjGroupItem* DrawProjGroup::getAnchor(void)
     if (docObj == nullptr) {
         //explode! DPG w/o anchor
         if (!isDeleting()) {
-            Base::Console().Error("Error - DPG::getAnchor - DPG has no Anchor!!!\n");
+            printf("Error - DPG::getAnchor - DPG has no Anchor!!!\n");
         }
     } else {
         result = static_cast<DrawProjGroupItem*>(docObj);
@@ -756,7 +756,7 @@ Base::Vector3d DrawProjGroup::getAnchorDirection(void)
         DrawProjGroupItem* item = static_cast<DrawProjGroupItem*>(docObj);
         result = item->Direction.getValue();
     } else {
-        Base::Console().Log("ERROR - DPG::getAnchorDir - no Anchor!!\n");
+        printf("ERROR - DPG::getAnchorDir - no Anchor!!\n");
     }
     return result;
 }
@@ -827,7 +827,7 @@ void DrawProjGroup::updateSecondaryDirs()
             }
             default: {
                 //TARFU invalid secondary type
-                Base::Console().Message("ERROR - DPG::updateSecondaryDirs - invalid projection type\n");
+                printf("ERROR - DPG::updateSecondaryDirs - invalid projection type\n");
                 newDir = v->Direction.getValue();
                 newAxis = v->RotationVector.getValue();
             }
@@ -886,7 +886,7 @@ void DrawProjGroup::spinCCW()
 //dumps the current iso DPGI's 
 void DrawProjGroup::dumpISO(char * title)
 {
-    Base::Console().Message("DPG ISO: %s\n", title); 
+    printf("DPG ISO: %s\n", title); 
     for (auto& docObj: Views.getValues()) {
         Base::Vector3d dir;
         Base::Vector3d axis;
@@ -895,7 +895,7 @@ void DrawProjGroup::dumpISO(char * title)
         dir = v->Direction.getValue();
         axis = v->RotationVector.getValue();
 
-        Base::Console().Message("%s:  %s/%s\n", 
+        printf("%s:  %s/%s\n", 
                                 t.c_str(),DrawUtil::formatVector(dir).c_str(),DrawUtil::formatVector(axis).c_str());
     }
 }

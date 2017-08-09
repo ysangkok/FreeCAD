@@ -154,7 +154,7 @@ std::vector<TopoDS_Edge> DrawProjectSplit::getEdges(TechDrawGeometry::GeometryOb
         if (!DrawUtil::isZeroEdge(e)) {
             nonZero.push_back(e);
         } else {
-            Base::Console().Message("INFO - DPS::getEdges found ZeroEdge!\n");
+            printf("INFO - DPS::getEdges found ZeroEdge!\n");
         }
     }
     faceEdges = nonZero;
@@ -172,11 +172,11 @@ std::vector<TopoDS_Edge> DrawProjectSplit::getEdges(TechDrawGeometry::GeometryOb
         BRepBndLib::Add(*itOuter, sOuter);
         sOuter.SetGap(0.1);
         if (sOuter.IsVoid()) {
-            Base::Console().Message("DPS::Extract Faces - outer Bnd_Box is void\n");
+            printf("DPS::Extract Faces - outer Bnd_Box is void\n");
             continue;
         }
         if (DrawUtil::isZeroEdge(*itOuter)) {
-            Base::Console().Message("DPS::extractFaces - outerEdge: %d is ZeroEdge\n",iOuter);   //this is not finding ZeroEdges
+            printf("DPS::extractFaces - outerEdge: %d is ZeroEdge\n",iOuter);   //this is not finding ZeroEdges
             continue;  //skip zero length edges. shouldn't happen ;)
         }
         int iInner = 0;
@@ -193,7 +193,7 @@ std::vector<TopoDS_Edge> DrawProjectSplit::getEdges(TechDrawGeometry::GeometryOb
             BRepBndLib::Add(*itInner, sInner);
             sInner.SetGap(0.1);
             if (sInner.IsVoid()) {
-                Base::Console().Log("INFO - DPS::Extract Faces - inner Bnd_Box is void\n");
+                printf("INFO - DPS::Extract Faces - inner Bnd_Box is void\n");
                 continue;
             }
             if (sOuter.IsOut(sInner)) {      //bboxes of edges don't intersect, don't bother
@@ -226,7 +226,7 @@ std::vector<TopoDS_Edge> DrawProjectSplit::getEdges(TechDrawGeometry::GeometryOb
     std::vector<TopoDS_Edge> newEdges = splitEdges(faceEdges,sorted);
 
     if (newEdges.empty()) {
-        Base::Console().Log("LOG - DPS::extractFaces - no newEdges\n");
+        printf("LOG - DPS::extractFaces - no newEdges\n");
     }
     newEdges = removeDuplicateEdges(newEdges);
     return newEdges;
@@ -246,7 +246,7 @@ bool DrawProjectSplit::isOnEdge(TopoDS_Edge e, TopoDS_Vertex v, double& param, b
     BRepBndLib::Add(e, sBox);
     sBox.SetGap(0.1);
     if (sBox.IsVoid()) {
-        Base::Console().Message("DPS::isOnEdge - Bnd_Box is void\n");
+        printf("DPS::isOnEdge - Bnd_Box is void\n");
     } else {
         gp_Pnt pt = BRep_Tool::Pnt(v);
         if (sBox.IsOut(pt)) {
@@ -256,7 +256,7 @@ bool DrawProjectSplit::isOnEdge(TopoDS_Edge e, TopoDS_Vertex v, double& param, b
     if (!outOfBox) {
             double dist = DrawUtil::simpleMinDist(v,e);
             if (dist < 0.0) {
-                Base::Console().Error("DPS::isOnEdge - simpleMinDist failed: %.3f\n",dist);
+                printf("DPS::isOnEdge - simpleMinDist failed: %.3f\n",dist);
                 result = false;
             } else if (dist < Precision::Confusion()) {
                 const gp_Pnt pt = BRep_Tool::Pnt(v);                         //have to duplicate method 3 to get param
@@ -339,7 +339,7 @@ std::vector<TopoDS_Edge> DrawProjectSplit::split1Edge(TopoDS_Edge e, std::vector
     double last = BRepLProp_CurveTool::LastParameter(adapt);
     if (first > last) {
         //TODO parms.reverse();
-        Base::Console().Message("DPS::split1Edge - edge is backwards!\n");
+        printf("DPS::split1Edge - edge is backwards!\n");
         return result;
     }
     std::vector<double> parms;
@@ -362,7 +362,7 @@ std::vector<TopoDS_Edge> DrawProjectSplit::split1Edge(TopoDS_Edge e, std::vector
             }
         }
         catch (Standard_Failure) {
-            Base::Console().Message("LOG - DPS::split1Edge failed building edge segment\n");
+            printf("LOG - DPS::split1Edge failed building edge segment\n");
         }
     }
     return result;
@@ -442,7 +442,7 @@ std::vector<TopoDS_Edge> DrawProjectSplit::removeDuplicateEdges(std::vector<Topo
         if (e.idx < inEdges.size()) {
             result.push_back(inEdges.at(e.idx));                  //<<< ***here
         } else {
-            Base::Console().Message("ERROR - DPS::removeDuplicateEdges - access: %d inEdges: %d\n",e.idx,inEdges.size());
+            printf("ERROR - DPS::removeDuplicateEdges - access: %d inEdges: %d\n",e.idx,inEdges.size());
         }
     }
     return result;

@@ -66,7 +66,7 @@ PyMOD_INIT_FUNC(RaytracingGui)
         PyMOD_Return(0);
     }
     PyObject* mod = RaytracingGui::initModule();
-    Base::Console().Log("Loading GUI of Raytracing module... done\n");
+    printf("Loading GUI of Raytracing module... done\n");
 
     // instantiating the commands
     CreateRaytracingCommands();

@@ -447,13 +447,13 @@ BSpline::BSpline(const TopoDS_Edge &e)
     } else {
         if (approx.HasResult()) {                   //result, but not within tolerance
             spline = approx.Curve();
-            Base::Console().Log("Geometry::BSpline - result not within tolerance\n");
+            printf("Geometry::BSpline - result not within tolerance\n");
         } else {
             f = c.FirstParameter();
             l = c.LastParameter();
             s = c.Value(f);
             ePt = c.Value(l);
-            Base::Console().Log("Error - Geometry::BSpline - no result- from:(%.3f,%.3f) to:(%.3f,%.3f) poles: %d\n",
+            printf("Error - Geometry::BSpline - no result- from:(%.3f,%.3f) to:(%.3f,%.3f) poles: %d\n",
                                  s.X(),s.Y(),ePt.X(),ePt.Y(),spline->NbPoles());
             TColgp_Array1OfPnt controlPoints(0,1);
             controlPoints.SetValue(0,s);
@@ -469,7 +469,7 @@ BSpline::BSpline(const TopoDS_Edge &e)
         BezierSegment tempSegment;
         Handle(Geom_BezierCurve) bezier = crt.Arc(i);
         if (bezier->Degree() > 3) {
-            Base::Console().Log("Geometry::BSpline - converted curve degree > 3\n");
+            printf("Geometry::BSpline - converted curve degree > 3\n");
         }
         tempSegment.poles = bezier->NbPoles();
         tempSegment.degree = bezier->Degree();
@@ -503,7 +503,7 @@ BezierSegment::BezierSegment(const TopoDS_Edge &e)
     poles = bez->NbPoles();
     degree = bez->Degree();
     if (poles > 4)  {
-        Base::Console().Log("Warning - BezierSegment has degree > 3: %d\n",degree);
+        printf("Warning - BezierSegment has degree > 3: %d\n",degree);
     }
     for (int i = 1; i <= poles; ++i) {
         gp_Pnt controlPoint = bez->Pole(i);
@@ -564,7 +564,7 @@ BaseGeomPtrVector GeometryUtils::chainGeoms(BaseGeomPtrVector geoms)
                     atPoint = nextEdge->getEndPoint();
                 }
             } else {
-                Base::Console().Log("Error - Geometry::chainGeoms - couldn't find next edge\n");
+                printf("Error - Geometry::chainGeoms - couldn't find next edge\n");
                 //TARFU
             }
         }

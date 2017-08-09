@@ -230,7 +230,7 @@ void CmdPointsConvert::activated(int iMsg)
                 if (vertexes.size() == normals.size()) {
                     fea = static_cast<Points::Feature*>(Base::Type::fromName("Points::FeatureCustom").createInstance());
                     if (!fea) {
-                        Base::Console().Error("Failed to create instance of 'Points::FeatureCustom'\n");
+                        printf("Failed to create instance of 'Points::FeatureCustom'\n");
                         continue;
                     }
                     Points::PropertyNormalList* prop = static_cast<Points::PropertyNormalList*>

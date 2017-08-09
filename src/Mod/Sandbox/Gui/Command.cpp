@@ -531,7 +531,7 @@ void CmdSandboxEventLoop::activated(int)
 
     timer.start(5000); // 5s timeout
     loop.exec();
-    Base::Console().Message("CmdSandboxEventLoop: timeout\n");
+    printf("CmdSandboxEventLoop: timeout\n");
 }
 
 bool CmdSandboxEventLoop::isActive(void)
@@ -762,7 +762,7 @@ public:
             kernel = myMesh->getKernel();
             for (std::vector<Mesh::MeshObjectConstRef>::iterator it = meshes.begin(); it != meshes.end(); ++it) {
                 if (*it != myMesh) {
-                    Base::Console().Message("MeshTestJob::run() in thread: %p\n", QThread::currentThreadId());
+                    printf("MeshTestJob::run() in thread: %p\n", QThread::currentThreadId());
                 }
             }
 
@@ -826,7 +826,7 @@ void CmdSandboxMeshTestJob::activated(int)
         }
 
         // run the actual multi-threaded mesh test
-        Base::Console().Message("Mesh test (step %d)...\n",iteration++);
+        printf("Mesh test (step %d)...\n",iteration++);
         MeshTestJob meshJob;
         QFuture<Mesh::MeshObject*> mesh_future = QtConcurrent::mapped
             (mesh_groups, boost::bind(&MeshTestJob::run, &meshJob, _1));
@@ -844,7 +844,7 @@ void CmdSandboxMeshTestJob::activated(int)
     }
 
     if (meshes.empty()) {
-        Base::Console().Error("The mesh test failed to create a valid mesh.\n");
+        printf("The mesh test failed to create a valid mesh.\n");
         return;
     }
 }
@@ -909,9 +909,9 @@ void CmdSandboxMeshTestRef::activated(int)
 
     Mesh::MeshObject* ptr = (Mesh::MeshObject*)mesh;
     if (!ptr)
-        Base::Console().Error("Object deleted\n");
+        printf("Object deleted\n");
     if (num != mesh.getRefCount())
-        Base::Console().Error("Reference count is %d\n",mesh.getRefCount());
+        printf("Reference count is %d\n",mesh.getRefCount());
 }
 
 bool CmdSandboxMeshTestRef::isActive(void)

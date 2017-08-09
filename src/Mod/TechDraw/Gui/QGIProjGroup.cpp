@@ -222,5 +222,5 @@ void QGIProjGroup::updateView(bool update)
 void QGIProjGroup::drawBorder()
 {
 //QGIProjGroup does not have a border!
-//    Base::Console().Message("TRACE - QGIProjGroup::drawBorder - doing nothing!!\n");
+//    printf("TRACE - QGIProjGroup::drawBorder - doing nothing!!\n");
 }

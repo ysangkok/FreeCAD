@@ -20,6 +20,18 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/../Gui/Language
     ${CMAKE_CURRENT_BINARY_DIR}/../Gui/propertyeditor
     ${CMAKE_CURRENT_BINARY_DIR}/../Mod/Part/Gui
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Mod/Part/Gui
+    ${CMAKE_CURRENT_SOURCE_DIR}/__/Mod/Part/App
+    ${CMAKE_CURRENT_SOURCE_DIR}/__/Mod/Part/Gui
+    ${CMAKE_CURRENT_SOURCE_DIR}/__/App
+    ${CMAKE_CURRENT_SOURCE_DIR}/__/Gui
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Base
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Gui
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Gui/DAGView
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Gui/TaskView
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Gui/Language
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Gui/propertyeditor
+    ${CMAKE_CURRENT_BINARY_DIR}/__/Mod/Part/Gui
     ${OCC_INCLUDE_DIR}
     ${Boost_INCLUDE_DIRS}
     ${PYTHON_INCLUDE_DIRS}
@@ -949,10 +961,10 @@ if (BUILD_QT5)
     set_property(SOURCE GraphvizView.cpp APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/moc_GraphvizView-internal.cpp)
 else()
     add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/moc_GraphvizView-internal.cpp
-        COMMAND ${QT_MOC_EXECUTABLE} -o ${CMAKE_CURRENT_BINARY_DIR}/moc_GraphvizView-internal.cpp ${CMAKE_CURRENT_SOURCE_DIR}/GraphvizView.cpp
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/GraphvizView.cpp)
+        COMMAND ${QT_MOC_EXECUTABLE} -o ${CMAKE_CURRENT_BINARY_DIR}/moc_GraphvizView-internal.cpp ${CMAKE_CURRENT_SOURCE_DIR}/../Gui/GraphvizView.cpp
+        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Gui/GraphvizView.cpp)
 
-    set_property(SOURCE GraphvizView.cpp APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/moc_GraphvizView-internal.cpp)
+    set_property(SOURCE ../Gui/GraphvizView.cpp APPEND PROPERTY OBJECT_DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/moc_GraphvizView-internal.cpp)
 endif()
 
 SET(Gui_UIC_SRCS

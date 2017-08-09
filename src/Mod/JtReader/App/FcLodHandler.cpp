@@ -36,5 +36,5 @@
 
 void FcLodHandler::startLod()
 {
-	Base::Console().Log("FcLodHandler::startLod()");
+	printf("FcLodHandler::startLod()");
 }

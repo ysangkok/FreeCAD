@@ -147,7 +147,7 @@ double DrawUtil::simpleMinDist(TopoDS_Shape s1, TopoDS_Shape s2)
 
     BRepExtrema_DistShapeShape extss(s1, s2);
     if (!extss.IsDone()) {
-        Base::Console().Message("DU::simpleMinDist - BRepExtrema_DistShapeShape failed");
+        printf("DU::simpleMinDist - BRepExtrema_DistShapeShape failed");
         return -1;
     }
     int count = extss.NbSolution();
@@ -198,7 +198,7 @@ double DrawUtil::angleWithX(TopoDS_Edge e, TopoDS_Vertex v, double tolerance)
         adjust = -1;
     } else {
         //TARFU
-        Base::Console().Message("Error: DU::angleWithX - v is neither first nor last \n");
+        printf("Error: DU::angleWithX - v is neither first nor last \n");
         //must be able to get non-terminal point parm from curve/
     }
 
@@ -220,7 +220,7 @@ double DrawUtil::angleWithX(TopoDS_Edge e, TopoDS_Vertex v, double tolerance)
             uVec = end - start;
         } else {
           gp_Pnt errPnt = BRep_Tool::Pnt(v);
-          Base::Console().Warning("angleWithX: Tangent not defined at (%.3f,%.3f,%.3f)\n",errPnt.X(),errPnt.Y(),errPnt.Z());
+          printf("angleWithX: Tangent not defined at (%.3f,%.3f,%.3f)\n",errPnt.X(),errPnt.Y(),errPnt.Z());
           //throw ??????
         }
     }
@@ -426,13 +426,13 @@ double DrawUtil::sensibleScale(double working_scale)
 // various debugging routines.
 void DrawUtil::dumpVertexes(const char* text, const TopoDS_Shape& s)
 {
-    Base::Console().Message("DUMP - %s\n",text);
+    printf("DUMP - %s\n",text);
     TopExp_Explorer expl(s, TopAbs_VERTEX);
     int i;
     for (i = 1 ; expl.More(); expl.Next(),i++) {
         const TopoDS_Vertex& v = TopoDS::Vertex(expl.Current());
         gp_Pnt pnt = BRep_Tool::Pnt(v);
-        Base::Console().Message("v%d: (%.3f,%.3f,%.3f)\n",i,pnt.X(),pnt.Y(),pnt.Z());
+        printf("v%d: (%.3f,%.3f,%.3f)\n",i,pnt.X(),pnt.Y(),pnt.Z());
     }
 }
 
@@ -441,7 +441,7 @@ void DrawUtil::countFaces(const char* text, const TopoDS_Shape& s)
     TopTools_IndexedMapOfShape mapOfFaces;
     TopExp::MapShapes(s, TopAbs_FACE, mapOfFaces);
     int num = mapOfFaces.Extent();
-    Base::Console().Message("COUNT - %s has %d Faces\n",text,num);
+    printf("COUNT - %s has %d Faces\n",text,num);
 }
 
 //count # of unique Wires in shape.
@@ -450,7 +450,7 @@ void DrawUtil::countWires(const char* text, const TopoDS_Shape& s)
     TopTools_IndexedMapOfShape mapOfWires;
     TopExp::MapShapes(s, TopAbs_WIRE, mapOfWires);
     int num = mapOfWires.Extent();
-    Base::Console().Message("COUNT - %s has %d wires\n",text,num);
+    printf("COUNT - %s has %d wires\n",text,num);
 }
 
 void DrawUtil::countEdges(const char* text, const TopoDS_Shape& s)
@@ -458,14 +458,14 @@ void DrawUtil::countEdges(const char* text, const TopoDS_Shape& s)
     TopTools_IndexedMapOfShape mapOfEdges;
     TopExp::MapShapes(s, TopAbs_EDGE, mapOfEdges);
     int num = mapOfEdges.Extent();
-    Base::Console().Message("COUNT - %s has %d edges\n",text,num);
+    printf("COUNT - %s has %d edges\n",text,num);
 }
 
 void DrawUtil::dump1Vertex(const char* text, const TopoDS_Vertex& v)
 {
-    Base::Console().Message("DUMP - dump1Vertex - %s\n",text);
+    printf("DUMP - dump1Vertex - %s\n",text);
     gp_Pnt pnt = BRep_Tool::Pnt(v);
-    Base::Console().Message("%s: (%.3f,%.3f,%.3f)\n",text,pnt.X(),pnt.Y(),pnt.Z());
+    printf("%s: (%.3f,%.3f,%.3f)\n",text,pnt.X(),pnt.Y(),pnt.Z());
 }
 
 void DrawUtil::dumpEdge(char* label, int i, TopoDS_Edge e)
@@ -477,9 +477,9 @@ void DrawUtil::dumpEdge(char* label, int i, TopoDS_Edge e)
     const gp_Pnt& vStart = propStart.Value();
     BRepLProp_CLProps propEnd(adapt,end,0,Precision::Confusion());
     const gp_Pnt& vEnd = propEnd.Value();
-    //Base::Console().Message("%s edge:%d start:(%.3f,%.3f,%.3f)/%0.3f end:(%.2f,%.3f,%.3f)/%.3f\n",label,i,
+    //printf("%s edge:%d start:(%.3f,%.3f,%.3f)/%0.3f end:(%.2f,%.3f,%.3f)/%.3f\n",label,i,
     //                        vStart.X(),vStart.Y(),vStart.Z(),start,vEnd.X(),vEnd.Y(),vEnd.Z(),end);
-    Base::Console().Message("%s edge:%d start:(%.3f,%.3f,%.3f)  end:(%.2f,%.3f,%.3f)\n",label,i,
+    printf("%s edge:%d start:(%.3f,%.3f,%.3f)  end:(%.2f,%.3f,%.3f)\n",label,i,
                             vStart.X(),vStart.Y(),vStart.Z(),vEnd.X(),vEnd.Y(),vEnd.Z());
 }
 const char* DrawUtil::printBool(bool b)

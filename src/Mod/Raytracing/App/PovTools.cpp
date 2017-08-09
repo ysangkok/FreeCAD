@@ -223,7 +223,7 @@ void PovTools::writeShape(const char *FileName, const char *PartName,
 void PovTools::writeShape(std::ostream &out, const char *PartName,
                           const TopoDS_Shape& Shape, float fMeshDeviation)
 {
-    Base::Console().Log("Meshing with Deviation: %f\n",fMeshDeviation);
+    printf("Meshing with Deviation: %f\n",fMeshDeviation);
 
     TopExp_Explorer ex;
     BRepMesh_IncrementalMesh MESH(Shape,fMeshDeviation);
@@ -309,7 +309,7 @@ void PovTools::writeShapeCSV(const char *FileName,
 {
     const char cSeperator = ',';
 
-    Base::Console().Log("Meshing with Deviation: %f\n",fMeshDeviation);
+    printf("Meshing with Deviation: %f\n",fMeshDeviation);
 
     TopExp_Explorer ex;
     BRepMesh_IncrementalMesh MESH(Shape,fMeshDeviation);
@@ -369,7 +369,7 @@ void PovTools::transferToArray(const TopoDS_Face& aFace,gp_Vec** vertices,gp_Vec
     //BRepMesh_IncrementalMesh MESH(aFace,fDeflection);
     Handle(Poly_Triangulation) aPoly = BRep_Tool::Triangulation(aFace,aLoc);
     if (aPoly.IsNull()) {
-        Base::Console().Log("Empty face trianglutaion\n");
+        printf("Empty face trianglutaion\n");
         nbNodesInFace =0;
         nbTriInFace = 0;
         vertices = 0l;
@@ -475,7 +475,7 @@ void PovTools::transferToArray(const TopoDS_Face& aFace,gp_Vec** vertices,gp_Vec
 
             clNormal = clPropOfFace.Normal();
             gp_Vec temp = clNormal;
-            //Base::Console().Log("unterschied:%.2f",temp.dot((*vertexnormals)[i]));
+            //printf("unterschied:%.2f",temp.dot((*vertexnormals)[i]));
             if ( temp * (*vertexnormals)[i] < 0 )
                 temp = -temp;
             (*vertexnormals)[i] = temp;

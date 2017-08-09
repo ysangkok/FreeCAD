@@ -118,7 +118,7 @@ PyMOD_INIT_FUNC(WebGui)
     }
 
     PyObject* mod = WebGui::initModule();
-    Base::Console().Log("Loading GUI of Web module... done\n");
+    printf("Loading GUI of Web module... done\n");
 
     // instantiating the commands
     CreateWebCommands();

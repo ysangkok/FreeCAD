@@ -63,7 +63,7 @@ PyMOD_INIT_FUNC(Inspection)
     //
     //
     PyObject* mod = Inspection::initModule();
-    Base::Console().Log("Loading Inspection module... done\n");
+    printf("Loading Inspection module... done\n");
 
     Inspection::PropertyDistanceList    ::init();
     Inspection::Feature                 ::init();

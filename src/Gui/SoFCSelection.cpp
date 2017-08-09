@@ -749,7 +749,7 @@ SoFCSelection::redrawHighlighted(SoAction *  action , SbBool  doHighlight )
 {
     Q_UNUSED(action); 
     Q_UNUSED(doHighlight); 
-    //Base::Console().Log("SoFCSelection::redrawHighlighted() (%p) doHigh=%d \n",this,doHighlight?1:0);
+    //printf("SoFCSelection::redrawHighlighted() (%p) doHigh=%d \n",this,doHighlight?1:0);
 
 #ifdef NO_FRONTBUFFER
 #else
@@ -850,7 +850,7 @@ SoFCSelection::readInstance  (  SoInput *  in, unsigned short  flags )
 void
 SoFCSelection::setOverride(SoGLRenderAction * action)
 {
-    //Base::Console().Log("SoFCSelection::setOverride() (%p)\n",this);
+    //printf("SoFCSelection::setOverride() (%p)\n",this);
     SoState * state = action->getState();
     if(this->selected.getValue() == SELECTED)
         SoLazyElement::setEmissive(state, &this->colorSelection.getValue());

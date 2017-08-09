@@ -96,7 +96,7 @@ int MeshingOutput::sync()
             else {
                 sub = buffer;
             }
-            Base::Console().Error("%s", sub.c_str());
+            printf("%s", sub.c_str());
         }
         buffer.clear();
     }
@@ -540,7 +540,7 @@ Mesh::MeshObject* Mesher::createMesh() const
             faces.push_back(f6);
         }
         else {
-            Base::Console().Warning("Face with %d nodes ignored\n", aFace->NbNodes());
+            printf("Face with %d nodes ignored\n", aFace->NbNodes());
         }
     }
 

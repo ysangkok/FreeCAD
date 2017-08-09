@@ -532,7 +532,7 @@ void MeshSelection::pickFaceCallback(void * ud, SoEventCallback * n)
         if (mbe->getButton() == SoMouseButtonEvent::BUTTON1 && mbe->getState() == SoButtonEvent::DOWN) {
             const SoPickedPoint * point = n->getPickedPoint();
             if (point == NULL) {
-                Base::Console().Message("No facet picked.\n");
+                printf("No facet picked.\n");
                 return;
             }
 

@@ -253,6 +253,6 @@ PyMOD_INIT_FUNC(Sandbox)
     // the following constructor call registers our extension module
     // with the Python runtime system
     PyObject* mod = Sandbox::initModule();
-    Base::Console().Log("Loading Sandbox module... done\n");
+    printf("Loading Sandbox module... done\n");
     PyMOD_Return(mod);
 }

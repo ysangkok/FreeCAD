@@ -380,7 +380,7 @@ bool SelectionSingleton::setPreselect(const char* pDocName, const char* pObjectN
     Notify(Chng);
     signalSelectionChanged(Chng);
 
-    //Base::Console().Log("Sel : Add preselect %s \n",pObjectName);
+    //printf("Sel : Add preselect %s \n",pObjectName);
 
     // allows the preselection
     return true;
@@ -441,7 +441,7 @@ void SelectionSingleton::rmvPreselect()
         mdi->restoreOverrideCursor();
     }
 
-    //Base::Console().Log("Sel : Rmv preselect \n");
+    //printf("Sel : Rmv preselect \n");
 }
 
 const SelectionChanges &SelectionSingleton::getPreselection(void) const
@@ -546,7 +546,7 @@ bool SelectionSingleton::addSelection(const char* pDocName, const char* pObjectN
         signalSelectionChanged(Chng);
 
 #ifdef FC_DEBUG
-        Base::Console().Log("Sel : Add Selection \"%s.%s.%s(%f,%f,%f)\"\n",pDocName,pObjectName,pSubName,x,y,z);
+        printf("Sel : Add Selection \"%s.%s.%s(%f,%f,%f)\"\n",pDocName,pObjectName,pSubName,x,y,z);
 #endif
 
         // allow selection

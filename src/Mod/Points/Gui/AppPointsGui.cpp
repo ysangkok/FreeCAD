@@ -86,7 +86,7 @@ PyMOD_INIT_FUNC(PointsGui)
         PyMOD_Return(0);
     }
 
-    Base::Console().Log("Loading GUI of Points module... done\n");
+    printf("Loading GUI of Points module... done\n");
     PyObject* mod = PointsGui::initModule();
 
     // instantiating the commands

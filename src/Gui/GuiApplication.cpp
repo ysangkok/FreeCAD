@@ -127,7 +127,7 @@ bool GUIApplication::notify (QObject * receiver, QEvent * event)
                         dump << " is child of\n";
                 }
                 std::string str = dump.str();
-                printf("%s",str.c_str());
+                printf("%s\n",str.c_str());
             }
         }
         catch (...) {

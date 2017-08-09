@@ -128,7 +128,7 @@ short DrawViewDetail::mustExecute() const
 void DrawViewDetail::onChanged(const App::Property* prop)
 {
     if (!isRestoring()) {
-        //Base::Console().Message("TRACE - DVD::onChanged(%s) - %s\n",prop->getName(),Label.getValue());
+        //printf("TRACE - DVD::onChanged(%s) - %s\n",prop->getName(),Label.getValue());
         if (prop == &Reference) {
             std::string lblText = "Detail " +
                                   std::string(Reference.getValue());
@@ -149,7 +149,7 @@ App::DocumentObjectExecReturn *DrawViewDetail::execute(void)
     App::DocumentObject* link = Source.getValue();
     App::DocumentObject* base = BaseView.getValue();
     if (!link || !base)  {
-        Base::Console().Log("INFO - DVD::execute - No Source or Link - creation?\n");
+        printf("INFO - DVD::execute - No Source or Link - creation?\n");
         return DrawView::execute();
     }
 
@@ -162,7 +162,7 @@ App::DocumentObjectExecReturn *DrawViewDetail::execute(void)
         dvp = static_cast<DrawViewPart*>(base);
     }
 
-    //Base::Console().Message("TRACE - DVD::execute() - %s/%s\n",getNameInDocument(),Label.getValue());
+    //printf("TRACE - DVD::execute() - %s/%s\n",getNameInDocument(),Label.getValue());
 
     const Part::TopoShape &partTopo = static_cast<Part::Feature*>(link)->Shape.getShape();
     if (partTopo.getShape().IsNull())
@@ -210,11 +210,11 @@ App::DocumentObjectExecReturn *DrawViewDetail::execute(void)
 
     BRepAlgoAPI_Common mkCommon(myShape,tool);
     if (!mkCommon.IsDone()) {
-        Base::Console().Log("DVD::execute - mkCommon not done\n");
+        printf("DVD::execute - mkCommon not done\n");
         return new App::DocumentObjectExecReturn("DVD::execute - mkCommon not done");
     }
     if (mkCommon.Shape().IsNull()) {
-        Base::Console().Log("DVD::execute - mkCommon.Shape is Null\n");
+        printf("DVD::execute - mkCommon.Shape is Null\n");
         return new App::DocumentObjectExecReturn("DVD::execute - mkCommon.Shape is Null");
     }
 
@@ -222,14 +222,14 @@ App::DocumentObjectExecReturn *DrawViewDetail::execute(void)
     TopExp_Explorer xp;
     xp.Init(mkCommon.Shape(),TopAbs_SOLID);
     if (!(xp.More() == Standard_True)) {
-        Base::Console().Log("DVD::execute - mkCommon.Shape is not a solid!\n");
+        printf("DVD::execute - mkCommon.Shape is not a solid!\n");
     }
     TopoDS_Shape detail = mkCommon.Shape();
     Bnd_Box testBox;
     testBox.SetGap(0.0);
     BRepBndLib::Add(detail, testBox);
     if (testBox.IsVoid()) {
-        Base::Console().Message("INFO - DVD::execute - testBox is void\n");
+        printf("INFO - DVD::execute - testBox is void\n");
     }
 
 //for debugging show compound instead of cut
@@ -257,7 +257,7 @@ App::DocumentObjectExecReturn *DrawViewDetail::execute(void)
         }
         catch (Standard_Failure) {
             Handle(Standard_Failure) e4 = Standard_Failure::Caught();
-            Base::Console().Log("LOG - DVD::execute - extractFaces failed for %s - %s **\n",getNameInDocument(),e4->GetMessageString());
+            printf("LOG - DVD::execute - extractFaces failed for %s - %s **\n",getNameInDocument(),e4->GetMessageString());
             return new App::DocumentObjectExecReturn(e4->GetMessageString());
         }
     }
@@ -266,7 +266,7 @@ App::DocumentObjectExecReturn *DrawViewDetail::execute(void)
     }
     catch (Standard_Failure) {
         Handle(Standard_Failure) e1 = Standard_Failure::Caught();
-        Base::Console().Log("LOG - DVD::execute - base shape failed for %s - %s **\n",getNameInDocument(),e1->GetMessageString());
+        printf("LOG - DVD::execute - base shape failed for %s - %s **\n",getNameInDocument(),e1->GetMessageString());
         return new App::DocumentObjectExecReturn(e1->GetMessageString());
     }
 

@@ -625,7 +625,7 @@ void CmdSketcherIncreaseKnotMultiplicity::activated(int iMsg)
                                         ngeoid);
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 getSelection().clearSelection();
             }
             
@@ -778,7 +778,7 @@ void CmdSketcherDecreaseKnotMultiplicity::activated(int iMsg)
                                         ngeoid);
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 getSelection().clearSelection();
             }
 

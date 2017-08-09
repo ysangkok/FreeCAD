@@ -104,7 +104,7 @@ PyMOD_INIT_FUNC(MeshGui)
         PyMOD_Return(0);
     }
     PyObject* mod = MeshGui::initModule();
-    Base::Console().Log("Loading GUI of Mesh module... done\n");
+    printf("Loading GUI of Mesh module... done\n");
 
     // Register icons
     Gui::BitmapFactory().addXPM("mesh_fillhole", mesh_fillhole);

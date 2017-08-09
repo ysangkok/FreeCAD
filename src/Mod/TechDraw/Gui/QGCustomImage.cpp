@@ -77,7 +77,7 @@ bool QGCustomImage::load(QString fileSpec)
     QPixmap px(fileSpec);
     m_px = px;
 //    if (m_px.isNull()) {
-//        Base::Console().Message("TRACE - QGCustomImage::load - pixmap no good\n");
+//        printf("TRACE - QGCustomImage::load - pixmap no good\n");
 //    }
     prepareGeometryChange();
     setPixmap(m_px);

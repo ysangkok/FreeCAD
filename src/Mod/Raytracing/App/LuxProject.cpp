@@ -74,7 +74,7 @@ App::DocumentObjectExecReturn *LuxProject::execute(void)
 
     Base::FileInfo fi(Template.getValue());
     if (!fi.isReadable()) {
-        Base::Console().Log("LuxProject::execute() not able to open %s!\n",Template.getValue());
+        printf("LuxProject::execute() not able to open %s!\n",Template.getValue());
         std::string error = std::string("Cannot open file ") + Template.getValue();
         return new App::DocumentObjectExecReturn(error);
     }

@@ -52,7 +52,7 @@ void AppJtReaderExport initJtReader() {
    //JtkEntityFactory::registerCustomer( 1103193 );
    //JtkEntityFactory::registerCustomer(1103103);
 
-  Base::Console().Log("Loading JtReader module... done\n");
+  printf("Loading JtReader module... done\n");
 
   return;
 }

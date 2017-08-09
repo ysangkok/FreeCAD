@@ -154,7 +154,7 @@ App::DocumentObjectExecReturn *SketchObject::execute(void)
         rebuildExternalGeometry();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\nClear constraints to external geometry\n", e.what());
+        printf("%s\nClear constraints to external geometry\n", e.what());
         // we cannot trust the constraints of external geometries, so remove them
         delConstraintsToExternal();
     }
@@ -2025,7 +2025,7 @@ bool SketchObject::isExternalAllowed(App::Document *pDoc, App::DocumentObject *p
             return false;
         }
     } catch (Base::Exception &e) {
-        Base::Console().Warning("Probably, there is a circular reference in the document. Error: %s\n", e.what());
+        printf("Probably, there is a circular reference in the document. Error: %s\n", e.what());
         return true; //prohibiting this reference won't remove the problem anyway...
     }
     
@@ -2088,7 +2088,7 @@ bool SketchObject::isCarbonCopyAllowed(App::Document *pDoc, App::DocumentObject 
             return false;
         }
     } catch (Base::Exception &e) {
-        Base::Console().Warning("Probably, there is a circular reference in the document. Error: %s\n", e.what());
+        printf("Probably, there is a circular reference in the document. Error: %s\n", e.what());
         return true; //prohibiting this reference won't remove the problem anyway...
     }
     
@@ -2186,7 +2186,7 @@ int SketchObject::addSymmetric(const std::vector<int> &geoIdList, int refGeoId, 
     if(refPosId == Sketcher::none) {
         const Part::Geometry *georef = getGeometry(refGeoId);
         if(georef->getTypeId() != Part::GeomLineSegment::getClassTypeId()) {
-            Base::Console().Error("Reference for symmetric is neither a point nor a line.\n");
+            printf("Reference for symmetric is neither a point nor a line.\n");
             return -1;
         }
 
@@ -2353,7 +2353,7 @@ int SketchObject::addSymmetric(const std::vector<int> &geoIdList, int refGeoId, 
                 isStartEndInverted.insert(std::make_pair(*it, false));
             }
             else {
-                Base::Console().Error("Unsupported Geometry!! Just copying it.\n");
+                printf("Unsupported Geometry!! Just copying it.\n");
                 isStartEndInverted.insert(std::make_pair(*it, false));
             }
 
@@ -2452,7 +2452,7 @@ int SketchObject::addSymmetric(const std::vector<int> &geoIdList, int refGeoId, 
                     }
                     break;
                 default:
-                    Base::Console().Error("Wrong PointPosId.\n");
+                    printf("Wrong PointPosId.\n");
                     return -1;
             }
         }
@@ -2616,7 +2616,7 @@ int SketchObject::addSymmetric(const std::vector<int> &geoIdList, int refGeoId, 
                 isStartEndInverted.insert(std::make_pair(*it, false));
             }
             else {
-                Base::Console().Error("Unsupported Geometry!! Just copying it.\n");
+                printf("Unsupported Geometry!! Just copying it.\n");
                 isStartEndInverted.insert(std::make_pair(*it, false));
             }
             
@@ -2888,7 +2888,7 @@ int SketchObject::addCopy(const std::vector<int> &geoIdList, const Base::Vector3
                         iterfirstpoint = scp;
                 }
                 else {
-                    Base::Console().Error("Unsupported Geometry!! Just skipping it.\n");
+                    printf("Unsupported Geometry!! Just skipping it.\n");
                     continue;
                 }
 
@@ -4055,7 +4055,7 @@ bool SketchObject::convertToNURBS(int GeoId)
         }
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         // revert to original values
         return false;
     }
@@ -4120,7 +4120,7 @@ bool SketchObject::increaseBSplineDegree(int GeoId, int degreeincrement /*= 1*/)
         bspline->increaseDegree(cdegree+degreeincrement);
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         return false;
     }
 
@@ -4140,7 +4140,7 @@ bool SketchObject::increaseBSplineDegree(int GeoId, int degreeincrement /*= 1*/)
 bool SketchObject::modifyBSplineKnotMultiplicity(int GeoId, int knotIndex, int multiplicityincr)
 {
     #if OCC_VERSION_HEX < 0x060900
-    Base::Console().Error("This version of OCE/OCC does not support knot operation. You need 6.9.0 or higher\n");
+    printf("This version of OCE/OCC does not support knot operation. You need 6.9.0 or higher\n");
     return false;
     #endif
     
@@ -4187,7 +4187,7 @@ bool SketchObject::modifyBSplineKnotMultiplicity(int GeoId, int knotIndex, int m
         }
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         return false;
     }
 
@@ -4442,13 +4442,13 @@ int SketchObject::addExternal(App::DocumentObject *Obj, const char* SubName)
 
     if (Objects.size() != SubElements.size()) {
         assert(0 /*counts of objects and subelements in external geometry links do not match*/);
-        Base::Console().Error("Internal error: counts of objects and subelements in external geometry links do not match\n");
+        printf("Internal error: counts of objects and subelements in external geometry links do not match\n");
         return -1;
     }
 
     for (size_t i = 0  ;  i < Objects.size()  ;  ++i){
         if (Objects[i] == Obj   &&   std::string(SubName) == SubElements[i]){
-            Base::Console().Error("Link to %s already exists in this sketch.\n",SubName);
+            printf("Link to %s already exists in this sketch.\n",SubName);
             return -1;
         }
     }
@@ -4463,7 +4463,7 @@ int SketchObject::addExternal(App::DocumentObject *Obj, const char* SubName)
         rebuildExternalGeometry();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         // revert to original values
         ExternalGeometry.setValues(originalObjects,originalSubElements);
         return -1;
@@ -4516,7 +4516,7 @@ int SketchObject::delExternal(int ExtGeoId)
         rebuildExternalGeometry();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         // revert to original values
         ExternalGeometry.setValues(originalObjects,originalSubElements);
         for (Constraint* it : newConstraints)
@@ -4564,7 +4564,7 @@ int SketchObject::delAllExternal()
         rebuildExternalGeometry();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         // revert to original values
         ExternalGeometry.setValues(originalObjects,originalSubElements);
         for (Constraint* it : newConstraints)
@@ -5783,7 +5783,7 @@ int SketchObject::changeConstraintsLocking(bool bLock)
             if (ret) cntSuccess++;
             tbd.push_back(constNew);
             newVals[i] = constNew;
-            Base::Console().Log("Constraint%i will be affected\n",
+            printf("Constraint%i will be affected\n",
                                 i+1);
         }
     }
@@ -5795,7 +5795,7 @@ int SketchObject::changeConstraintsLocking(bool bLock)
         delete (tbd[i]);
     }
 
-    Base::Console().Log("ChangeConstraintsLocking: affected %i of %i tangent/perp constraints\n",
+    printf("ChangeConstraintsLocking: affected %i of %i tangent/perp constraints\n",
                         cntSuccess, cntToBeAffected);
 
     return cntSuccess;
@@ -5860,14 +5860,14 @@ int SketchObject::port_reversedExternalArcs(bool justAnalyze)
             cntToBeAffected++;
             tbd.push_back(constNew);
             newVals[ic] = constNew;
-            Base::Console().Log("Constraint%i will be affected\n",
+            printf("Constraint%i will be affected\n",
                                 ic+1);
         };
     }
 
     if(!justAnalyze){
         this->Constraints.setValues(newVals);
-        Base::Console().Log("Swapped start/end of reversed external arcs in %i constraints\n",
+        printf("Swapped start/end of reversed external arcs in %i constraints\n",
                             cntToBeAffected);
     }
 
@@ -5947,7 +5947,7 @@ bool SketchObject::AutoLockTangencyAndPerpty(Constraint *cstr, bool bForce, bool
         }
     } catch (Base::Exception& e){
         //failure to determine tangency type is not a big deal, so a warning.
-        Base::Console().Warning("Error in AutoLockTangency. %s \n", e.what());
+        printf("Error in AutoLockTangency. %s \n", e.what());
         return false;
     }
     return true;

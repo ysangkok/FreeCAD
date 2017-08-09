@@ -290,7 +290,7 @@ void Command::invoke(int i)
 {
     // Do not query _pcAction since it isn't created necessarily
 #ifdef FC_LOGUSERACTION
-    Base::Console().Log("CmdG: %s\n",sName);
+    printf("CmdG: %s\n",sName);
 #endif
     // set the application module type for the macro
     getGuiApplication()->macroManager()->setModule(sAppModule);
@@ -464,7 +464,7 @@ void Command::doCommand(DoCmd_Type eType, const char* sCmd, ...)
     QByteArray format = cmd.toUtf8();
 
 #ifdef FC_LOGUSERACTION
-    Base::Console().Log("CmdC: %s\n", format.constData());
+    printf("CmdC: %s\n", format.constData());
 #endif
 
     if (eType == Gui)
@@ -906,7 +906,7 @@ bool CommandManager::addTo(const char* Name, QWidget *pcWidget)
     if (_sCommands.find(Name) == _sCommands.end()) {
         // Print in release mode only a log message instead of an error message to avoid to annoy the user
 #ifdef FC_DEBUG
-        Base::Console().Error("CommandManager::addTo() try to add an unknown command (%s) to a widget!\n",Name);
+        printf("CommandManager::addTo() try to add an unknown command (%s) to a widget!\n",Name);
 #else
         printf("Unknown command '%s'\n",Name);
 #endif

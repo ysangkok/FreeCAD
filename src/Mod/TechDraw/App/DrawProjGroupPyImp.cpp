@@ -102,7 +102,7 @@ PyObject* DrawProjGroupPy::setViewOrientation(PyObject* args)
 //        projGroup->setViewOrientation( view, projType );
 
 //    } else {
-//        Base::Console().Message("'%s' is not a DrawProjGroup Item, it will be ignored.\n", obj->Label.getValue());
+//        printf("'%s' is not a DrawProjGroup Item, it will be ignored.\n", obj->Label.getValue());
 //    }
 
     return Py_None;

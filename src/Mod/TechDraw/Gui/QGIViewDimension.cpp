@@ -328,7 +328,7 @@ void QGIViewDimension::draw()
             int idx = TechDraw::DrawUtil::getIndexFromName(SubNames[0]);
             TechDrawGeometry::BaseGeom* geom = refObj->getProjEdgeByIndex(idx);
             if (!geom) {
-                Base::Console().Log("INFO - qgivd::draw - no geom for projected edge: %d of %d\n",
+                printf("INFO - qgivd::draw - no geom for projected edge: %d of %d\n",
                                     idx,refObj->getEdgeGeometry().size());
                 return;
             }
@@ -341,7 +341,7 @@ void QGIViewDimension::draw()
                 distEnd = Base::Vector3d(pnt2.x, pnt2.y, 0.);
                 distEnd = Rez::guiX(distEnd);
             } else {
-                Base::Console().Log("INFO - QGIVD::draw - Original edge not found or is invalid type (1)\n");
+                printf("INFO - QGIVD::draw - Original edge not found or is invalid type (1)\n");
                 datumLabel->hide();
                 hide();
                 return;
@@ -355,7 +355,7 @@ void QGIViewDimension::draw()
             TechDrawGeometry::Vertex *v1 = refObj->getProjVertexByIndex(idx1);
             if (!v0 || !v1) {
                 //Ugh. this is probably because the document is restoring. check log.
-                Base::Console().Log("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
+                printf("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
                                     idx0,idx1,refObj->getEdgeGeometry().size());
                 return;
             }
@@ -371,7 +371,7 @@ void QGIViewDimension::draw()
             TechDrawGeometry::BaseGeom* geom0 = refObj->getProjEdgeByIndex(idx0);
             TechDrawGeometry::BaseGeom* geom1 = refObj->getProjEdgeByIndex(idx1);
             if (!geom0 || !geom1) {
-                Base::Console().Log("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
+                printf("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
                                     idx0,idx1,refObj->getEdgeGeometry().size());
                 return;
             }
@@ -420,7 +420,7 @@ void QGIViewDimension::draw()
                 else
                     distEnd = edge2Start;
             } else {
-                Base::Console().Log("INFO - QGIVD::draw - Invalid reference for dimension type (1)\n");
+                printf("INFO - QGIVD::draw - Invalid reference for dimension type (1)\n");
                 datumLabel->hide();
                 hide();
                 return;
@@ -438,13 +438,13 @@ void QGIViewDimension::draw()
                 ex = TechDraw::DrawUtil::getIndexFromName(SubNames[1]);
                 vx = TechDraw::DrawUtil::getIndexFromName(SubNames[0]);
             } else {
-                Base::Console().Log("INFO - qgivd::draw - vertexEdge dim is not vertexEdge!\n");
+                printf("INFO - qgivd::draw - vertexEdge dim is not vertexEdge!\n");
                 return;
             }
             e = refObj->getProjEdgeByIndex(ex);
             v = refObj->getProjVertexByIndex(vx);
             if (!e || !v) {
-                Base::Console().Log("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
+                printf("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
                                     ex,vx,refObj->getEdgeGeometry().size());
                 return;
             }
@@ -459,7 +459,7 @@ void QGIViewDimension::draw()
             distEnd = Rez::guiX(ptOnLine);
             //need to figure out Distance? from slope of distEnd-distStart?
         } else {
-            Base::Console().Message("TARFU - invalid references for Dimension!!");
+            printf("TARFU - invalid references for Dimension!!");
         }
 
         // +/- aligned method
@@ -644,7 +644,7 @@ void QGIViewDimension::draw()
             int idx = TechDraw::DrawUtil::getIndexFromName(SubNames[0]);
             TechDrawGeometry::BaseGeom *geom = refObj->getProjEdgeByIndex(idx);
             if(!geom)  {
-                Base::Console().Log("INFO - qgivd::draw - no geom for projected edge: %d of %d\n",
+                printf("INFO - qgivd::draw - no geom for projected edge: %d of %d\n",
                                         idx,refObj->getEdgeGeometry().size());
                 return;
             }
@@ -665,13 +665,13 @@ void QGIViewDimension::draw()
                 pointOnCurve = Base::Vector3d(circ->midPnt.x, circ->midPnt.y,0.0);
                 pointOnCurve = Rez::guiX(pointOnCurve);
             } else {
-                Base::Console().Log("INFO - QGIVD::draw - Original edge not found or is invalid type (2)\n");
+                printf("INFO - QGIVD::draw - Original edge not found or is invalid type (2)\n");
                 datumLabel->hide();
                 hide();
                 return;
             }
         } else {
-            Base::Console().Log("INFO - QGIVD::draw - Invalid reference for dimension type (2)\n");
+            printf("INFO - QGIVD::draw - Invalid reference for dimension type (2)\n");
             datumLabel->hide();
             hide();
             return;
@@ -939,7 +939,7 @@ void QGIViewDimension::draw()
             int idx = TechDraw::DrawUtil::getIndexFromName(SubNames[0]);
             TechDrawGeometry::BaseGeom* geom = refObj->getProjEdgeByIndex(idx);
             if(!geom)  {
-                Base::Console().Log("INFO - qgivd::draw - no geom for projected edge: %d of %d\n",
+                printf("INFO - qgivd::draw - no geom for projected edge: %d of %d\n",
                                         idx,refObj->getEdgeGeometry().size());
                 return;
             }
@@ -960,13 +960,13 @@ void QGIViewDimension::draw()
                 pointOnCurve = Base::Vector3d(circ->midPnt.x, circ->midPnt.y,0.0);
                 pointOnCurve = Rez::guiX(pointOnCurve);
             } else {
-                Base::Console().Log("INFO - QGIVD::draw - Original edge not found or is invalid type (3)\n");
+                printf("INFO - QGIVD::draw - Original edge not found or is invalid type (3)\n");
                 datumLabel->hide();
                 hide();
                 return;
             }
         } else {
-            Base::Console().Log("INFO - QGIVD::draw - Invalid reference for dimension type (3)\n");
+            printf("INFO - QGIVD::draw - Invalid reference for dimension type (3)\n");
             datumLabel->hide();
             hide();
             return;
@@ -1087,7 +1087,7 @@ void QGIViewDimension::draw()
             TechDrawGeometry::BaseGeom* geom0 = refObj->getProjEdgeByIndex(idx0);
             TechDrawGeometry::BaseGeom* geom1 = refObj->getProjEdgeByIndex(idx1);
             if (!geom0 || !geom1) {
-                Base::Console().Log("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
+                printf("INFO - qgivd::draw - no geom for projected edge: %d or %d of %d\n",
                                         idx0,idx1,refObj->getEdgeGeometry().size());
                 return;
             }
@@ -1302,7 +1302,7 @@ void QGIViewDimension::draw()
                 datumLabel->setRotation(lAngle * 180 / M_PI);
 
             } else {
-                Base::Console().Log("INFO - QGIVD::draw - Invalid reference for dimension type (4)\n");
+                printf("INFO - QGIVD::draw - Invalid reference for dimension type (4)\n");
                 datumLabel->hide();
                 hide();
                 return;
@@ -1330,7 +1330,7 @@ void QGIViewDimension::draw()
         //TODO: parent redraw still required with new frame/label??
         parentItem()->update();
     } else {
-        Base::Console().Log("INFO - QGIVD::draw - no parent to update\n");
+        printf("INFO - QGIVD::draw - no parent to update\n");
     }
 
 }
@@ -1338,7 +1338,7 @@ void QGIViewDimension::draw()
 void QGIViewDimension::drawBorder(void)
 {
 //Dimensions have no border!
-//    Base::Console().Message("TRACE - QGIViewDimension::drawBorder - doing nothing!\n");
+//    printf("TRACE - QGIViewDimension::drawBorder - doing nothing!\n");
 }
 
 QVariant QGIViewDimension::itemChange(GraphicsItemChange change, const QVariant &value)

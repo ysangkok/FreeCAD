@@ -884,13 +884,13 @@ void SoFCMeshFaceSet::generatePrimitives(SoAction* action)
         createProxyModel(rPoints, rFacets, FALSE);
         meshChanged = false;
       } catch (const Base::MemoryException&) {
-          Base::Console().Log("Not enough memory to create a proxy model, use its bounding box instead\n");
+          printf("Not enough memory to create a proxy model, use its bounding box instead\n");
           try {
             // try to create a triangulation of the bbox instead
             createProxyModel(rPoints, rFacets, TRUE);
             meshChanged = false;
           } catch (const Base::MemoryException&) {
-              Base::Console().Log("Not enough memory to make the object pickable\n");
+              printf("Not enough memory to make the object pickable\n");
               return;
           }
       }
@@ -923,7 +923,7 @@ void SoFCMeshFaceSet::generatePrimitives(SoAction* action)
           shapeVertex(&vertex);
         }
     } catch (const Base::MemoryException&) {
-        Base::Console().Log("Not enough memory to generate primitives from the proxy model\n");
+        printf("Not enough memory to generate primitives from the proxy model\n");
     }
     endShape();
   } else {
@@ -987,7 +987,7 @@ void SoFCMeshFaceSet::generatePrimitives(SoAction* action)
           faceDetail.incFaceIndex();
         }
     } catch (const Base::MemoryException&) {
-        Base::Console().Log("Not enough memory to generate primitives\n");
+        printf("Not enough memory to generate primitives\n");
     }
 
     endShape();

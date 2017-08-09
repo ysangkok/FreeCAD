@@ -285,7 +285,7 @@ App::DocumentObjectExecReturn *Draft::execute(void)
                     //       therefore unusable. See http://forum.freecadweb.org/viewtopic.php?f=10&t=3209&start=10#p25341
                     //       The only solution is to discard mkDraft and start over without the current face
                     // mkDraft.Remove(face);
-                    Base::Console().Error("Adding face failed on %s. Omitted\n", it->c_str());
+                    printf("Adding face failed on %s. Omitted\n", it->c_str());
                     success = false;
                     SubVals.erase(it);
                     break;

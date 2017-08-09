@@ -47,7 +47,7 @@ PyObject* initModule()
 PyMOD_INIT_FUNC(Image)
 {
     PyObject* mod = Image::initModule();
-    Base::Console().Log("Loading Image module... done\n");
+    printf("Loading Image module... done\n");
 
     Image::ImagePlane::init();
 

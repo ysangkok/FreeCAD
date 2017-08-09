@@ -278,12 +278,12 @@ void Cube::spinCW(double angle)
 void Cube::dump(char * title)
 {
 //Bottom/Front/Left/Rear/Right/Top
-    Base::Console().Message("Cube: %s\n", title); 
-    Base::Console().Message("B: %s/%s  \nF: %s/%s  \nL: %s/%s\n", 
+    printf("Cube: %s\n", title); 
+    printf("B: %s/%s  \nF: %s/%s  \nL: %s/%s\n", 
                             DrawUtil::formatVector(getBottom()).c_str(),DrawUtil::formatVector(getBottomRot()).c_str(),
                             DrawUtil::formatVector(getFront()).c_str(),DrawUtil::formatVector(getFrontRot()).c_str(), 
                             DrawUtil::formatVector(getLeft()).c_str(),DrawUtil::formatVector(getLeftRot()).c_str());
-    Base::Console().Message("K: %s/%s  \nR: %s/%s  \nT: %s/%s\n", 
+    printf("K: %s/%s  \nR: %s/%s  \nT: %s/%s\n", 
                             DrawUtil::formatVector(getRear()).c_str(),DrawUtil::formatVector(getRearRot()).c_str(),
                             DrawUtil::formatVector(getRight()).c_str(),DrawUtil::formatVector(getRightRot()).c_str(), 
                             DrawUtil::formatVector(getTop()).c_str(),DrawUtil::formatVector(getTopRot()).c_str());
@@ -293,8 +293,8 @@ void Cube::dump(char * title)
 void Cube::dumpISO(char * title)
 {
 //FBL/FBR/FTL/FTR
-    Base::Console().Message("Cube ISO: %s\n", title); 
-    Base::Console().Message("FBL: %s/%s  \nFBR: %s/%s  \nFTL: %s/%s\nFTR: %s/%s\n", 
+    printf("Cube ISO: %s\n", title); 
+    printf("FBL: %s/%s  \nFBR: %s/%s  \nFTL: %s/%s\nFTR: %s/%s\n", 
                             DrawUtil::formatVector(getFBL()).c_str(),DrawUtil::formatVector(getFBLRot()).c_str(),
                             DrawUtil::formatVector(getFBR()).c_str(),DrawUtil::formatVector(getFBRRot()).c_str(), 
                             DrawUtil::formatVector(getFTL()).c_str(),DrawUtil::formatVector(getFTLRot()).c_str(), 
@@ -318,7 +318,7 @@ Base::Vector3d Cube::getViewDir(std::string name)
             result = getFBL();
         } else {
             result = Base::Vector3d(0,-1,0);
-            Base::Console().Log("Cube: invalid direction name - %s\n",name.c_str());
+            printf("Cube: invalid direction name - %s\n",name.c_str());
         }
     }
     return result;
@@ -411,7 +411,7 @@ Base::Vector3d Cube::getRotationDir(std::string name)
             result = getFBLRot();
         } else {
             result = Base::Vector3d(1,0,0);
-            Base::Console().Log("Cube: invalid rotation name - %s\n",name.c_str());
+            printf("Cube: invalid rotation name - %s\n",name.c_str());
         }
     }
     return result;
@@ -529,7 +529,7 @@ std::vector<Base::Vector3d> Cube::getAllRots(void)
 void Cube::setAllDirs(std::vector<Base::Vector3d> dirs)
 {
     if (dirs.size() != 6) {
-        Base::Console().Error("Cube:setAllDirs - missing dirs: %d\n",dirs.size());
+        printf("Cube:setAllDirs - missing dirs: %d\n",dirs.size());
         return;   //throw something?
     }
 
@@ -546,7 +546,7 @@ void Cube::setAllDirs(std::vector<Base::Vector3d> dirs)
 void Cube::setAllRots(std::vector<Base::Vector3d> rots)
 {
     if (rots.size() != 6) {
-        Base::Console().Error("Cube:setAllRots - missing rots: %d\n",rots.size());
+        printf("Cube:setAllRots - missing rots: %d\n",rots.size());
         return;   //throw something?
     }
 

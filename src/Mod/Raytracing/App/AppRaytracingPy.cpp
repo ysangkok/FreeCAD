@@ -233,7 +233,7 @@ private:
         resName += PATHSEP;
         resName += FileName;
 
-        Base::Console().Warning("Using fileName = %s\nRaytracer scene file not generated "
+        printf("Using fileName = %s\nRaytracer scene file not generated "
                                 "because function is not implemented yet.\nYou can copy "
                                 "the standard scene file FreeCAD.pov to your raytracing "
                                 "directory to render the scene.\n",resName.c_str());

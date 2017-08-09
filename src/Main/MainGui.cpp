@@ -285,7 +285,7 @@ public:
     MyStackWalker() : StackWalker(), threadId(GetCurrentThreadId())
     {
         std::string name = App::Application::Config()["UserAppData"] + "crash.log";
-        //Base::Console().AttachObserver(new Base::ConsoleObserverFile(name.c_str()));
+        //printfObserver(new Base::ConsoleObserverFile(name.c_str()));
     }
     MyStackWalker(DWORD dwProcessId, HANDLE hProcess) : StackWalker(dwProcessId, hProcess) {}
     virtual void OnOutput(LPCSTR szText)

@@ -452,11 +452,11 @@ void View3DInventorViewer::init()
     dimensionRoot->addChild(new SoSwitch()); //second one for the delta dimensions.
 
     // This is a callback node that logs all action that traverse the Inventor tree.
-#if defined (FC_DEBUG) && defined(FC_LOGGING_CB)
+//#if defined (FC_DEBUG) && defined(FC_LOGGING_CB)
     SoCallback* cb = new SoCallback;
     cb->setCallback(interactionLoggerCB, this);
     pcViewProviderRoot->addChild(cb);
-#endif
+//#endif
 
     // Set our own render action which show a bounding box if
     // the SoFCSelection::BOX style is set
@@ -483,7 +483,7 @@ void View3DInventorViewer::init()
         setSeekValueAsPercentage(true);
 
     setSeekDistance(100);
-    setViewing(false);
+    setViewing(true);
 
     setBackgroundColor(QColor(25, 25, 25));
     setGradientBackground(true);
@@ -611,7 +611,8 @@ SbBool View3DInventorViewer::searchNode(SoNode* node) const
 
 SbBool View3DInventorViewer::hasViewProvider(ViewProvider* pcProvider) const
 {
-    return _ViewProviderSet.find(pcProvider) != _ViewProviderSet.end();
+    bool hasViewProv = _ViewProviderSet.find(pcProvider) != _ViewProviderSet.end();
+    return hasViewProv;
 }
 
 /// adds an ViewProvider to the view, e.g. from a feature

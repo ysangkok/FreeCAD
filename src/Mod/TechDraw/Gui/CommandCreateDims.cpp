@@ -1006,7 +1006,7 @@ int _isValidSingleEdge(Gui::Command* cmd) {
             int GeoId( TechDraw::DrawUtil::getIndexFromName(SubNames[0]) );
             TechDrawGeometry::BaseGeom* geom = objFeat->getProjEdgeByIndex(GeoId);
             if (!geom) {
-                Base::Console().Error("Logic Error: no geometry for GeoId: %d\n",GeoId);
+                printf("Logic Error: no geometry for GeoId: %d\n",GeoId);
                 return isInvalid;
             }
 
@@ -1059,7 +1059,7 @@ int _isValidEdgeToEdge(Gui::Command* cmd) {
     auto objFeat0( dynamic_cast<TechDraw::DrawViewPart *>(selection[0].getObject()) );
     // getObject() can return null pointer, or dynamic_cast can fail
     if ( !objFeat0 ) {
-        Base::Console().Error("Logic error in _isValidEdgeToEdge()\n");
+        printf("Logic error in _isValidEdgeToEdge()\n");
         return isInvalid;
     }
 
@@ -1073,7 +1073,7 @@ int _isValidEdgeToEdge(Gui::Command* cmd) {
             TechDrawGeometry::BaseGeom* geom0 = objFeat0->getProjEdgeByIndex(GeoId0);
             TechDrawGeometry::BaseGeom* geom1 = objFeat0->getProjEdgeByIndex(GeoId1);
             if ((!geom0) || (!geom1)) {
-                Base::Console().Error("Logic Error: no geometry for GeoId: %d or GeoId: %d\n",GeoId0,GeoId1);
+                printf("Logic Error: no geometry for GeoId: %d or GeoId: %d\n",GeoId0,GeoId1);
                 return isInvalid;
             }
 
@@ -1131,7 +1131,7 @@ bool _isValidVertexToEdge(Gui::Command* cmd) {
         e = objFeat0->getProjEdgeByIndex(eId);
         v = objFeat0->getProjVertexByIndex(vId);
         if ((!e) || (!v)) {
-            Base::Console().Error("Logic Error: no geometry for GeoId: %d or GeoId: %d\n",eId,vId);
+            printf("Logic Error: no geometry for GeoId: %d or GeoId: %d\n",eId,vId);
             return false;
         }
         if (e->geomType != TechDrawGeometry::GENERIC)  {      //only vertex-line for now.

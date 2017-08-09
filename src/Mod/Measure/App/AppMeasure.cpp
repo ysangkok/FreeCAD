@@ -68,7 +68,7 @@ PyMOD_INIT_FUNC(Measure)
     PyObject* mod = Measure::initModule();
     // Add Types to module
     Base::Interpreter().addType(&Measure::MeasurementPy      ::Type,mod,"Measurement");
-    Base::Console().Log("Loading Inspection module... done\n");
+    printf("Loading Inspection module... done\n");
     Measure::Measurement         ::init();
     PyMOD_Return(mod);
 }
@@ -76,5 +76,5 @@ PyMOD_INIT_FUNC(Measure)
 // debug print for sketchsolv 
 void debugprint(const std::string& s)
 {
-    Base::Console().Log("%s", s.c_str());
+    printf("%s", s.c_str());
 }

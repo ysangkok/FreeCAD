@@ -63,7 +63,7 @@ PyMOD_INIT_FUNC(Path)
     }
 
     PyObject* pathModule = Path::initModule();
-    Base::Console().Log("Loading Path module... done\n");
+    printf("Loading Path module... done\n");
 
     // Add Types to module
     Base::Interpreter().addType(&Path::CommandPy    ::Type, pathModule, "Command");

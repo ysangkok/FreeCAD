@@ -196,12 +196,12 @@ void QGIFace::loadSvgHatch(std::string fileSpec)
     QString qfs(QString::fromUtf8(fileSpec.data(),fileSpec.size()));
     QFile f(qfs);
     if (!f.open(QFile::ReadOnly | QFile::Text))  {
-        Base::Console().Error("QGIFace could not read %s\n",fileSpec.c_str());
+        printf("QGIFace could not read %s\n",fileSpec.c_str());
         return;
     }
     m_svgXML = f.readAll();
     if (!m_svg->load(&m_svgXML)) {
-        Base::Console().Error("Error - Could not load hatch into SVG renderer for %s\n", fileSpec.c_str());
+        printf("Error - Could not load hatch into SVG renderer for %s\n", fileSpec.c_str());
         return;
     }
 }
@@ -270,7 +270,7 @@ void QGIFace::lineSetToFillItems(LineSet& ls)
         }
 
         if (m_segCount > m_maxSeg) {
-            Base::Console().Warning("PAT segment count exceeded: %ld\n",m_segCount);
+            printf("PAT segment count exceeded: %ld\n",m_segCount);
             break;
         }
     }
@@ -380,7 +380,7 @@ QPainterPath QGIFace::dashedPPath(const std::vector<double> dv, const Base::Vect
          while (travel < lineLength) {
              bool stop = false;
             if (m_segCount > 10000) {
-                Base::Console().Warning("PAT segment count exceeded: %ld\n",m_segCount);
+                printf("PAT segment count exceeded: %ld\n",m_segCount);
                 break;
             }
 

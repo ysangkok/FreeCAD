@@ -176,7 +176,7 @@ void TaskProjGroup::rotateButtonClicked(void)
 
 void TaskProjGroup::on3DClicked(void)
 {
-    Base::Console().Warning("TaskProjGroup - this function is temporarily unavailable\n");
+    printf("TaskProjGroup - this function is temporarily unavailable\n");
 //TODO: how to set the DPG.Cube (or a brand new replacement Cube) to a specific orientation 
 //      {10x(viewDirection + RotationVector)}  given only the 
 //      viewDirection + upDirection(!= RotationVector) of the front view?
@@ -227,7 +227,7 @@ void TaskProjGroup::projectionTypeChanged(int index)
                                 "App.activeDocument().%s.ProjectionType = '%s'",
                                 multiView->getNameInDocument(), "Third Angle");
     } else {
-        Base::Console().Log("Error - TaskProjGroup::projectionTypeChanged - unknown projection layout: %d\n",
+        printf("Error - TaskProjGroup::projectionTypeChanged - unknown projection layout: %d\n",
                             index);
         return;
     }
@@ -260,7 +260,7 @@ void TaskProjGroup::scaleTypeChanged(int index)
         Gui::Command::doCommand(Gui::Command::Doc, "App.activeDocument().%s.Scale = %f", multiView->getNameInDocument()
                                                                                      , scale);
     } else {
-        Base::Console().Log("Error - TaskProjGroup::scaleTypeChanged - unknown scale type: %d\n",index);
+        printf("Error - TaskProjGroup::scaleTypeChanged - unknown scale type: %d\n",index);
         return;
     }
 
@@ -434,7 +434,7 @@ std::pair<Base::Vector3d,Base::Vector3d> TaskProjGroup::get3DViewDir()
         }
     }
     if (!viewer) {
-        Base::Console().Log("LOG - TaskProjGroup could not find a 3D viewer\n");
+        printf("LOG - TaskProjGroup could not find a 3D viewer\n");
         return std::make_pair( viewDir, viewUp);
     }
 
@@ -495,7 +495,7 @@ bool TaskProjGroup::reject()
             Gui::Application::Instance->activeDocument()->undo(1);
             multiView->rebuildViewList();
         } else {
-            Base::Console().Log("TaskProjGroup: Edit mode - NO command is active\n");
+            printf("TaskProjGroup: Edit mode - NO command is active\n");
         }
 
         Gui::Command::updateActive();

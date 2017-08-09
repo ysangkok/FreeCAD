@@ -927,7 +927,7 @@ void DlgEvaluateMeshImp::on_analyzeSelfIntersectionButton_clicked()
             eval.GetIntersections(intersection);
         }
         catch (const Base::AbortException&) {
-            Base::Console().Message("The self-intersection analyse was aborted by the user\n");
+            printf("The self-intersection analyse was aborted by the user\n");
         }
 
         if (intersection.empty()) {

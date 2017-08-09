@@ -111,7 +111,7 @@ void View::onSelectionChanged(const SelectionChanges& msg)
   //just ignore for now.
 //   std::ostringstream stream;
 //   stream << std::endl << "couldn't find document of name: " << std::string(msg.pDocName) << std::endl << std::endl;
-//   Base::Console().Warning(stream.str().c_str());
+//   printf(stream.str().c_str());
 //   assert(0); //no document of name.
 }
 

@@ -184,7 +184,7 @@ App::DocumentObjectExecReturn *DrawViewPart::execute(void)
      gp_Ax2 viewAxis = getViewAxis(shapeCentroid,Direction.getValue());
      geometryObject =  buildGeometryObject(mirroredShape,viewAxis);
      
-     //Base::Console().Message("TRACE - DVP::execute - u: %s v: %s w: %s\n",
+     //printf("TRACE - DVP::execute - u: %s v: %s w: %s\n",
      //         DrawUtil::formatVector(getUDir()).c_str(), DrawUtil::formatVector(getVDir()).c_str(), DrawUtil::formatVector(getWDir()).c_str());
 
 #if MOD_TECHDRAW_HANDLE_FACES
@@ -194,13 +194,13 @@ App::DocumentObjectExecReturn *DrawViewPart::execute(void)
         }
         catch (Standard_Failure) {
             Handle(Standard_Failure) e4 = Standard_Failure::Caught();
-            Base::Console().Log("LOG - DVP::execute - extractFaces failed for %s - %s **\n",getNameInDocument(),e4->GetMessageString());
+            printf("LOG - DVP::execute - extractFaces failed for %s - %s **\n",getNameInDocument(),e4->GetMessageString());
             return new App::DocumentObjectExecReturn(e4->GetMessageString());
         }
     }
 #endif //#if MOD_TECHDRAW_HANDLE_FACES
 
-//   Base::Console().Message("TRACE _ DVP::exec - %s/%s u: %s v: %s w: %s\n",getNameInDocument(),Label.getValue(),
+//   printf("TRACE _ DVP::exec - %s/%s u: %s v: %s w: %s\n",getNameInDocument(),Label.getValue(),
 //                           DrawUtil::formatVector(getUDir()).c_str(), DrawUtil::formatVector(getVDir()).c_str(),DrawUtil::formatVector(getWDir()).c_str());
 
     return App::DocumentObject::StdReturn;
@@ -298,7 +298,7 @@ void DrawViewPart::extractFaces()
         if (!DrawUtil::isZeroEdge(e)) {
             nonZero.push_back(e);
         } else {
-            Base::Console().Message("INFO - DVP::extractFaces for %s found ZeroEdge!\n",getNameInDocument());
+            printf("INFO - DVP::extractFaces for %s found ZeroEdge!\n",getNameInDocument());
         }
     }
     faceEdges = nonZero;
@@ -316,11 +316,11 @@ void DrawViewPart::extractFaces()
         BRepBndLib::Add(*itOuter, sOuter);
         sOuter.SetGap(0.1);
         if (sOuter.IsVoid()) {
-            Base::Console().Message("DVP::Extract Faces - outer Bnd_Box is void for %s\n",getNameInDocument());
+            printf("DVP::Extract Faces - outer Bnd_Box is void for %s\n",getNameInDocument());
             continue;
         }
         if (DrawUtil::isZeroEdge(*itOuter)) {
-            Base::Console().Message("DVP::extractFaces - outerEdge: %d is ZeroEdge\n",iOuter);   //this is not finding ZeroEdges
+            printf("DVP::extractFaces - outerEdge: %d is ZeroEdge\n",iOuter);   //this is not finding ZeroEdges
             continue;  //skip zero length edges. shouldn't happen ;)
         }
         int iInner = 0;
@@ -337,7 +337,7 @@ void DrawViewPart::extractFaces()
             BRepBndLib::Add(*itInner, sInner);
             sInner.SetGap(0.1);
             if (sInner.IsVoid()) {
-                Base::Console().Log("INFO - DVP::Extract Faces - inner Bnd_Box is void for %s\n",getNameInDocument());
+                printf("INFO - DVP::Extract Faces - inner Bnd_Box is void for %s\n",getNameInDocument());
                 continue;
             }
             if (sOuter.IsOut(sInner)) {      //bboxes of edges don't intersect, don't bother
@@ -370,7 +370,7 @@ void DrawViewPart::extractFaces()
     std::vector<TopoDS_Edge> newEdges = DrawProjectSplit::splitEdges(faceEdges,sorted);
 
     if (newEdges.empty()) {
-        Base::Console().Log("LOG - DVP::extractFaces - no newEdges\n");
+        printf("LOG - DVP::extractFaces - no newEdges\n");
         return;
     }
 
@@ -381,7 +381,7 @@ void DrawViewPart::extractFaces()
     ew.loadEdges(newEdges);
     bool success = ew.perform();
     if (!success) {
-        Base::Console().Warning("DVP::extractFaces - input is not planar graph. No face detection\n");
+        printf("DVP::extractFaces - input is not planar graph. No face detection\n");
         return;
     }
     std::vector<TopoDS_Wire> fw = ew.getResultNoDups();
@@ -459,11 +459,11 @@ TechDrawGeometry::BaseGeom* DrawViewPart::getProjEdgeByIndex(int idx) const
 {
     const std::vector<TechDrawGeometry::BaseGeom *> &geoms = getEdgeGeometry();
     if (geoms.empty()) {
-        Base::Console().Log("INFO - getProjEdgeByIndex(%d) - no Edge Geometry. Probably restoring?\n",idx);
+        printf("INFO - getProjEdgeByIndex(%d) - no Edge Geometry. Probably restoring?\n",idx);
         return NULL;
     }
     if ((unsigned)idx >= geoms.size()) {
-        Base::Console().Log("INFO - getProjEdgeByIndex(%d) - invalid index\n",idx);
+        printf("INFO - getProjEdgeByIndex(%d) - invalid index\n",idx);
         return NULL;
     }
     return geoms.at(idx);
@@ -474,11 +474,11 @@ TechDrawGeometry::Vertex* DrawViewPart::getProjVertexByIndex(int idx) const
 {
     const std::vector<TechDrawGeometry::Vertex *> &geoms = getVertexGeometry();
     if (geoms.empty()) {
-        Base::Console().Log("INFO - getProjVertexByIndex(%d) - no Vertex Geometry. Probably restoring?\n",idx);
+        printf("INFO - getProjVertexByIndex(%d) - no Vertex Geometry. Probably restoring?\n",idx);
         return NULL;
     }
     if ((unsigned)idx >= geoms.size()) {
-        Base::Console().Log("INFO - getProjVertexByIndex(%d) - invalid index\n",idx);
+        printf("INFO - getProjVertexByIndex(%d) - invalid index\n",idx);
         return NULL;
     }
     return geoms.at(idx);
@@ -505,7 +505,7 @@ std::vector<TechDrawGeometry::BaseGeom*> DrawViewPart::getProjFaceByIndex(int id
 
 std::vector<TopoDS_Wire> DrawViewPart::getWireForFace(int idx) const
 {
-//    Base::Console().Message("TRACE - DVP::getWireForFace(%d)\n",idx);
+//    printf("TRACE - DVP::getWireForFace(%d)\n",idx);
     std::vector<TopoDS_Wire> result;
     std::vector<TopoDS_Edge> edges;
     const std::vector<TechDrawGeometry::Face *>& faces = getFaceGeometry();
@@ -523,7 +523,7 @@ std::vector<TopoDS_Wire> DrawViewPart::getWireForFace(int idx) const
         result.push_back(occwire);
     }
  
-//    Base::Console().Message("TRACE - DVP::getWireForFace(%d) returns %d wires\n",idx,result.size());
+//    printf("TRACE - DVP::getWireForFace(%d) returns %d wires\n",idx,result.size());
     return result;
 }
 
@@ -598,7 +598,7 @@ gp_Ax2 DrawViewPart::getViewAxis(const Base::Vector3d& pt,
 
 void DrawViewPart::saveParamSpace(const Base::Vector3d& direction, const Base::Vector3d& xAxis)
 {
-    //Base::Console().Message("TRACE - DVP::saveParamSpace()\n");
+    //printf("TRACE - DVP::saveParamSpace()\n");
     (void)xAxis;
     Base::Vector3d origin(0.0,0.0,0.0);
     gp_Ax2 viewAxis = getViewAxis(origin,direction);
@@ -658,7 +658,7 @@ void DrawViewPart::getRunControl()
         .GetGroup("BaseApp")->GetGroup("Preferences")->GetGroup("Mod/TechDraw/General");
     m_sectionEdges = hGrp->GetBool("ShowSectionEdges", 0l);
     m_handleFaces = hGrp->GetBool("HandleFaces", 1l);
-    //Base::Console().Message("TRACE - DVP::getRunControl - handleFaces: %d\n",m_handleFaces);
+    //printf("TRACE - DVP::getRunControl - handleFaces: %d\n",m_handleFaces);
 }
 
 bool DrawViewPart::handleFaces(void)

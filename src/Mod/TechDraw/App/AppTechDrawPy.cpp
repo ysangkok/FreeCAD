@@ -107,7 +107,7 @@ private:
             str += " ";
             if (msg) {str += msg;}
             else     {str += "No OCCT Exception Message";}
-            Base::Console().Error("%s\n", str.c_str());
+            printf("%s\n", str.c_str());
             throw Py::Exception(Part::PartExceptionOCCError, str);
         }
         catch (const Base::Exception &e) {
@@ -123,7 +123,7 @@ private:
             str += "C++ exception thrown (";
             str += e.what();
             str += ")";
-            Base::Console().Error("%s\n", str.c_str());
+            printf("%s\n", str.c_str());
             throw Py::RuntimeError(str);
         }
     }
@@ -154,7 +154,7 @@ private:
         }
 
         if (edgeList.empty()) {
-            Base::Console().Log("LOG - edgeWalker: input is empty\n");
+            printf("LOG - edgeWalker: input is empty\n");
             return Py::None();
         }
 
@@ -177,7 +177,7 @@ private:
                     PyList_Append(result,new TopoShapeWirePy(new TopoShape(w)));
                 }
             } else {
-                Base::Console().Warning("edgeWalker: input is not planar graph. Wire detection not done\n");
+                printf("edgeWalker: input is not planar graph. Wire detection not done\n");
             }
         }
         catch (Base::Exception &e) {
@@ -212,7 +212,7 @@ private:
         }
 
         if (edgeList.empty()) {
-            Base::Console().Log("LOG - findOuterWire: input is empty\n");
+            printf("LOG - findOuterWire: input is empty\n");
             return Py::None();
         }
 
@@ -227,7 +227,7 @@ private:
                 std::vector<TopoDS_Wire> sortedWires = ew.sortStrip(rw,true);
                 outerWire = new TopoShapeWirePy(new TopoShape(*sortedWires.begin()));
             } else {
-                Base::Console().Warning("findOuterWire: input is not planar graph. Wire detection not done\n");
+                printf("findOuterWire: input is not planar graph. Wire detection not done\n");
             }
         }
         catch (Base::Exception &e) {
@@ -260,7 +260,7 @@ private:
 
         TopoShapePy* pShape = static_cast<TopoShapePy*>(pcObjShape);
         if (!pShape) {
-            Base::Console().Message("TRACE - AATDP::findShapeOutline - input shape is null\n");
+            printf("TRACE - AATDP::findShapeOutline - input shape is null\n");
             return Py::None();
         }
 
@@ -276,7 +276,7 @@ private:
         }
 
         if (edgeList.empty()) {
-            Base::Console().Log("LOG - ATDP::findShapeOutline: input is empty\n");
+            printf("LOG - ATDP::findShapeOutline: input is empty\n");
             return Py::None();
         }
 
@@ -291,7 +291,7 @@ private:
                 std::vector<TopoDS_Wire> sortedWires = ew.sortStrip(rw,true);
                 outerWire = new TopoShapeWirePy(new TopoShape(*sortedWires.begin()));
             } else {
-                Base::Console().Warning("ATDP::findShapeOutline: input is not planar graph. Wire detection not done\n");
+                printf("ATDP::findShapeOutline: input is not planar graph. Wire detection not done\n");
             }
         }
         catch (Base::Exception &e) {

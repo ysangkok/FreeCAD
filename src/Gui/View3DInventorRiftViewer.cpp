@@ -85,7 +85,7 @@ View3DInventorRiftViewer::~View3DInventorRiftViewer()
     hGrp->SetInt("RenderWindowSizeW",size().width());
     hGrp->SetInt("RenderWindowSizeH",size().height());
 
-    Base::Console().Log("pos: %d %d  size: %d %d \n",pos().x(),pos().y(),
+    printf("pos: %d %d  size: %d %d \n",pos().x(),pos().y(),
                                                         size().width(),size().height());
 }
 

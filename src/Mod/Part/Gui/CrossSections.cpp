@@ -530,4 +530,4 @@ void TaskCrossSections::clicked(int id)
     }
 }
 
-#include "moc_CrossSections.cpp"
+#include "__/Mod/Part/Gui/moc_CrossSections.cpp"

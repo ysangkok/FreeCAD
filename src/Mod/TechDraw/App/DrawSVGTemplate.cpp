@@ -141,7 +141,7 @@ App::DocumentObjectExecReturn * DrawSVGTemplate::execute(void)
         fi.setFile(App::Application::getResourceDir() + "Mod/Drawing/Templates/" + fi.fileName());
         // try the redirect
         if (!fi.isReadable()) {
-            Base::Console().Log("DrawPage::execute() not able to open %s!\n",Template.getValue());
+            printf("DrawPage::execute() not able to open %s!\n",Template.getValue());
             std::string error = std::string("Cannot open file ") + Template.getValue();
             return new App::DocumentObjectExecReturn(error);
         }

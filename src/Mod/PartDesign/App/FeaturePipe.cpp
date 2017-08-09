@@ -378,9 +378,9 @@ void Pipe::getContiniusEdges(Part::TopoShape /*TopShape*/, std::vector< std::str
     TopExp::MapShapesAndAncestors(TopShape.getShape(), TopAbs_EDGE, TopAbs_EDGE, mapEdgeEdge);
     TopExp::MapShapes(TopShape.getShape(), TopAbs_EDGE, mapOfEdges);
 
-    Base::Console().Message("Initial edges:\n");
+    printf("Initial edges:\n");
     for(int i=0; i<SubNames.size(); ++i)
-        Base::Console().Message("Subname: %s\n", SubNames[i].c_str());
+        printf("Subname: %s\n", SubNames[i].c_str());
     
     unsigned int i = 0;
     while(i < SubNames.size())
@@ -415,9 +415,9 @@ void Pipe::getContiniusEdges(Part::TopoShape /*TopShape*/, std::vector< std::str
         }
     }   
     
-    Base::Console().Message("Final edges:\n");
+    printf("Final edges:\n");
     for(int i=0; i<SubNames.size(); ++i)
-        Base::Console().Message("Subname: %s\n", SubNames[i].c_str());
+        printf("Subname: %s\n", SubNames[i].c_str());
     */
 }
 

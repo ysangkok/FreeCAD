@@ -132,7 +132,7 @@ void PythonThread::run()
 #endif
     }
     catch (const Base::PyException& e) {
-        Base::Console().Error(e.what());
+        printf(e.what());
     }
 }
 
@@ -180,26 +180,26 @@ short SandboxObject::mustExecute(void) const
 
 App::DocumentObjectExecReturn *SandboxObject::execute(void)
 {
-    Base::Console().Message("SandboxObject::execute()\n");
+    printf("SandboxObject::execute()\n");
     return 0;
 }
 
 void SandboxObject::onChanged(const App::Property* prop)
 {
     if (prop == &Integer)
-        Base::Console().Message("SandboxObject::onChanged(%d)\n", Integer.getValue());
+        printf("SandboxObject::onChanged(%d)\n", Integer.getValue());
     App::DocumentObject::onChanged(prop);
 }
 
 void SandboxObject::setIntValue(int v)
 {
-    Base::Console().Message("SandboxObject::setIntValue(%d)\n", v);
+    printf("SandboxObject::setIntValue(%d)\n", v);
     Integer.setValue(v);
 }
 
 void SandboxObject::resetValue()
 {
-    Base::Console().Message("SandboxObject::resetValue()\n");
+    printf("SandboxObject::resetValue()\n");
     Integer.setValue(4711);
 }
 
@@ -214,7 +214,7 @@ DocumentTestThread::~DocumentTestThread()
 
 void DocumentTestThread::run()
 {
-    Base::Console().Message("DocumentTestThread::run()\n");
+    printf("DocumentTestThread::run()\n");
     App::Document* doc = App::GetApplication().getActiveDocument();
     DocumentProtector dp(doc);
     SandboxObject* obj = static_cast<SandboxObject*>(dp.addObject("Sandbox::SandboxObject"));

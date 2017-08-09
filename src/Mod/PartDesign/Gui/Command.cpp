@@ -479,7 +479,7 @@ void CmdPartDesignNewSketch::activated(int iMsg)
         if (shouldMakeBody) {
             pcActiveBody = PartDesignGui::makeBody(doc);
             if ( !pcActiveBody ) {
-                Base::Console().Error("Failed to create a Body object");
+                printf("Failed to create a Body object");
                 return;
             }
 
@@ -514,7 +514,7 @@ void CmdPartDesignNewSketch::activated(int iMsg)
                 validPlaneCount++;
             }
         } catch (const Base::Exception &ex) {
-            Base::Console().Error ("%s\n", ex.what() );
+            printf ("%s\n", ex.what() );
         }
 
         auto datumPlanes( getDocument()->getObjectsOfType(PartDesign::Plane::getClassTypeId()) );
@@ -719,13 +719,13 @@ unsigned validateSketches(std::vector<App::DocumentObject*>& sketches,
             continue;
         }
 
-        //Base::Console().Error("Checking sketch %s\n", (*s)->getNameInDocument());
+        //printf("Checking sketch %s\n", (*s)->getNameInDocument());
         // Check whether this sketch is already being used by another feature
         // Body features don't count...
         std::vector<App::DocumentObject*> inList = (*s)->getInList();
         std::vector<App::DocumentObject*>::iterator o = inList.begin();
         while (o != inList.end()) {
-            //Base::Console().Error("Inlist: %s\n", (*o)->getNameInDocument());
+            //printf("Inlist: %s\n", (*o)->getNameInDocument());
             if ((*o)->getTypeId().isDerivedFrom(PartDesign::Body::getClassTypeId()))
                 o = inList.erase(o); //ignore bodies
             else if (!(  (*o)->getTypeId().isDerivedFrom(PartDesign::Feature::getClassTypeId())  ))

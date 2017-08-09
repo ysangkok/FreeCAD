@@ -70,7 +70,7 @@ DrawTemplate::DrawTemplate(void)
 
 DrawTemplate::~DrawTemplate()
 {
-  Base::Console().Log("template destroyed");
+  printf("template destroyed");
 }
 
 

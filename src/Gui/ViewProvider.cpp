@@ -359,7 +359,8 @@ void ViewProvider::show(void)
 
 bool ViewProvider::isShow(void) const
 {
-    return pcModeSwitch->whichChild.getValue() != -1;
+    bool isShow = pcModeSwitch->whichChild.getValue() != -1;
+    return isShow;
 }
 
 void ViewProvider::setVisible(bool s)

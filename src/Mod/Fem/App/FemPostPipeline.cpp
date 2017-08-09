@@ -247,7 +247,7 @@ bool FemPostPipeline::holdsPostObject(FemPostObject* obj) {
 
 void FemPostPipeline::load(FemResultObject* res) {
     if(!res->Mesh.getValue() || !res->Mesh.getValue()->isDerivedFrom(Fem::FemMeshObject::getClassTypeId())) {
-        Base::Console().Warning("Mesh of result object is empty or not derived from Fem::FemMeshObject\n");
+        printf("Mesh of result object is empty or not derived from Fem::FemMeshObject\n");
         return;
     }
 

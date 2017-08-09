@@ -58,7 +58,7 @@ void AssemblyExport initAssembly()
         return;
     }
     Py_InitModule3("Assembly", Assembly_methods, module_Assembly_doc);   /* mod name, table ptr */
-    Base::Console().Log("Loading Assembly module... done\n");
+    printf("Loading Assembly module... done\n");
 
 
 	//dWorldID id = dWorldCreate();

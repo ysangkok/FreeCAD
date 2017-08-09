@@ -47,13 +47,13 @@ void FeatureImportStep::InitLabel(const TDF_Label &rcLabel)
 /*
 bool FeaturePartImportStep::MustExecute(void)
 {
-	Base::Console().Log("PartBoxFeature::MustExecute()\n");
+	printf("PartBoxFeature::MustExecute()\n");
 	return false;
 }
 */
 Standard_Integer FeatureImportStep::Execute(void)
 {
-	Base::Console().Log("FeaturePartImportStep::Execute()\n");
+	printf("FeaturePartImportStep::Execute()\n");
 
 /*  cout << GetFloatProperty("x") << endl;
   cout << GetFloatProperty("y") << endl;
@@ -119,7 +119,7 @@ Standard_Integer FeatureImportStep::Execute(void)
   }
   catch(...){
     Base::Sequencer().halt();
-    Base::Console().Error("FeaturePartImportStep::Execute() failed!");
+    printf("FeaturePartImportStep::Execute() failed!");
     return 1;
   }
 
@@ -129,7 +129,7 @@ Standard_Integer FeatureImportStep::Execute(void)
 /*
 void FeatureImportStep::Validate(void)
 {
-	Base::Console().Log("FeaturePartImportStep::Validate()\n");
+	printf("FeaturePartImportStep::Validate()\n");
  
   // We validate the object label ( Label() ), all the arguments and the results of the object:
   log.SetValid(Label(), Standard_True);

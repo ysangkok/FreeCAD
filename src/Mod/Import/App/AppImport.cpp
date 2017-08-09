@@ -54,6 +54,6 @@ PyMOD_INIT_FUNC(Import)
         // init Type system
     //Import::StepShape       ::init();
 
-    Base::Console().Log("Loading Import module... done\n");
+    printf("Loading Import module... done\n");
     PyMOD_Return(importModule);
 }

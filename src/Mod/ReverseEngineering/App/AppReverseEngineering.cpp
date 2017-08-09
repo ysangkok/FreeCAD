@@ -758,6 +758,6 @@ PyMOD_INIT_FUNC(ReverseEngineering)
     }
 
     PyObject* mod = Reen::initModule();
-    Base::Console().Log("Loading ReverseEngineering module... done\n");
+    printf("Loading ReverseEngineering module... done\n");
     PyMOD_Return(mod);
 }

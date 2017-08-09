@@ -263,7 +263,7 @@ int DrawPage::addView(App::DocumentObject *docObj)
 
     //check if View fits on Page
     if ( !view->checkFit(this) ) {
-        Base::Console().Warning("%s is larger than page. Will be scaled.\n",view->getNameInDocument());
+        printf("%s is larger than page. Will be scaled.\n",view->getNameInDocument());
         view->ScaleType.setValue("Automatic");
     }
 
@@ -375,12 +375,12 @@ void DrawPage::Restore(Base::XMLReader &reader)
                                 }
                             } else {
                                 // has Scale prop that isn't Float! 
-                                Base::Console().Log("DrawPage::Restore - old Document Scale is Not Float!\n");
+                                printf("DrawPage::Restore - old Document Scale is Not Float!\n");
                                 // no idea
                             }
                         }
                     } else {
-                        Base::Console().Log("DrawPage::Restore - old Document has unknown Property\n");
+                        printf("DrawPage::Restore - old Document has unknown Property\n");
                     }
                 }
             }
@@ -389,17 +389,17 @@ void DrawPage::Restore(Base::XMLReader &reader)
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("PropertyContainer::Restore: Unknown C++ exception thrown");
+            printf("PropertyContainer::Restore: Unknown C++ exception thrown");
         }
 #endif
 

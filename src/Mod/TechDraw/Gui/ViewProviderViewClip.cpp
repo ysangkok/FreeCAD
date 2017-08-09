@@ -59,7 +59,7 @@ ViewProviderViewClip::~ViewProviderViewClip()
 
 void ViewProviderViewClip::updateData(const App::Property* prop)
 {
-    //Base::Console().Log("ViewProviderViewClip::updateData - Update View: %s\n",prop->getName());
+    //printf("ViewProviderViewClip::updateData - Update View: %s\n",prop->getName());
     if (prop == &(getViewObject()->Height)      ||
         prop == &(getViewObject()->Width)       ||
         prop == &(getViewObject()->ShowFrame)   ||

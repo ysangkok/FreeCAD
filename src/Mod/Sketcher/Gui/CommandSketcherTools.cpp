@@ -787,7 +787,7 @@ void CmdSketcherRestoreInternalAlignmentGeometry::activated(int iMsg)
                     }
                 }
                 catch (const Base::Exception& e) {
-                    Base::Console().Error("%s\n", e.what());
+                    printf("%s\n", e.what());
                     Gui::Command::abortCommand();
 
                     ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -998,7 +998,7 @@ void CmdSketcherSymmetry::activated(int iMsg)
         Gui::Command::commitCommand();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error("%s\n", e.what());
+        printf("%s\n", e.what());
         Gui::Command::abortCommand();
     }
 
@@ -1138,7 +1138,7 @@ static const char *cursor_createcopy[]={
                     Gui::Command::commitCommand();
                 }
                 catch (const Base::Exception& e) {
-                    Base::Console().Error("%s\n", e.what());
+                    printf("%s\n", e.what());
                     Gui::Command::abortCommand();
                 }
                 
@@ -1586,7 +1586,7 @@ static const char *cursor_createrectangulararray[]={
                     Gui::Command::commitCommand();
                 }
                 catch (const Base::Exception& e) {
-                    Base::Console().Error("%s\n", e.what());
+                    printf("%s\n", e.what());
                     Gui::Command::abortCommand();
                 }
                 

@@ -73,7 +73,7 @@ App::DocumentObjectExecReturn *RayProject::execute(void)
 
     Base::FileInfo fi(Template.getValue());
     if (!fi.isReadable()) {
-        Base::Console().Log("RayProject::execute() not able to open %s!\n",Template.getValue());
+        printf("RayProject::execute() not able to open %s!\n",Template.getValue());
         std::string error = std::string("Cannot open file ") + Template.getValue();
         return new App::DocumentObjectExecReturn(error);
     }

@@ -250,7 +250,7 @@ double QGIView::getYInClip(double y)
         }
     }
 
-    Base::Console().Log( "Logic Error - getYInClip called for child "
+    printf( "Logic Error - getYInClip called for child "
                          "(%s) not in Clip\n", getViewName() );
     return 0;
 }
@@ -517,6 +517,6 @@ double QGIView::getPrefFontSize()
 }
 
 void QGIView::dumpRect(char* text, QRectF r) {
-    Base::Console().Message("DUMP - %s - rect: (%.3f,%.3f) x (%.3f,%.3f)\n",text,
+    printf("DUMP - %s - rect: (%.3f,%.3f) x (%.3f,%.3f)\n",text,
                             r.left(),r.top(),r.right(),r.bottom());
 }

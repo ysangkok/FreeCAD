@@ -410,7 +410,7 @@ void Document::slotNewObject(const App::DocumentObject& Obj)
 {
     ViewProviderDocumentObject* pcProvider = static_cast<ViewProviderDocumentObject*>(getViewProvider(&Obj));
     if (!pcProvider) {
-        //Base::Console().Log("Document::slotNewObject() called\n");
+        //printf("Document::slotNewObject() called\n");
         std::string cName = Obj.getViewProviderName();
         if (cName.empty()) {
             // handle document object with no view provider specified
@@ -471,7 +471,7 @@ void Document::slotDeletedObject(const App::DocumentObject& Obj)
 {
     std::list<Gui::BaseView*>::iterator vIt;
     setModified(true);
-    //Base::Console().Log("Document::slotDeleteObject() called\n");
+    //printf("Document::slotDeleteObject() called\n");
   
     // cycling to all views of the document
     ViewProvider* viewProvider = getViewProvider(&Obj);
@@ -497,7 +497,7 @@ void Document::slotDeletedObject(const App::DocumentObject& Obj)
 
 void Document::slotChangedObject(const App::DocumentObject& Obj, const App::Property& Prop)
 {
-    //Base::Console().Log("Document::slotChangedObject() called\n");
+    //printf("Document::slotChangedObject() called\n");
     ViewProvider* viewProvider = getViewProvider(&Obj);
     if (viewProvider) {
         try {

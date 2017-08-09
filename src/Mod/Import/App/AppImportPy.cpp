@@ -102,7 +102,7 @@ private:
         std::string name8bit = Part::encodeFilename(Utf8Name);
 
         try {
-            //Base::Console().Log("Insert in Part with %s",Name);
+            //printf("Insert in Part with %s",Name);
             Base::FileInfo file(Utf8Name.c_str());
 
             App::Document *pcDoc = 0;
@@ -136,8 +136,8 @@ private:
                 }
                 catch (OSD_Exception) {
                     Handle(Standard_Failure) e = Standard_Failure::Caught();
-                    Base::Console().Error("%s\n", e->GetMessageString());
-                    Base::Console().Message("Try to load STEP file without colors...\n");
+                    printf("%s\n", e->GetMessageString());
+                    printf("Try to load STEP file without colors...\n");
 
                     Part::ImportStepParts(pcDoc,Utf8Name.c_str());
                     pcDoc->recompute();
@@ -172,8 +172,8 @@ private:
                 }
                 catch (OSD_Exception) {
                     Handle(Standard_Failure) e = Standard_Failure::Caught();
-                    Base::Console().Error("%s\n", e->GetMessageString());
-                    Base::Console().Message("Try to load IGES file without colors...\n");
+                    printf("%s\n", e->GetMessageString());
+                    printf("Try to load IGES file without colors...\n");
 
                     Part::ImportIgesParts(pcDoc,Utf8Name.c_str());
                     pcDoc->recompute();
@@ -236,7 +236,7 @@ private:
                         ocaf.saveShape(part, colors, hierarchical_label, hierarchical_loc);
                     }
                     else {
-                        Base::Console().Message("'%s' is not a shape, export will be ignored.\n", obj->Label.getValue());
+                        printf("'%s' is not a shape, export will be ignored.\n", obj->Label.getValue());
                     }
                 }
                 else if (PyTuple_Check(item) && PyTuple_Size(item) == 2) {
@@ -254,7 +254,7 @@ private:
                             ocaf.saveShape(part, colors.getValues(), hierarchical_label, hierarchical_loc);
                         }
                         else {
-                            Base::Console().Message("'%s' is not a shape, export will be ignored.\n", obj->Label.getValue());
+                            printf("'%s' is not a shape, export will be ignored.\n", obj->Label.getValue());
                         }
                     }
                 }
@@ -327,7 +327,7 @@ static PyObject * importAssembly(PyObject *self, PyObject *args)
     std::string name8bit = Part::encodeFilename(Utf8Name);
 
     PY_TRY {
-        //Base::Console().Log("Insert in Part with %s",Name);
+        //printf("Insert in Part with %s",Name);
         Base::FileInfo file(name8bit);
 
         App::DocumentObject* target = nullptr;
@@ -368,8 +368,8 @@ static PyObject * importAssembly(PyObject *self, PyObject *args)
             }
             catch (OSD_Exception) {
                 Handle(Standard_Failure) e = Standard_Failure::Caught();
-                Base::Console().Error("%s\n", e->GetMessageString());
-                Base::Console().Message("Try to load STEP file without colors...\n");
+                printf("%s\n", e->GetMessageString());
+                printf("Try to load STEP file without colors...\n");
 
                 Part::ImportStepParts(pcDoc,Name);
                 pcDoc->recompute();
@@ -397,8 +397,8 @@ static PyObject * importAssembly(PyObject *self, PyObject *args)
             }
             catch (OSD_Exception) {
                 Handle(Standard_Failure) e = Standard_Failure::Caught();
-                Base::Console().Error("%s\n", e->GetMessageString());
-                Base::Console().Message("Try to load IGES file without colors...\n");
+                printf("%s\n", e->GetMessageString());
+                printf("Try to load IGES file without colors...\n");
 
                 Part::ImportIgesParts(pcDoc,Name);
                 pcDoc->recompute();

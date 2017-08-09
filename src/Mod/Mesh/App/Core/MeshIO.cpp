@@ -163,7 +163,7 @@ bool MeshInput::LoadAny(const char* FileName)
         else if (fi.hasExtension("iv")) {
             ok = LoadInventor( str );
             if (ok && _rclMesh.CountFacets() == 0)
-                Base::Console().Warning("No usable mesh found in file '%s'", FileName);
+                printf("No usable mesh found in file '%s'", FileName);
         }
         else if (fi.hasExtension("nas") || fi.hasExtension("bdf")) {
             ok = LoadNastran( str );
@@ -1894,7 +1894,7 @@ bool MeshOutput::SaveOBJ (std::ostream &out) const
     if (_material) {
         if (_material->binding == MeshIO::PER_FACE) {
             if (_material->diffuseColor.size() != rFacets.size()) {
-                Base::Console().Warning("Cannot export color information because there is a different number of faces and colors");
+                printf("Cannot export color information because there is a different number of faces and colors");
             }
             else {
                 exportColorPerFace = true;
@@ -1902,7 +1902,7 @@ bool MeshOutput::SaveOBJ (std::ostream &out) const
         }
         else if (_material->binding == MeshIO::PER_VERTEX) {
             if (_material->diffuseColor.size() != rPoints.size()) {
-                Base::Console().Warning("Cannot export color information because there is a different number of points and colors");
+                printf("Cannot export color information because there is a different number of points and colors");
             }
             else {
                 exportColorPerVertex = true;
@@ -1910,7 +1910,7 @@ bool MeshOutput::SaveOBJ (std::ostream &out) const
         }
         else if (_material->binding == MeshIO::OVERALL) {
             if (_material->diffuseColor.empty()) {
-                Base::Console().Warning("Cannot export color information because there is no color defined");
+                printf("Cannot export color information because there is no color defined");
             }
             else {
                 exportColorPerVertex = true;
@@ -2109,11 +2109,11 @@ bool MeshOutput::SaveOFF (std::ostream &out) const
     bool exportColor = false;
     if (_material) {
         if (_material->binding == MeshIO::PER_FACE) {
-            Base::Console().Warning("Cannot export color information because it's defined per face");
+            printf("Cannot export color information because it's defined per face");
         }
         else if (_material->binding == MeshIO::PER_VERTEX) {
             if (_material->diffuseColor.size() != rPoints.size()) {
-                Base::Console().Warning("Cannot export color information because there is a different number of points and colors");
+                printf("Cannot export color information because there is a different number of points and colors");
             }
             else {
                 exportColor = true;
@@ -2121,7 +2121,7 @@ bool MeshOutput::SaveOFF (std::ostream &out) const
         }
         else if (_material->binding == MeshIO::OVERALL) {
             if (_material->diffuseColor.empty()) {
-                Base::Console().Warning("Cannot export color information because there is no color defined");
+                printf("Cannot export color information because there is no color defined");
             }
             else {
                 exportColor = true;

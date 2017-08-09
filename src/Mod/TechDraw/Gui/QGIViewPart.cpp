@@ -241,7 +241,7 @@ QPainterPath QGIViewPart::geomToPainterPath(TechDrawGeometry::BaseGeom *baseGeom
                            Rez::guiX(geom->pnts[2].x), Rez::guiX(geom->pnts[2].y),
                            Rez::guiX(geom->pnts[3].x), Rez::guiX(geom->pnts[3].y));
           } else {                                                 //can only handle lines,quads,cubes
-              Base::Console().Error("Bad pole count (%d) for BezierSegment\n",geom->poles);
+              printf("Bad pole count (%d) for BezierSegment\n",geom->poles);
               auto itBez = geom->pnts.begin() + 1;
               for (; itBez != geom->pnts.end();itBez++)  {
                 path.lineTo(Rez::guiX((*itBez).x), Rez::guiX((*itBez).y));         //show something for debugging
@@ -272,7 +272,7 @@ QPainterPath QGIViewPart::geomToPainterPath(TechDrawGeometry::BaseGeom *baseGeom
                                Rez::guiX(it->pnts[2].x), Rez::guiX(it->pnts[2].y),
                                Rez::guiX(it->pnts[3].x), Rez::guiX(it->pnts[3].y));
               } else {                                                 //can only handle lines,quads,cubes
-                  Base::Console().Error("Bad pole count (%d) for BezierSegment of BSpline geometry\n",it->poles);
+                  printf("Bad pole count (%d) for BezierSegment of BSpline geometry\n",it->poles);
                   path.lineTo(it->pnts[1].x, it->pnts[1].y);         //show something for debugging
               }
           }
@@ -287,7 +287,7 @@ QPainterPath QGIViewPart::geomToPainterPath(TechDrawGeometry::BaseGeom *baseGeom
           }
         } break;
         default:
-          Base::Console().Error("Error - geomToPainterPath - UNKNOWN geomType: %d\n",baseGeom->geomType);
+          printf("Error - geomToPainterPath - UNKNOWN geomType: %d\n",baseGeom->geomType);
           break;
       }
 
@@ -932,7 +932,7 @@ TechDraw::DrawGeomHatch* QGIViewPart::faceIsGeomHatched(int i,std::vector<TechDr
 void QGIViewPart::dumpPath(const char* text,QPainterPath path)
 {
         QPainterPath::Element elem;
-        Base::Console().Message(">>>%s has %d elements\n",text,path.elementCount());
+        printf(">>>%s has %d elements\n",text,path.elementCount());
         char* typeName;
         for(int iElem = 0; iElem < path.elementCount(); iElem++) {
             elem = path.elementAt(iElem);
@@ -945,7 +945,7 @@ void QGIViewPart::dumpPath(const char* text,QPainterPath path)
             } else {
                 typeName = "CurveData";
             }
-            Base::Console().Message(">>>>> element %d: type:%d/%s pos(%.3f,%.3f) M:%d L:%d C:%d\n",iElem,
+            printf(">>>>> element %d: type:%d/%s pos(%.3f,%.3f) M:%d L:%d C:%d\n",iElem,
                                     elem.type,typeName,elem.x,elem.y,elem.isMoveTo(),elem.isLineTo(),elem.isCurveTo());
         }
 }

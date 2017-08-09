@@ -43,7 +43,7 @@ namespace Points {
 PyMOD_INIT_FUNC(Points)
 {
     PyObject* pointsModule = Points::initModule();
-    Base::Console().Log("Loading Points module... done\n");
+    printf("Loading Points module... done\n");
 
     // add python types
     Base::Interpreter().addType(&Points::PointsPy::Type, pointsModule, "Points");

@@ -269,7 +269,7 @@ GtsSurface* GTSAlgos::createGTSSurface(const Mesh::MeshObject& Mesh)
           new_edge (aVertex[p3],aVertex[p1])));
   }
 
-  Base::Console().Log("GTS [%d faces, %d Points, %d Edges,%s ,%s]\n",gts_surface_face_number(Surf),
+  printf("GTS [%d faces, %d Points, %d Edges,%s ,%s]\n",gts_surface_face_number(Surf),
                                                                      gts_surface_vertex_number(Surf),
                                                                      gts_surface_edge_number(Surf),
                                                                      gts_surface_is_orientable (Surf)?"orientable":"not orientable",

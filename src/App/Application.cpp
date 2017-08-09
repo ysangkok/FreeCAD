@@ -136,9 +136,9 @@ using namespace Base; // for ExceptionProducer
 
 
 // scriptings (scripts are build in but can be overridden by command line option)
-#include <App/InitScript.h>
-#include <App/TestScript.h>
-#include <App/CMakeScript.h>
+//#include <App/InitScript.h>
+//#include <App/TestScript.h>
+//#include <App/CMakeScript.h>
 
 #ifdef _MSC_VER // New handler for Microsoft Visual C++ compiler
 # include <new.h>

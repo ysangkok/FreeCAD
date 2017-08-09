@@ -114,7 +114,7 @@ App::DocumentObjectExecReturn *DrawView::execute(void)
                 }
             }
         } else if (ScaleType.isValue("Custom")) {
-            //Base::Console().Message("TRACE - DV::execute - custom %s Scale: %.3f\n",getNameInDocument(),Scale.getValue());
+            //printf("TRACE - DV::execute - custom %s Scale: %.3f\n",getNameInDocument(),Scale.getValue());
         }
     }
     return App::DocumentObject::StdReturn;                //DO::execute returns 0
@@ -123,7 +123,7 @@ App::DocumentObjectExecReturn *DrawView::execute(void)
 void DrawView::onChanged(const App::Property* prop)
 {
     if (!isRestoring()) {
-        //Base::Console().Message("TRACE - DV::onChanged(%s) - %s\n",prop->getName(),Label.getValue());
+        //printf("TRACE - DV::onChanged(%s) - %s\n",prop->getName(),Label.getValue());
         if (prop == &ScaleType) {
             if (ScaleType.isValue("Page")) {
                 Scale.setStatus(App::Property::ReadOnly,true);
@@ -273,12 +273,12 @@ void DrawView::Restore(Base::XMLReader &reader)
                                 }
                             } else {
                                 // has Scale prop that isn't Float! 
-                                Base::Console().Log("DrawView::Restore - old Document Scale is Not Float!\n");
+                                printf("DrawView::Restore - old Document Scale is Not Float!\n");
                                 // no idea
                             }
                         }
                     } else {
-                        Base::Console().Log("DrawView::Restore - old Document has unknown Property\n");
+                        printf("DrawView::Restore - old Document has unknown Property\n");
                     }
                 }
             }
@@ -287,17 +287,17 @@ void DrawView::Restore(Base::XMLReader &reader)
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("PropertyContainer::Restore: Unknown C++ exception thrown");
+            printf("PropertyContainer::Restore: Unknown C++ exception thrown");
         }
 #endif
 

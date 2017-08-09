@@ -595,19 +595,19 @@ bool ViewProviderSketch::mouseButtonPressed(int Button, bool pressed, const SbVe
                 case STATUS_NONE:{
                     bool done=false;
                     if (edit->PreselectPoint != -1) {
-                        //Base::Console().Log("start dragging, point:%d\n",this->DragPoint);
+                        //printf("start dragging, point:%d\n",this->DragPoint);
                         Mode = STATUS_SELECT_Point;
                         done = true;
                     } else if (edit->PreselectCurve != -1) {
-                        //Base::Console().Log("start dragging, point:%d\n",this->DragPoint);
+                        //printf("start dragging, point:%d\n",this->DragPoint);
                         Mode = STATUS_SELECT_Edge;
                         done = true;
                     } else if (edit->PreselectCross != -1) {
-                        //Base::Console().Log("start dragging, point:%d\n",this->DragPoint);
+                        //printf("start dragging, point:%d\n",this->DragPoint);
                         Mode = STATUS_SELECT_Cross;
                         done = true;
                     } else if (edit->PreselectConstraintSet.empty() != true) {
-                        //Base::Console().Log("start dragging, point:%d\n",this->DragPoint);
+                        //printf("start dragging, point:%d\n",this->DragPoint);
                         Mode = STATUS_SELECT_Constraint;
                         done = true;
                     }
@@ -647,7 +647,7 @@ bool ViewProviderSketch::mouseButtonPressed(int Button, bool pressed, const SbVe
             switch (Mode) {
                 case STATUS_SELECT_Point:
                     if (pp) {
-                        //Base::Console().Log("Select Point:%d\n",this->DragPoint);
+                        //printf("Select Point:%d\n",this->DragPoint);
                         // Do selection
                         std::stringstream ss;
                         ss << "Vertex" << edit->PreselectPoint + 1;
@@ -672,7 +672,7 @@ bool ViewProviderSketch::mouseButtonPressed(int Button, bool pressed, const SbVe
                     return true;
                 case STATUS_SELECT_Edge:
                     if (pp) {
-                        //Base::Console().Log("Select Point:%d\n",this->DragPoint);
+                        //printf("Select Point:%d\n",this->DragPoint);
                         std::stringstream ss;
                         if (edit->PreselectCurve >= 0)
                             ss << "Edge" << edit->PreselectCurve + 1;
@@ -701,7 +701,7 @@ bool ViewProviderSketch::mouseButtonPressed(int Button, bool pressed, const SbVe
                     return true;
                 case STATUS_SELECT_Cross:
                     if (pp) {
-                        //Base::Console().Log("Select Point:%d\n",this->DragPoint);
+                        //printf("Select Point:%d\n",this->DragPoint);
                         std::stringstream ss;
                         switch(edit->PreselectCross){
                             case 0: ss << "RootPoint" ; break;
@@ -779,7 +779,7 @@ bool ViewProviderSketch::mouseButtonPressed(int Button, bool pressed, const SbVe
                             }
                             catch (const Base::Exception& e) {
                                 Gui::Command::abortCommand();
-                                Base::Console().Error("Drag point: %s\n", e.what());
+                                printf("Drag point: %s\n", e.what());
                             }
                         }
                         setPreselectPoint(edit->DragPoint);
@@ -817,7 +817,7 @@ bool ViewProviderSketch::mouseButtonPressed(int Button, bool pressed, const SbVe
                             }
                             catch (const Base::Exception& e) {
                                 Gui::Command::abortCommand();
-                                Base::Console().Error("Drag curve: %s\n", e.what());
+                                printf("Drag curve: %s\n", e.what());
                             }
                         }
                         edit->PreselectCurve = edit->DragCurve;
@@ -983,13 +983,13 @@ bool ViewProviderSketch::mouseButtonPressed(int Button, bool pressed, const SbVe
 void ViewProviderSketch::editDoubleClicked(void)
 {
     if (edit->PreselectPoint != -1) {
-        Base::Console().Log("double click point:%d\n",edit->PreselectPoint);
+        printf("double click point:%d\n",edit->PreselectPoint);
     }
     else if (edit->PreselectCurve != -1) {
-        Base::Console().Log("double click edge:%d\n",edit->PreselectCurve);
+        printf("double click edge:%d\n",edit->PreselectCurve);
     }
     else if (edit->PreselectCross != -1) {
-        Base::Console().Log("double click cross:%d\n",edit->PreselectCross);
+        printf("double click cross:%d\n",edit->PreselectCross);
     }
     else if (edit->PreselectConstraintSet.empty() != true) {
         // Find the constraint
@@ -1141,7 +1141,7 @@ bool ViewProviderSketch::mouseMove(const SbVec2s &cursorPos, Gui::View3DInventor
             return true;
         case STATUS_SKETCH_DragPoint:
             if (edit->DragPoint != -1) {
-                //Base::Console().Log("Drag Point:%d\n",edit->DragPoint);
+                //printf("Drag Point:%d\n",edit->DragPoint);
                 int GeoId;
                 Sketcher::PointPos PosId;
                 getSketchObject()->getGeoVertexIndex(edit->DragPoint, GeoId, PosId);
@@ -1153,7 +1153,7 @@ bool ViewProviderSketch::mouseMove(const SbVec2s &cursorPos, Gui::View3DInventor
                         signalSolved(QString::fromLatin1("Solved in %1 sec").arg(getSketchObject()->getSolvedSketch().SolveTime));
                     } else {
                         signalSolved(QString::fromLatin1("Unsolved (%1 sec)").arg(getSketchObject()->getSolvedSketch().SolveTime));
-                        //Base::Console().Log("Error solving:%d\n",ret);
+                        //printf("Error solving:%d\n",ret);
                     }
                 }
             }
@@ -1694,7 +1694,7 @@ bool ViewProviderSketch::detectPreselection(const SoPickedPoint *Point,
     std::set<int> constrIndices;
 
     if (Point) {
-        //Base::Console().Log("Point pick\n");
+        //printf("Point pick\n");
         SoPath *path = Point->getPath();
         SoNode *tail = path->getTail();
         SoNode *tailFather2 = path->getNode(path->getLength()-3);
@@ -2423,7 +2423,7 @@ void ViewProviderSketch::doBoxSelection(const SbVec2s &startPos, const SbVec2s &
 void ViewProviderSketch::updateColor(void)
 {
     assert(edit);
-    //Base::Console().Log("Draw preseletion\n");
+    //printf("Draw preseletion\n");
 
     int PtNum = edit->PointsMaterials->diffuseColor.getNum();
     SbColor *pcolor = edit->PointsMaterials->diffuseColor.startEditing();
@@ -4755,9 +4755,9 @@ Restart:
             }
 
         } catch (Base::Exception e) {
-            Base::Console().Error("Exception during draw: %s\n", e.what());
+            printf("Exception during draw: %s\n", e.what());
         } catch (...){
-            Base::Console().Error("Exception during draw: unknown\n");
+            printf("Exception during draw: unknown\n");
         }
 
     }
@@ -5097,11 +5097,11 @@ bool ViewProviderSketch::setEdit(int ModNum)
             QByteArray cmdstr_bytearray = cmdstr.toLatin1();
             Gui::Command::runCommand(Gui::Command::Gui, cmdstr_bytearray);
         } catch (Base::PyException &e){
-            Base::Console().Error("ViewProviderSketch::setEdit: visibility automation failed with an error: \n");
+            printf("ViewProviderSketch::setEdit: visibility automation failed with an error: \n");
             e.ReportException();
         }
     } catch (Base::PyException &){
-        Base::Console().Warning("ViewProviderSketch::setEdit: could not import Show module. Visibility automation will not work.\n");
+        printf("ViewProviderSketch::setEdit: could not import Show module. Visibility automation will not work.\n");
     }
 
 
@@ -5483,7 +5483,7 @@ void ViewProviderSketch::unsetEdit(int ModNum)
             QByteArray cmdstr_bytearray = cmdstr.toLatin1();
             Gui::Command::runCommand(Gui::Command::Gui, cmdstr_bytearray);
         } catch (Base::PyException &e){
-            Base::Console().Error("ViewProviderSketch::unsetEdit: visibility automation failed with an error: \n");
+            printf("ViewProviderSketch::unsetEdit: visibility automation failed with an error: \n");
             e.ReportException();
         }
 
@@ -5531,7 +5531,7 @@ void ViewProviderSketch::setEditViewer(Gui::View3DInventorViewer* viewer, int Mo
             QByteArray cmdstr_bytearray = cmdstr.toLatin1();
             Gui::Command::runCommand(Gui::Command::Gui, cmdstr_bytearray);
         } catch (Base::PyException &e){
-            Base::Console().Error("ViewProviderSketch::setEdit: visibility automation failed with an error: \n");
+            printf("ViewProviderSketch::setEdit: visibility automation failed with an error: \n");
             e.ReportException();
         }
     }
@@ -5766,7 +5766,7 @@ bool ViewProviderSketch::onDelete(const std::vector<std::string> &subList)
                                        ,getObject()->getNameInDocument(), *rit);
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
             }
         }
 
@@ -5776,7 +5776,7 @@ bool ViewProviderSketch::onDelete(const std::vector<std::string> &subList)
                                        ,getObject()->getNameInDocument(), *rit);
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
             }
         }
 
@@ -5786,7 +5786,7 @@ bool ViewProviderSketch::onDelete(const std::vector<std::string> &subList)
                                            ,getObject()->getNameInDocument(), *rit);
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
             }
         }
 
@@ -5796,7 +5796,7 @@ bool ViewProviderSketch::onDelete(const std::vector<std::string> &subList)
                     ,getObject()->getNameInDocument(), *rit);
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
             }
         }
         

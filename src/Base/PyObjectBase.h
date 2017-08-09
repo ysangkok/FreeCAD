@@ -452,7 +452,7 @@ BaseExport extern PyObject* BaseExceptionFreeCADError;
         str += "STL exception thrown (";                            \
         str += e.what();                                            \
         str += ")";                                                 \
-        Base::Console().Error(str.c_str());                         \
+        printf(str.c_str());                         \
         Py_Error(Base::BaseExceptionFreeCADError,str.c_str());      \
     }                                                               \
     catch(const Py::Exception&)                                     \
@@ -485,7 +485,7 @@ BaseExport extern PyObject* BaseExceptionFreeCADError;
         str += "STL exception thrown (";                            \
         str += e.what();                                            \
         str += ")";                                                 \
-        Base::Console().Error(str.c_str());                         \
+        printf(str.c_str());                         \
         Py_Error(Base::BaseExceptionFreeCADError,str.c_str());      \
     }                                                               \
     catch(const Py::Exception&)                                     \

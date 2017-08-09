@@ -76,7 +76,7 @@ PyMOD_INIT_FUNC(MeshPartGui)
     }
 
     PyObject* mod = MeshPartGui::initModule();
-    Base::Console().Log("Loading GUI of MeshPart module... done\n");
+    printf("Loading GUI of MeshPart module... done\n");
 
     // instantiating the commands
     CreateMeshPartCommands();

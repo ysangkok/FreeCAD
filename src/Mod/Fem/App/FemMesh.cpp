@@ -92,7 +92,7 @@ TYPESYSTEM_SOURCE(Fem::FemMesh , Base::Persistence);
 
 FemMesh::FemMesh()
 {
-    //Base::Console().Log("FemMesh::FemMesh():%p (id=%i)\n",this,StatCount);
+    //printf("FemMesh::FemMesh():%p (id=%i)\n",this,StatCount);
     // create a mesh always with new StudyId to avoid overlapping destruction
     myMesh = getGenerator()->CreateMesh(StatCount++,false);
 }
@@ -105,7 +105,7 @@ FemMesh::FemMesh(const FemMesh& mesh)
 
 FemMesh::~FemMesh()
 {
-    //Base::Console().Log("FemMesh::~FemMesh():%p\n",this);
+    //printf("FemMesh::~FemMesh():%p\n",this);
 
     try {
         TopoDS_Shape aNull;
@@ -863,7 +863,7 @@ std::list<int> FemMesh::getElementNodes(int id) const
 void FemMesh::readNastran(const std::string &Filename)
 {
     Base::TimeInfo Start;
-    Base::Console().Log("Start: FemMesh::readNastran() =================================\n");
+    printf("Start: FemMesh::readNastran() =================================\n");
 
     _Mtrx = Base::Matrix4D();
 
@@ -984,7 +984,7 @@ void FemMesh::readNastran(const std::string &Filename)
     while (inputfile.good());
     inputfile.close();
 
-    Base::Console().Log("    %f: File read, start building mesh\n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
+    printf("    %f: File read, start building mesh\n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
 
     //Now fill the SMESH datastructure
     std::vector<Base::Vector3d>::const_iterator anodeiterator;
@@ -1030,7 +1030,7 @@ void FemMesh::readNastran(const std::string &Filename)
             element_id[i]
         );
     }
-    Base::Console().Log("    %f: Done \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
+    printf("    %f: Done \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
 
 }
 

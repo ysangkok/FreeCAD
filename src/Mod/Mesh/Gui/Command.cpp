@@ -1451,7 +1451,7 @@ void CmdMeshBoundingBox::activated(int)
         const MeshCore::MeshKernel& rMesh = ((Mesh::Feature*)(*it))->Mesh.getValue().getKernel();
         const Base::BoundBox3f& box = rMesh.GetBoundBox();
 
-        Base::Console().Message("Boundings: Min=<%f,%f,%f>, Max=<%f,%f,%f>\n",
+        printf("Boundings: Min=<%f,%f,%f>, Max=<%f,%f,%f>\n",
                                 box.MinX,box.MinY,box.MinZ,box.MaxX,box.MaxY,box.MaxZ);
 
         QString bound = QObject::tr("Min=<%1,%2,%3>\n\nMax=<%4,%5,%6>")

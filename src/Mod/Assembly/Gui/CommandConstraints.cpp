@@ -295,12 +295,12 @@ void CmdAssemblyConstraintFix::activated(int iMsg)
     //std::pair<Assembly::PartRef*, Assembly::ProductRef*> part = Asm->getContainingPart(objs[0].getObject());
 
     //if(!part.first) {
-    //    Base::Console().Message("The selected part need to belong to the active assembly\n");
+    //    printf("The selected part need to belong to the active assembly\n");
     //    return;
     //};
 
     //if(part.second != Asm) {
-    //    Base::Console().Message("The selected part need belongs to an subproduct, please add constraint there\n");
+    //    printf("The selected part need belongs to an subproduct, please add constraint there\n");
     //    return;
     //}
 

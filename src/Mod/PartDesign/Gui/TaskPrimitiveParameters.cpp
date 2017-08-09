@@ -234,7 +234,7 @@ TaskBoxPrimitives::TaskBoxPrimitives(ViewProviderPrimitive* vp, QWidget* parent)
             vpOrigin = static_cast<Gui::ViewProviderOrigin*>(Gui::Application::Instance->getViewProvider(origin));
             vpOrigin->setTemporaryVisibility(true, true);
         } catch (const Base::Exception &ex) {
-            Base::Console().Error ("%s\n", ex.what () );
+            printf ("%s\n", ex.what () );
         }
     }
 }
@@ -254,7 +254,7 @@ TaskBoxPrimitives::~TaskBoxPrimitives()
             vpOrigin->resetTemporaryVisibility();
         }
     } catch (const Base::Exception &ex) {
-        Base::Console().Error ("%s\n", ex.what () );
+        printf ("%s\n", ex.what () );
     }
 }
 

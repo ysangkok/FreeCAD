@@ -59,7 +59,7 @@ PyMOD_INIT_FUNC(ImportGui)
     }
 
     PyObject* mod = ImportGui::initModule();
-    Base::Console().Log("Loading GUI of Import module... done\n");
+    printf("Loading GUI of Import module... done\n");
 
     CreateImportCommands();
     ImportGui::Workbench::init();

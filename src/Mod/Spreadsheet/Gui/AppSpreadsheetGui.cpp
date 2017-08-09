@@ -121,6 +121,6 @@ PyMOD_INIT_FUNC(SpreadsheetGui)
     loadSpreadsheetResource();
 
     PyObject* mod = SpreadsheetGui::initModule();
-    Base::Console().Log("Loading GUI of Spreadsheet module... done\n");
+    printf("Loading GUI of Spreadsheet module... done\n");
     PyMOD_Return(mod);
 }

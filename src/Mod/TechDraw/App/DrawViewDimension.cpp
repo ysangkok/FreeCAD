@@ -133,7 +133,7 @@ void DrawViewDimension::onChanged(const App::Property* prop)
     if (!isRestoring()) {
         if (prop == &MeasureType) {
             if (MeasureType.isValue("True") && !measurement->has3DReferences()) {
-                Base::Console().Warning("Dimension %s missing Reference to 3D model. Must be Projected.\n", getNameInDocument());
+                printf("Dimension %s missing Reference to 3D model. Must be Projected.\n", getNameInDocument());
                 MeasureType.setValue("Projected");
             }
         }
@@ -231,12 +231,12 @@ double DrawViewDimension::getDimValue()
 {
     double result = 0.0;
     if (!has2DReferences()) {                                            //happens during Dimension creation
-        Base::Console().Log("INFO - DVD::getDimValue - Dimension has no References\n");
+        printf("INFO - DVD::getDimValue - Dimension has no References\n");
         return result;
     }
 
     if (!getViewPart()->hasGeometry()) {                              //happens when loading saved document
-        Base::Console().Log("INFO - DVD::getDimValue ViewPart has no Geometry yet\n");
+        printf("INFO - DVD::getDimValue ViewPart has no Geometry yet\n");
         return result;
     }
 
@@ -272,7 +272,7 @@ double DrawViewDimension::getDimValue()
         const std::vector<std::string> &subElements      = References2D.getSubValues();
 
         if (!checkReferences2D()) {
-            Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+            printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
             References2D.setValue(nullptr,"");
             return result;
         }
@@ -287,7 +287,7 @@ double DrawViewDimension::getDimValue()
                 if (geom && geom->geomType == TechDrawGeometry::GeomType::GENERIC) {
                     gen = static_cast<TechDrawGeometry::Generic*>(geom);
                 } else {
-                    Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                    printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                     References2D.setValue(nullptr,"");
                     return result;
                 }
@@ -310,7 +310,7 @@ double DrawViewDimension::getDimValue()
                 if (geom0 && geom0->geomType == TechDrawGeometry::GeomType::GENERIC) {
                     gen0 = static_cast<TechDrawGeometry::Generic*>(geom0);
                 } else {
-                    Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                    printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                     References2D.setValue(nullptr,"");
                     return result;
                 }
@@ -319,7 +319,7 @@ double DrawViewDimension::getDimValue()
                 if (geom1 && geom1->geomType == TechDrawGeometry::GeomType::GENERIC) {
                     gen1 = static_cast<TechDrawGeometry::Generic*>(geom1);
                 } else {
-                    Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                    printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                     References2D.setValue(nullptr,"");
                     return result;
                 }
@@ -345,7 +345,7 @@ double DrawViewDimension::getDimValue()
                 TechDrawGeometry::Vertex* v1 = getViewPart()->getProjVertexByIndex(idx1);
                 if ((v0 == nullptr) ||
                     (v1 == nullptr) ) {
-                    Base::Console().Error("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                    printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                     References2D.setValue(nullptr,"");
                     return result;
                 }
@@ -373,7 +373,7 @@ double DrawViewDimension::getDimValue()
                 }
                 if ((v == nullptr) ||
                     (e == nullptr) ) {
-                    Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                    printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                     References2D.setValue(nullptr,"");
                     return result;
                 }
@@ -396,7 +396,7 @@ double DrawViewDimension::getDimValue()
                    (base && base->geomType == TechDrawGeometry::GeomType::ARCOFCIRCLE))  {
                     circle = static_cast<TechDrawGeometry::Circle*> (base);
                 } else {
-                    Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                    printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                     References2D.setValue(nullptr,"");
                     return result;
                 }
@@ -420,7 +420,7 @@ double DrawViewDimension::getDimValue()
             //WF: why not use projected geom in GeomObject and Vector2d.GetAngle? intersection pt & direction issues?
             //TODO: do we need to distinguish inner vs outer angle? -wf
             if (getRefType() != twoEdge) {
-                 Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                 printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                  References2D.setValue(nullptr,"");
                  return result;
             }
@@ -428,7 +428,7 @@ double DrawViewDimension::getDimValue()
             int idx1 = DrawUtil::getIndexFromName(subElements[1]);
             auto viewPart( dynamic_cast<TechDraw::DrawViewPart *>(objects[0]) );
             if( viewPart == nullptr ) {
-                Base::Console().Log("INFO - DVD::getDimValue - References2D not DrawViewPart\n");
+                printf("INFO - DVD::getDimValue - References2D not DrawViewPart\n");
                 return result;
             }
             TechDrawGeometry::BaseGeom* edge0 = viewPart->getProjEdgeByIndex(idx0);
@@ -438,14 +438,14 @@ double DrawViewDimension::getDimValue()
             if (edge0 && edge0->geomType == TechDrawGeometry::GeomType::GENERIC) {
                  gen1 = static_cast<TechDrawGeometry::Generic*>(edge0);
             } else {
-                 Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                 printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                  References2D.setValue(nullptr,"");
                  return result;
             }
             if (edge1 && edge1->geomType == TechDrawGeometry::GeomType::GENERIC) {
                  gen2 = static_cast<TechDrawGeometry::Generic*>(edge1);
             } else {
-                 Base::Console().Log("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
+                 printf("Error: DVD - %s - 2D references are corrupt\n",getNameInDocument());
                  References2D.setValue(nullptr,"");
                  return result;
             }
@@ -589,14 +589,14 @@ void DrawViewDimension::clear3DMeasurements()
 
 void DrawViewDimension::dumpRefs2D(char* text) const
 {
-    Base::Console().Message("DUMP - %s\n",text);
+    printf("DUMP - %s\n",text);
     const std::vector<App::DocumentObject*> &objects = References2D.getValues();
     const std::vector<std::string> &subElements = References2D.getSubValues();
     std::vector<App::DocumentObject*>::const_iterator objIt = objects.begin();
     std::vector<std::string>::const_iterator subIt = subElements.begin();
     int i = 0;
     for( ;objIt != objects.end();objIt++,subIt++,i++) {
-        Base::Console().Message("DUMP - ref: %d object: %s subElement: %s\n",i,(*objIt)->getNameInDocument(),(*subIt).c_str());
+        printf("DUMP - ref: %d object: %s subElement: %s\n",i,(*objIt)->getNameInDocument(),(*subIt).c_str());
     }
 }
 

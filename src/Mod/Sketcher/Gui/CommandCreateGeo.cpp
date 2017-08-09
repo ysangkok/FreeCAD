@@ -338,7 +338,7 @@ public:
                 Gui::Command::commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add line: %s\n", e.what());
+                printf("Failed to add line: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -587,7 +587,7 @@ public:
                 Gui::Command::commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add box: %s\n", e.what());
+                printf("Failed to add box: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -1069,7 +1069,7 @@ public:
                 }
                 catch (const Base::Exception& e) {
                     addedGeometry = false;
-                    Base::Console().Error("Failed to add line: %s\n", e.what());
+                    printf("Failed to add line: %s\n", e.what());
                     Gui::Command::abortCommand();
                 }
                 
@@ -1093,7 +1093,7 @@ public:
                 }
                 catch (const Base::Exception& e) {
                     addedGeometry = false;
-                    Base::Console().Error("Failed to add arc: %s\n", e.what());
+                    printf("Failed to add arc: %s\n", e.what());
                     Gui::Command::abortCommand();
                 }
                 
@@ -1576,7 +1576,7 @@ public:
                 Gui::Command::commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add arc: %s\n", e.what());
+                printf("Failed to add arc: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -1893,7 +1893,7 @@ public:
                 Gui::Command::commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add arc: %s\n", e.what());
+                printf("Failed to add arc: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -2210,7 +2210,7 @@ public:
                 Gui::Command::commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add circle: %s\n", e.what());
+                printf("Failed to add circle: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -3024,7 +3024,7 @@ private:
                                 currentgeoid);
         }
         catch (const Base::Exception& e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
             Gui::Command::abortCommand();
 
             ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -3452,7 +3452,7 @@ public:
                                         currentgeoid);
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 Gui::Command::abortCommand();
 
                 ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -3846,7 +3846,7 @@ public:
 
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 Gui::Command::abortCommand();
 
                 ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -4203,7 +4203,7 @@ public:
                     
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 Gui::Command::abortCommand();
 
                 ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -4571,7 +4571,7 @@ public:
                 
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 Gui::Command::abortCommand();
                 
                 static_cast<Sketcher::SketchObject *>(sketchgui->getObject())->solve();
@@ -4641,7 +4641,7 @@ public:
 
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 Gui::Command::abortCommand();
                 
                 static_cast<Sketcher::SketchObject *>(sketchgui->getObject())->solve();
@@ -4745,7 +4745,7 @@ public:
                 
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("%s\n", e.what());
+                printf("%s\n", e.what());
                 Gui::Command::abortCommand();
 
                 ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
@@ -5220,7 +5220,7 @@ public:
                 Gui::Command::commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add circle: %s\n", e.what());
+                printf("Failed to add circle: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -5491,7 +5491,7 @@ public:
                 Gui::Command::commitCommand();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add point: %s\n", e.what());
+                printf("Failed to add point: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -5788,7 +5788,7 @@ public:
                     Gui::Command::commitCommand();
                 }
                 catch (const Base::Exception& e) {
-                    Base::Console().Error("Failed to create fillet: %s\n", e.what());
+                    printf("Failed to create fillet: %s\n", e.what());
                     Gui::Command::abortCommand();
                 }
 
@@ -5850,7 +5850,7 @@ public:
                         Gui::Command::commitCommand();
                     }
                     catch (const Base::Exception& e) {
-                        Base::Console().Error("Failed to create fillet: %s\n", e.what());
+                        printf("Failed to create fillet: %s\n", e.what());
                         Gui::Command::abortCommand();
                     }
 
@@ -6041,7 +6041,7 @@ public:
                         Gui::Command::updateActive();
                 }
                 catch (const Base::Exception& e) {
-                    Base::Console().Error("Failed to trim edge: %s\n", e.what());
+                    printf("Failed to trim edge: %s\n", e.what());
                     Gui::Command::abortCommand();
                 }
             }
@@ -6378,7 +6378,7 @@ public:
                 }
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to extend edge: %s\n", e.what());
+                printf("Failed to extend edge: %s\n", e.what());
                 Gui::Command::abortCommand();
             }
 
@@ -6628,7 +6628,7 @@ public:
                 * right button of the mouse */
                 }
                 catch (const Base::Exception& e) {
-                    Base::Console().Error("Failed to add external geometry: %s\n", e.what());
+                    printf("Failed to add external geometry: %s\n", e.what());
                     Gui::Command::abortCommand();
                 }
                 return true;
@@ -6848,7 +6848,7 @@ static const char *cursor_carboncopy[]={
                          * right button of the mouse */
                     }
                     catch (const Base::Exception& e) {
-                        Base::Console().Error("Failed to add carbon copy: %s\n", e.what());
+                        printf("Failed to add carbon copy: %s\n", e.what());
                         Gui::Command::abortCommand();
                     }
                     return true;
@@ -7109,7 +7109,7 @@ public:
                     static_cast<Sketcher::SketchObject *>(sketchgui->getObject())->solve();
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add slot: %s\n", e.what());
+                printf("Failed to add slot: %s\n", e.what());
                 Gui::Command::abortCommand();
                 ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");
                 bool autoRecompute = hGrp->GetBool("AutoRecompute",false);
@@ -7347,7 +7347,7 @@ public:
                     static_cast<Sketcher::SketchObject *>(sketchgui->getObject())->solve();                
             }
             catch (const Base::Exception& e) {
-                Base::Console().Error("Failed to add hexagon: %s\n", e.what());
+                printf("Failed to add hexagon: %s\n", e.what());
                 Gui::Command::abortCommand();
 
                 ParameterGrp::handle hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Mod/Sketcher");

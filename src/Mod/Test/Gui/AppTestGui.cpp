@@ -104,7 +104,7 @@ PyMOD_INIT_FUNC(QtUnitGui)
     // with the Python runtime system
     PyObject* mod = TestGui::initModule();
 
-    Base::Console().Log("Loading GUI of Test module... done\n");
+    printf("Loading GUI of Test module... done\n");
 
     // add resources and reloads the translators
     loadTestResource();

@@ -352,7 +352,7 @@ void CoinRiftWidget::paintGL()
 
         camera[eye]->position.setValue(basePosition - viewAdjust + riftPosition);
 
-        //Base::Console().Log("Eye(%d) Pos: %f, %f, %f  ViewAdjust:  %f, %f, %f \n",eye, eyePose[eye].Position.x,
+        //printf("Eye(%d) Pos: %f, %f, %f  ViewAdjust:  %f, %f, %f \n",eye, eyePose[eye].Position.x,
         //                                                eyePose[eye].Position.y,
         //                                 eyePose[eye].Position.z,
         //                                 eyeRenderDesc[eye].ViewAdjust.x,

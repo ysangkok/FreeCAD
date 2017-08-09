@@ -329,7 +329,7 @@ private:
         std::string name8bit = Part::encodeFilename(Utf8Name);
 
         try {
-            //Base::Console().Log("Insert in Part with %s",Name);
+            //printf("Insert in Part with %s",Name);
             Base::FileInfo file(Utf8Name.c_str());
 
             App::Document *pcDoc = 0;
@@ -363,8 +363,8 @@ private:
                 }
                 catch (OSD_Exception) {
                     Handle(Standard_Failure) e = Standard_Failure::Caught();
-                    Base::Console().Error("%s\n", e->GetMessageString());
-                    Base::Console().Message("Try to load STEP file without colors...\n");
+                    printf("%s\n", e->GetMessageString());
+                    printf("Try to load STEP file without colors...\n");
 
                     Part::ImportStepParts(pcDoc,Utf8Name.c_str());
                     pcDoc->recompute();
@@ -399,8 +399,8 @@ private:
                 }
                 catch (OSD_Exception) {
                     Handle(Standard_Failure) e = Standard_Failure::Caught();
-                    Base::Console().Error("%s\n", e->GetMessageString());
-                    Base::Console().Message("Try to load IGES file without colors...\n");
+                    printf("%s\n", e->GetMessageString());
+                    printf("Try to load IGES file without colors...\n");
 
                     Part::ImportIgesParts(pcDoc,Utf8Name.c_str());
                     pcDoc->recompute();
@@ -570,7 +570,7 @@ private:
             throw Py::Exception();
 
         try {
-            //Base::Console().Log("Insert in Part with %s",Name);
+            //printf("Insert in Part with %s",Name);
             Base::FileInfo file(Name);
 
             Handle(XCAFApp_Application) hApp = XCAFApp_Application::GetApplication();

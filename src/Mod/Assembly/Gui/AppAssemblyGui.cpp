@@ -69,7 +69,7 @@ void AssemblyGuiExport initAssemblyGui()
     }
 
     (void) Py_InitModule("AssemblyGui", AssemblyGui_Import_methods);   /* mod name, table ptr */
-    Base::Console().Log("Loading GUI of Assembly module... done\n");
+    printf("Loading GUI of Assembly module... done\n");
 
     // directly load the module for usage in commands
     Base::Interpreter().runString("import AssemblyGui");

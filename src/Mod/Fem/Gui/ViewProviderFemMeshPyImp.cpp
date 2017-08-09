@@ -141,7 +141,7 @@ void ViewProviderFemMeshPy::setNodeColor(Py::Dict arg)
         this->getViewProviderFemMeshPtr()->resetColorByNodeId();
     else {
         Base::TimeInfo Start;
-        Base::Console().Log("Start: ViewProviderFemMeshPy::setNodeColor() =================================\n");
+        printf("Start: ViewProviderFemMeshPy::setNodeColor() =================================\n");
         //std::map<long,App::Color> NodeColorMap;
 
         //for( Py::Dict::iterator it = arg.begin(); it!= arg.end();++it){
@@ -159,11 +159,11 @@ void ViewProviderFemMeshPy::setNodeColor(Py::Dict arg)
             NodeIds[i]    = id;
             NodeColors[i] = App::Color(Py::Float(color[0]),Py::Float(color[1]),Py::Float(color[2]),0);
         }
-        Base::Console().Log("    %f: Start ViewProviderFemMeshPy::setNodeColor() call \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
+        printf("    %f: Start ViewProviderFemMeshPy::setNodeColor() call \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
 
         //this->getViewProviderFemMeshPtr()->setColorByNodeId(NodeColorMap);
         this->getViewProviderFemMeshPtr()->setColorByNodeId(NodeIds,NodeColors);
-        Base::Console().Log("    %f: Finish ViewProviderFemMeshPy::setNodeColor() call \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
+        printf("    %f: Finish ViewProviderFemMeshPy::setNodeColor() call \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
     }
 }
 

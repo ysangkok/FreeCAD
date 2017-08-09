@@ -153,7 +153,7 @@ void TaskMirroredParameters::setupUI()
             vpOrigin = static_cast<ViewProviderOrigin*>(Gui::Application::Instance->getViewProvider(origin));
             vpOrigin->setTemporaryVisibility(false, true);
         } catch (const Base::Exception &ex) {
-            Base::Console().Error ("%s\n", ex.what () );
+            printf ("%s\n", ex.what () );
         }
     }
 
@@ -296,7 +296,7 @@ TaskMirroredParameters::~TaskMirroredParameters()
             vpOrigin->resetTemporaryVisibility();
         }
     } catch (const Base::Exception &ex) {
-        Base::Console().Error ("%s\n", ex.what () );
+        printf ("%s\n", ex.what () );
     }
 
     delete ui;

@@ -193,7 +193,7 @@ TaskFemConstraintFluidBoundary::TaskFemConstraintFluidBoundary(ViewProviderFemCo
             }
             else {
                 ui->tabThermalBoundary->setEnabled(false);
-                //Base::Console().Message("retrieve solver property HeatTransfering as false\n");
+                //printf("retrieve solver property HeatTransfering as false\n");
             }
         }
         else {
@@ -218,7 +218,7 @@ TaskFemConstraintFluidBoundary::TaskFemConstraintFluidBoundary(ViewProviderFemCo
         }
     }
     else {
-        Base::Console().Message("Warning: No solver object inside FemAnalysis object\n");
+        printf("Warning: No solver object inside FemAnalysis object\n");
     }
     ui->tabWidget->setTabText(0, tr("Basic"));
     ui->tabWidget->setTabText(1, tr("Turbulence"));
@@ -295,8 +295,8 @@ void TaskFemConstraintFluidBoundary::updateBoundaryTypeUI()
         pcConstraint->Reversed.setValue(false); // outlet must point outward
     }
     else {
-        Base::Console().Message(boundaryType.c_str());
-        Base::Console().Message("Error: Fluid boundary type is not defined\n");
+        printf(boundaryType.c_str());
+        printf("Error: Fluid boundary type is not defined\n");
     }
     //std::string subtypeLabel = boundaryType + std::string(" type");
     //ui->labelSubtype->setText(QString::fromUtf8(subtypeLabel)); // too long to show in UI

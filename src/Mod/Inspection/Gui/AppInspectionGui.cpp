@@ -80,6 +80,6 @@ PyMOD_INIT_FUNC(InspectionGui)
     //
 
     PyObject* mod = InspectionGui::initModule();
-    Base::Console().Log("Loading GUI of Inspection module... done\n");
+    printf("Loading GUI of Inspection module... done\n");
     PyMOD_Return(mod);
 }

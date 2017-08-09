@@ -114,7 +114,7 @@ void TaskSectionView::resetValues()
     ui->leNormal->setText(formatVector(saveSectionNormal));
 
     m_section->Label.setValue(saveLabel.c_str());
-    Base::Console().Message("");
+    printf("");
 }
 
 //calculate good starting points from base view and push buttons
@@ -135,7 +135,7 @@ bool TaskSectionView::calcValues()
         sectionDir = "Right";
         sectionProjDir = m_section->getSectionVector(sectionDir);
     } else {
-        Base::Console().Message("Select a direction\n");
+        printf("Select a direction\n");
         result = false;
     }
 
@@ -144,7 +144,7 @@ bool TaskSectionView::calcValues()
         ui->leNormal->setText(formatVector(sectionNormal));
         ui->leProjDir->setText(formatVector(sectionProjDir));
 
-        Base::Console().Message("Press Reset, OK or Cancel to continue \n");
+        printf("Press Reset, OK or Cancel to continue \n");
     }
     return result;
 }
@@ -284,7 +284,7 @@ void TaskSectionView::onResetClicked(bool b)
 bool TaskSectionView::accept()
 {
     if (strcmp(sectionDir,"unset") == 0) {
-        Base::Console().Message("No direction selected!\n");
+        printf("No direction selected!\n");
         return reject();
     } else {
         updateValues();
@@ -325,7 +325,7 @@ QString TaskSectionView::formatVector(Base::Vector3d v)
 
 void _printVect(char* label, Base::Vector3d v)
 {
-    Base::Console().Message("printVect: %s (%3f,%.3f,%.3f)\n",label,v.x,v.y,v.z);
+    printf("printVect: %s (%3f,%.3f,%.3f)\n",label,v.x,v.y,v.z);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -50,7 +50,7 @@ extern "C"
         }
 
         Py_InitModule3("Cam", Cam_methods, module_part_doc);   /* mod name, table ptr */
-        Base::Console().Log("Loading Cam module... done\n");
+        printf("Loading Cam module... done\n");
 
         // NOTE: To finish the initialization of our own type objects we must
         // call PyType_Ready, otherwise we run into a segmentation fault, later on.

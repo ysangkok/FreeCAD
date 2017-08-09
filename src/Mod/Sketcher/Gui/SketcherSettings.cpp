@@ -178,7 +178,7 @@ void SketcherSettings::onBtnTVApplyClicked(bool)
             this->ui->checkBoxTVShowSupport->isChecked()   ? "True": "False",
             this->ui->checkBoxTVRestoreCamera->isChecked() ? "True": "False");
     } catch (Base::PyException &e){
-        Base::Console().Error("SketcherSettings::onBtnTVApplyClicked:\n");
+        printf("SketcherSettings::onBtnTVApplyClicked:\n");
         e.ReportException();
         errMsg = QString::fromLatin1(e.what());
     } catch (...) {

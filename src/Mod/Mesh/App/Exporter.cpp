@@ -91,7 +91,7 @@ bool Exporter::addObject(App::DocumentObject *obj, float tol)
     } else if (obj->hasExtension(groupExtensionId)) {
         return addAppGroup( obj, tol );
     } else {
-        Base::Console().Message(
+        printf(
             "'%s' is of type %s, and can not be exported as a mesh.\n",
             obj->Label.getValue(), obj->getTypeId().getName() );
         return false;

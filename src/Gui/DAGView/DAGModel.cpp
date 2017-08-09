@@ -549,7 +549,7 @@ void Model::updateSlot()
   }
   catch(const boost::not_a_dag &)
   {
-    //Base::Console().Error("not a dag exception in DAGView::Model::updateSlot()\n");
+    //printf("not a dag exception in DAGView::Model::updateSlot()\n");
     return;
   }
   //index the vertices in sort order.

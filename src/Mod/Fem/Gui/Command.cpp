@@ -1528,10 +1528,10 @@ void CmdFemPostPipelineFromResult::activated(int)
     /*
     Gui::SelectionFilter ResultFilter("SELECT Fem::FemResultObject COUNT 1");
     if (ResultFilter.match()) {
-        Base::Console().Message("Debug: `SELECT Fem::FemResultObject COUNT 1` has matched obj");
+        printf("Debug: `SELECT Fem::FemResultObject COUNT 1` has matched obj");
         Fem::FemResultObject* result = static_cast<Fem::FemResultObject*>(ResultFilter.Result[0][0].getObject());
         //static_cast failed here
-        Base::Console().Message("Debug: FemResultObject pointer = %p", result );
+        printf("Debug: FemResultObject pointer = %p", result );
 
     */
     std::vector<Fem::FemResultObject*> results = getSelection().getObjectsOfType<Fem::FemResultObject>();

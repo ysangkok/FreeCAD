@@ -24,7 +24,7 @@
 #ifndef GUI_WIDGETS_H
 #define GUI_WIDGETS_H
 
-#include <Gui/ui_DlgTreeWidget.h>
+#include <Base/ui_DlgTreeWidget.h>
 #include <QListWidget>
 #include <QLabel>
 #include <QLineEdit>

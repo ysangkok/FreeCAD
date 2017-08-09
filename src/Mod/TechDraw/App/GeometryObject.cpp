@@ -170,7 +170,7 @@ void GeometryObject::projectShape(const TopoDS_Shape& input,
     auto end   = chrono::high_resolution_clock::now();
     auto diff  = end - start;
     double diffOut = chrono::duration <double, milli> (diff).count();
-    Base::Console().Log("TIMING - %s GO spent: %.3f millisecs in HLRBRep_Algo & co\n",m_parentName.c_str(),diffOut);
+    printf("TIMING - %s GO spent: %.3f millisecs in HLRBRep_Algo & co\n",m_parentName.c_str(),diffOut);
 
     try {
         HLRBRep_HLRToShape hlrToShape(brep_hlr);
@@ -226,7 +226,7 @@ void GeometryObject::extractGeometry(edgeClass category, bool visible)
                 filtEdges = visIso;
                 break;
             default:
-                Base::Console().Warning("GeometryObject::ExtractGeometry - unsupported visible edgeClass: %d\n",category);
+                printf("GeometryObject::ExtractGeometry - unsupported visible edgeClass: %d\n",category);
                 return;
         }
     } else {
@@ -247,7 +247,7 @@ void GeometryObject::extractGeometry(edgeClass category, bool visible)
                 filtEdges = hidIso;
                 break;
             default:
-                Base::Console().Warning("GeometryObject::ExtractGeometry - unsupported hidden edgeClass: %d\n",category);
+                printf("GeometryObject::ExtractGeometry - unsupported hidden edgeClass: %d\n",category);
                 return;
         }
     }
@@ -259,7 +259,7 @@ void GeometryObject::extractGeometry(edgeClass category, bool visible)
 void GeometryObject::addGeomFromCompound(TopoDS_Shape edgeCompound, edgeClass category, bool visible)
 {
     if(edgeCompound.IsNull()) {
-        Base::Console().Log("TechDraw::GeometryObject::addGeomFromCompound edgeCompound is NULL\n");
+        printf("TechDraw::GeometryObject::addGeomFromCompound edgeCompound is NULL\n");
         return; // There is no OpenCascade Geometry to be calculated
     }
 
@@ -268,17 +268,17 @@ void GeometryObject::addGeomFromCompound(TopoDS_Shape edgeCompound, edgeClass ca
     for (int i = 1 ; edges.More(); edges.Next(),i++) {
         const TopoDS_Edge& edge = TopoDS::Edge(edges.Current());
         if (edge.IsNull()) {
-            //Base::Console().Log("INFO - GO::addGeomFromCompound - edge: %d is NULL\n",i);
+            //printf("INFO - GO::addGeomFromCompound - edge: %d is NULL\n",i);
             continue;
         }
         if (DrawUtil::isZeroEdge(edge)) {
-            Base::Console().Log("INFO - GO::addGeomFromCompound - edge: %d is zeroEdge\n",i);
+            printf("INFO - GO::addGeomFromCompound - edge: %d is zeroEdge\n",i);
             continue;
         }
 
         base = BaseGeom::baseFactory(edge);
         if (base == nullptr) {
-            Base::Console().Message("Error - GO::addGeomFromCompound - baseFactory failed for edge: %d\n",i);
+            printf("Error - GO::addGeomFromCompound - baseFactory failed for edge: %d\n",i);
             throw Base::Exception("GeometryObject::addGeomFromCompound - baseFactory failed");
         }
         base->classOfEdge = category;
@@ -412,7 +412,7 @@ Base::BoundBox3d GeometryObject::calcBoundingBox() const
          BRepBndLib::Add((*it)->occEdge, testBox);
     }
     if (testBox.IsVoid()) {
-        Base::Console().Log("INFO - GO::calcBoundingBox - testBox is void\n");
+        printf("INFO - GO::calcBoundingBox - testBox is void\n");
     }
     double xMin,xMax,yMin,yMax,zMin,zMax;
     testBox.Get(xMin,yMin,zMin,xMax,yMax,zMax);
@@ -555,7 +555,7 @@ TopoDS_Shape TechDrawGeometry::mirrorShape(const TopoDS_Shape &input,
         transShape = mkTrf.Shape();
     }
     catch (...) {
-        Base::Console().Log("GeometryObject::mirrorShape - mirror/scale failed.\n");
+        printf("GeometryObject::mirrorShape - mirror/scale failed.\n");
         return transShape;
     }
     return transShape;
@@ -574,7 +574,7 @@ TopoDS_Shape TechDrawGeometry::scaleShape(const TopoDS_Shape &input,
         transShape = mkTrf.Shape();
     }
     catch (...) {
-        Base::Console().Log("GeometryObject::scaleShape - scale failed.\n");
+        printf("GeometryObject::scaleShape - scale failed.\n");
         return transShape;
     }
     return transShape;

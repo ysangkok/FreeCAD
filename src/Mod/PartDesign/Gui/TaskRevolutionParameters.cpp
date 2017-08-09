@@ -138,7 +138,7 @@ TaskRevolutionParameters::TaskRevolutionParameters(PartDesignGui::ViewProvider* 
             vpOrigin = static_cast<ViewProviderOrigin*>(Gui::Application::Instance->getViewProvider(origin));
             vpOrigin->setTemporaryVisibility(true, false);
         } catch (const Base::Exception &ex) {
-            Base::Console().Error ("%s\n", ex.what () );
+            printf ("%s\n", ex.what () );
         }
      }
 }
@@ -185,7 +185,7 @@ void TaskRevolutionParameters::fillAxisCombo(bool forceRefill)
                 addAxisToCombo(orig->getY(),"",tr("Base Y axis"));
                 addAxisToCombo(orig->getZ(),"",tr("Base Z axis"));
             } catch (const Base::Exception &ex) {
-                Base::Console().Error ("%s\n", ex.what() );
+                printf ("%s\n", ex.what() );
             }
         }
 
@@ -282,7 +282,7 @@ void TaskRevolutionParameters::onAxisChanged(int num)
         TaskSketchBasedParameters::onSelectReference(true, true, false, true);
     } else {
         if (! pcRevolution->getDocument()->isIn(lnk.getValue())){
-            Base::Console().Error("Object was deleted\n");
+            printf("Object was deleted\n");
             return;
         }
         propReferenceAxis->Paste(lnk);
@@ -370,7 +370,7 @@ TaskRevolutionParameters::~TaskRevolutionParameters()
             vpOrigin->resetTemporaryVisibility();
         }
     } catch (const Base::Exception &ex) {
-        Base::Console().Error ("%s\n", ex.what () );
+        printf ("%s\n", ex.what () );
     }
 
     delete ui;

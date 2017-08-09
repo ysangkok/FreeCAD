@@ -248,7 +248,7 @@ void MeshProjection::projectEdgeToEdge( const TopoDS_Edge &aEdge, float fMaxDist
                     rParamSplitEdges[fSol] = splitEdge;
                 }
                 else if ( nCntSol > 1 ) {
-                    Base::Console().Log("More than one possible intersection points\n");
+                    printf("More than one possible intersection points\n");
                 }
             }
         }

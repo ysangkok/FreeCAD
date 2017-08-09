@@ -68,7 +68,7 @@ std::string LuxTools::getCamera(const CamDef& Cam)
 
 void LuxTools::writeShape(std::ostream &out, const char *PartName, const TopoDS_Shape& Shape, float fMeshDeviation)
 {
-    Base::Console().Log("Meshing with Deviation: %f\n",fMeshDeviation);
+    printf("Meshing with Deviation: %f\n",fMeshDeviation);
 
     TopExp_Explorer ex;
     BRepMesh_IncrementalMesh MESH(Shape,fMeshDeviation);

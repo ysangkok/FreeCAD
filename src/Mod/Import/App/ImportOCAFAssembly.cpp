@@ -188,7 +188,7 @@ void ImportOCAFAssembly::loadShapes(const TDF_Label& label, const TopLoc_Locatio
 
     std::stringstream str;
 
-    Base::Console().Log("H:%-9d \tN:%-30s \tTop:%d, Asm:%d, Shape:%d, Compound:%d, Simple:%d, Free:%d, Ref:%d, Component:%d, SubShape:%d\tTrf:%s-- Dep:%d  \n",
+    printf("H:%-9d \tN:%-30s \tTop:%d, Asm:%d, Shape:%d, Compound:%d, Simple:%d, Free:%d, Ref:%d, Component:%d, SubShape:%d\tTrf:%s-- Dep:%d  \n",
         hash,
         part_name.c_str(),
         aShapeTool->IsTopLevel(label),
@@ -205,7 +205,7 @@ void ImportOCAFAssembly::loadShapes(const TDF_Label& label, const TopLoc_Locatio
     );
 
     label.Dump(str);
-    Base::Console().Message(str.str().c_str() );
+    printf(str.str().c_str() );
 #endif
 
     std::string asm_name = assembly;
@@ -241,7 +241,7 @@ void ImportOCAFAssembly::loadShapes(const TDF_Label& label, const TopLoc_Locatio
 
 void ImportOCAFAssembly::createShape(const TDF_Label& label, const TopLoc_Location& loc, const std::string& name)
 {
-     Base::Console().Log("-create Shape\n");
+     printf("-create Shape\n");
     const TopoDS_Shape& aShape = aShapeTool->GetShape(label);
     if (!aShape.IsNull() && aShape.ShapeType() == TopAbs_COMPOUND) {
         TopExp_Explorer xp;

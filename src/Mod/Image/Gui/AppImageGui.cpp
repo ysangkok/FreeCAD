@@ -45,7 +45,7 @@ PyMOD_INIT_FUNC(ImageGui)
     }
 
     PyObject* mod = ImageGui::initModule();
-    Base::Console().Log("Loading GUI of Image module... done\n");
+    printf("Loading GUI of Image module... done\n");
 
     // instantiating the commands
     CreateImageCommands();

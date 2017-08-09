@@ -145,8 +145,8 @@ void ConstraintFluidBoundary::onChanged(const App::Property* prop)
             Subtype.setEnums(OutletSubtypes);
         }
         else {
-            Base::Console().Message(boundaryType.c_str());
-            Base::Console().Message(" Error: this boundaryType is not defined\n");
+            printf(boundaryType.c_str());
+            printf(" Error: this boundaryType is not defined\n");
         }
         Subtype.setValue(1); // must set a default (0 or 1) as freestream has only 2 subtypes
         // need to trigger ViewProvider::updateData() for redraw in 3D view after this method

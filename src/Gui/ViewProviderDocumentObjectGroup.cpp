@@ -72,7 +72,9 @@ std::vector<std::string> ViewProviderDocumentObjectGroup::getDisplayModes(void) 
 
 bool ViewProviderDocumentObjectGroup::isShow(void) const
 {
-    return Visibility.getValue();
+    bool isShow = Visibility.getValue();
+    std::cerr << isShow << "LOL" << std::endl;
+    return isShow;
 }
 
 /**

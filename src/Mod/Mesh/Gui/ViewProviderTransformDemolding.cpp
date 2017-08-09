@@ -183,13 +183,13 @@ void ViewProviderMeshTransformDemolding::DragEndCallback(void)
   SbRotation rot = pcTrackballDragger->rotation.getValue();
   calcMaterialIndex(rot);
 
-  Base::Console().Log("View: Finish draging\n");
+  printf("View: Finish draging\n");
 
 }
 
 void ViewProviderMeshTransformDemolding::valueChangedCallback(void)
 {
-  //Base::Console().Log("Value change Callback\n");
+  //printf("Value change Callback\n");
   //setTransformation(pcTrackballDragger->getMotionMatrix());
   //pcTransform->rotation = pcTrackballDragger->rotation;
   SbMatrix temp;

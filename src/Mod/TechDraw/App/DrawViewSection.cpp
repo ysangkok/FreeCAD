@@ -154,7 +154,7 @@ short DrawViewSection::mustExecute() const
 void DrawViewSection::onChanged(const App::Property* prop)
 {
     if (!isRestoring()) {
-        //Base::Console().Message("TRACE - DVS::onChanged(%s) - %s\n",prop->getName(),Label.getValue());
+        //printf("TRACE - DVS::onChanged(%s) - %s\n",prop->getName(),Label.getValue());
         if (prop == &SectionSymbol) {
             std::string lblText = "Section " +
                                   std::string(SectionSymbol.getValue()) +
@@ -194,7 +194,7 @@ App::DocumentObjectExecReturn *DrawViewSection::execute(void)
     App::DocumentObject* link = Source.getValue();
     App::DocumentObject* base = BaseView.getValue();
     if (!link || !base)  {
-        Base::Console().Log("INFO - DVS::execute - No Source or Link - creation?\n");
+        printf("INFO - DVS::execute - No Source or Link - creation?\n");
         return DrawView::execute();
     }
 
@@ -203,7 +203,7 @@ App::DocumentObjectExecReturn *DrawViewSection::execute(void)
     if (!base->getTypeId().isDerivedFrom(TechDraw::DrawViewPart::getClassTypeId()))
         return new App::DocumentObjectExecReturn("BaseView object is not a DrawViewPart object");
 
-    //Base::Console().Message("TRACE - DVS::execute() - %s/%s\n",getNameInDocument(),Label.getValue());
+    //printf("TRACE - DVS::execute() - %s/%s\n",getNameInDocument(),Label.getValue());
 
     const Part::TopoShape &partTopo = static_cast<Part::Feature*>(link)->Shape.getShape();
 
@@ -218,8 +218,8 @@ App::DocumentObjectExecReturn *DrawViewSection::execute(void)
 
     Base::BoundBox3d bb = partTopo.getBoundBox();
     if(!isReallyInBox(orgPnt, bb)) {
-        Base::Console().Warning("DVS: Section Plane doesn't intersect part in %s\n",getNameInDocument());
-        Base::Console().Warning("DVS: Using center of bounding box.\n");
+        printf("DVS: Section Plane doesn't intersect part in %s\n",getNameInDocument());
+        printf("DVS: Using center of bounding box.\n");
         orgPnt = bb.GetCenter();
         SectionOrigin.setValue(orgPnt);
     }
@@ -246,7 +246,7 @@ App::DocumentObjectExecReturn *DrawViewSection::execute(void)
     BRepBndLib::Add(rawShape, testBox);
     testBox.SetGap(0.0);
     if (testBox.IsVoid()) {                        //prism & input don't intersect.  rawShape is garbage, don't bother.
-        Base::Console().Log("INFO - DVS::execute - prism & input don't intersect\n");
+        printf("INFO - DVS::execute - prism & input don't intersect\n");
         return DrawView::execute();
     }
 
@@ -266,7 +266,7 @@ App::DocumentObjectExecReturn *DrawViewSection::execute(void)
     }
     catch (Standard_Failure) {
         Handle(Standard_Failure) e1 = Standard_Failure::Caught();
-        Base::Console().Log("LOG - DVS::execute - base shape failed for %s - %s **\n",getNameInDocument(),e1->GetMessageString());
+        printf("LOG - DVS::execute - base shape failed for %s - %s **\n",getNameInDocument(),e1->GetMessageString());
         return new App::DocumentObjectExecReturn(e1->GetMessageString());
     }
 
@@ -297,7 +297,7 @@ App::DocumentObjectExecReturn *DrawViewSection::execute(void)
     }
     catch (Standard_Failure) {
         Handle(Standard_Failure) e2 = Standard_Failure::Caught();
-        Base::Console().Log("LOG - DVS::execute - failed building section faces for %s - %s **\n",getNameInDocument(),e2->GetMessageString());
+        printf("LOG - DVS::execute - failed building section faces for %s - %s **\n",getNameInDocument(),e2->GetMessageString());
         return new App::DocumentObjectExecReturn(e2->GetMessageString());
     }
 
@@ -320,7 +320,7 @@ TopoDS_Compound DrawViewSection::findSectionPlaneIntersections(const TopoDS_Shap
 {
     TopoDS_Compound result;
     if(shape.IsNull()){
-        Base::Console().Log("DrawViewSection::getSectionSurface - Sectional View shape is Empty\n");
+        printf("DrawViewSection::getSectionSurface - Sectional View shape is Empty\n");
         return result;
     }
 
@@ -402,7 +402,7 @@ TopoDS_Face DrawViewSection::projectFace(const TopoDS_Shape &face,
     for (i = 1 ; expl.More(); expl.Next(),i++) {
         const TopoDS_Edge& edge = TopoDS::Edge(expl.Current());
         if (edge.IsNull()) {
-            Base::Console().Log("INFO - DVS::projectFace - hard edge: %d is NULL\n",i);
+            printf("INFO - DVS::projectFace - hard edge: %d is NULL\n",i);
             continue;
         }
         faceEdges.push_back(edge);
@@ -413,7 +413,7 @@ TopoDS_Face DrawViewSection::projectFace(const TopoDS_Shape &face,
 //    for (i = 1 ; expl2.More(); expl2.Next(),i++) {
 //        const TopoDS_Edge& edge = TopoDS::Edge(expl2.Current());
 //        if (edge.IsNull()) {
-//            Base::Console().Log("INFO - GO::projectFace - outline edge: %d is NULL\n",i);
+//            printf("INFO - GO::projectFace - outline edge: %d is NULL\n",i);
 //            continue;
 //        }
 //        bool addEdge = true;
@@ -421,7 +421,7 @@ TopoDS_Face DrawViewSection::projectFace(const TopoDS_Shape &face,
 //        for (auto& e:faceEdges) {
 //            if (e.IsPartner(edge)) {
 //                addEdge = false;
-//                Base::Console().Message("TRACE - DVS::projectFace - skipping an edge 1\n");
+//                printf("TRACE - DVS::projectFace - skipping an edge 1\n");
 //            }
 //        }
 //        expl.ReInit();
@@ -429,7 +429,7 @@ TopoDS_Face DrawViewSection::projectFace(const TopoDS_Shape &face,
 //            const TopoDS_Edge& eHard = TopoDS::Edge(expl.Current());
 //            if (eHard.IsPartner(edge)) {
 //                addEdge = false;
-//                Base::Console().Message("TRACE - DVS::projectFace - skipping an edge 2\n");
+//                printf("TRACE - DVS::projectFace - skipping an edge 2\n");
 //            }
 //        }
 //        if (addEdge) {
@@ -440,7 +440,7 @@ TopoDS_Face DrawViewSection::projectFace(const TopoDS_Shape &face,
     TopoDS_Face projectedFace;
 
     if (faceEdges.empty()) {
-        Base::Console().Log("LOG - DVS::projectFace - no faceEdges\n");
+        printf("LOG - DVS::projectFace - no faceEdges\n");
         return projectedFace;
     }
 
@@ -466,7 +466,7 @@ TopoDS_Face DrawViewSection::projectFace(const TopoDS_Shape &face,
             projectedFace = mkFace.Face();
         }
     } else {
-        Base::Console().Warning("DVS::projectFace - input is not planar graph. No face detection\n");
+        printf("DVS::projectFace - input is not planar graph. No face detection\n");
     }
     return projectedFace;
 }
@@ -529,7 +529,7 @@ Base::Vector3d DrawViewSection::getSectionVector (const std::string sectionName)
             result = -1.0 * stdX;
         }
     } else {
-        Base::Console().Log("Error - DVS::getSectionVector - bad sectionName: %s\n",sectionName.c_str());
+        printf("Error - DVS::getSectionVector - bad sectionName: %s\n",sectionName.c_str());
         result = stdZ;
     }
     Base::Vector3d adjResult = DrawUtil::vecRotate(result,adjustAngle,view);

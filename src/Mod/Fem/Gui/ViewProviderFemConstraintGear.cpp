@@ -56,7 +56,7 @@ ViewProviderFemConstraintGear::~ViewProviderFemConstraintGear()
 
 bool ViewProviderFemConstraintGear::setEdit(int ModNum)
 {
-    Base::Console().Error("ViewProviderFemConstraintGear::setEdit()\n");
+    printf("ViewProviderFemConstraintGear::setEdit()\n");
     if (ModNum == ViewProvider::Default ) {
         // When double-clicking on the item for this constraint the
         // object unsets and sets its edit mode without closing
@@ -130,7 +130,7 @@ void ViewProviderFemConstraintGear::updateData(const App::Property* prop)
             SbVec3f b(base.x, base.y, base.z);
             SbVec3f ax(axis.x, axis.y, axis.z);
             SbVec3f dir(direction.x, direction.y, direction.z);
-            //Base::Console().Error("DirectionVector: %f, %f, %f\n", direction.x, direction.y, direction.z);
+            //printf("DirectionVector: %f, %f, %f\n", direction.x, direction.y, direction.z);
 
             createPlacement(pShapeSep, b, SbRotation(SbVec3f(0,1,0), ax));
             pShapeSep->addChild(createCylinder(pcConstraint->Height.getValue() * 0.8, dia/2));
@@ -172,14 +172,14 @@ void ViewProviderFemConstraintGear::updateData(const App::Property* prop)
 
             SbVec3f ax(axis.x, axis.y, axis.z);
             SbVec3f dir(direction.x, direction.y, direction.z);
-            /*Base::Console().Error("Axis: %f, %f, %f\n", axis.x, axis.y, axis.z);
-            Base::Console().Error("Direction: %f, %f, %f\n", direction.x, direction.y, direction.z);
+            /*printf("Axis: %f, %f, %f\n", axis.x, axis.y, axis.z);
+            printf("Direction: %f, %f, %f\n", direction.x, direction.y, direction.z);
             SbRotation rot = SbRotation(ax, dir);
             SbMatrix m;
             rot.getValue(m);
             SbMat m2;
             m.getValue(m2);
-            Base::Console().Error("Matrix: %f, %f, %f, %f\n", m[0][0], m[1][0], m[2][0], m[3][0]);
+            printf("Matrix: %f, %f, %f, %f\n", m[0][0], m[1][0], m[2][0], m[3][0]);
             // Note: In spite of the fact that the rotation matrix takes on 3 different values if 3
             // normal directions are chosen, the resulting arrow will only point in two different
             // directions when ax = (1,0,0) (but for ax=(0,1,0) it points in 3 different directions!)

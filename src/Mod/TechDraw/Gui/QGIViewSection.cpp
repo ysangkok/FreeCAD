@@ -82,7 +82,7 @@ void QGIViewSection::drawSectionFace()
 
     auto sectionFaces( section->getFaceGeometry() );
     if (sectionFaces.empty()) {
-        //Base::Console().Log("INFO - QGIViewSection::drawSectionFace - No sectionFaces available. Check Section plane.\n");
+        //printf("INFO - QGIViewSection::drawSectionFace - No sectionFaces available. Check Section plane.\n");
         return;
     }
 

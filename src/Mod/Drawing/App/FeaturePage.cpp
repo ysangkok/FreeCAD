@@ -137,7 +137,7 @@ App::DocumentObjectExecReturn *FeaturePage::execute(void)
         fi.setFile(App::Application::getResourceDir() + "Mod/Drawing/Templates/" + fi.fileName());
         // try the redirect
         if (!fi.isReadable()) {
-            Base::Console().Log("FeaturePage::execute() not able to open %s!\n",Template.getValue());
+            printf("FeaturePage::execute() not able to open %s!\n",Template.getValue());
             std::string error = std::string("Cannot open file ") + Template.getValue();
             return new App::DocumentObjectExecReturn(error);
         }

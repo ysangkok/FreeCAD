@@ -54,6 +54,6 @@ PyMOD_INIT_FUNC(Spreadsheet)
     Spreadsheet::SheetPython::init();
 
     PyObject* mod = Spreadsheet::initModule();
-    Base::Console().Log("Loading Spreadsheet module... done\n");
+    printf("Loading Spreadsheet module... done\n");
     PyMOD_Return(mod);
 }

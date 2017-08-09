@@ -107,7 +107,7 @@ PyMOD_INIT_FUNC(Robot)
     }
 
     PyObject* robotModule = (new Robot::Module())->module().ptr();
-    Base::Console().Log("Loading Robot module... done\n");
+    printf("Loading Robot module... done\n");
 
     // Add Types to module
     Base::Interpreter().addType(&Robot::Robot6AxisPy          ::Type,robotModule,"Robot6Axis");

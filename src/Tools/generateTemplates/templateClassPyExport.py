@@ -551,7 +551,7 @@ PyObject * @self.export.Name@::staticCallback_@i.Name@ (PyObject *self, PyObject
         //str += ", ";
         str += e.what();
         str += ")\\n";
-        Base::Console().Error(str.c_str());
+        printf(str.c_str());
         PyErr_SetString(Base::BaseExceptionFreeCADError,str.c_str());
         return NULL;
     }
@@ -562,7 +562,7 @@ PyObject * @self.export.Name@::staticCallback_@i.Name@ (PyObject *self, PyObject
     }
     catch(const char* e) // catch simple string exceptions
     {
-        Base::Console().Error(e);
+        printf(e);
         PyErr_SetString(Base::BaseExceptionFreeCADError,e);
         return NULL;
     }
@@ -574,7 +574,7 @@ PyObject * @self.export.Name@::staticCallback_@i.Name@ (PyObject *self, PyObject
         str += "FC++ exception thrown (";
         str += e.what();
         str += ")";
-        Base::Console().Error(str.c_str());
+        printf(str.c_str());
         PyErr_SetString(Base::BaseExceptionFreeCADError,str.c_str());
         return NULL;
     }
@@ -738,7 +738,7 @@ PyObject *@self.export.Name@::_getattr(char *attr)				// __getattr__ function: n
         str += "C++ exception thrown (";
         str += e.what();
         str += ")";
-        Base::Console().Error(str.c_str());
+        printf(str.c_str());
         PyErr_SetString(Base::BaseExceptionFreeCADError,str.c_str());
         return NULL;
     }
@@ -811,7 +811,7 @@ int @self.export.Name@::_setattr(char *attr, PyObject *value) // __setattr__ fun
         str += "C++ exception thrown (";
         str += e.what();
         str += ")";
-        Base::Console().Error(str.c_str());
+        printf(str.c_str());
         PyErr_SetString(Base::BaseExceptionFreeCADError,str.c_str());
         return -1;
     }

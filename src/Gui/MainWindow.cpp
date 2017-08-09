@@ -106,7 +106,6 @@
 #include "DlgOnlineHelpImp.h"
 
 #include "Language/Translator.h"
-#include "GuiInitScript.h"
 
 #include "Document.h"
 #include "MergeDocuments.h"
@@ -1430,10 +1429,10 @@ void MainWindow::loadWindowSettings()
     this->move(pos);
 
     // tmp. disable the report window to suppress some bothering warnings
-    //Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, false);
+    //printfEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, false);
     this->restoreState(config.value(QString::fromLatin1("MainWindowState")).toByteArray());
     std::clog << "Main window restored" << std::endl;
-    //Base::Console().SetEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, true);
+    //printfEnabledMsgType("ReportOutput", ConsoleMsgType::MsgType_Wrn, true);
 
     bool max = config.value(QString::fromLatin1("Maximized"), false).toBool();
     max ? showMaximized() : show();
@@ -1917,7 +1916,7 @@ StatusBarObserver::StatusBarObserver()
     msg = QString::fromLatin1("#000000"); // black
     wrn = QString::fromLatin1("#ffaa00"); // orange
     err = QString::fromLatin1("#ff0000"); // red
-    //Base::Console().AttachObserver(this);
+    //printfObserver(this);
     getWindowParameter()->Attach(this);
     getWindowParameter()->NotifyAll();
 }
@@ -1925,7 +1924,7 @@ StatusBarObserver::StatusBarObserver()
 StatusBarObserver::~StatusBarObserver()
 {
     getWindowParameter()->Detach(this);
-    //Base::Console().DetachObserver(this);
+    //printfObserver(this);
 }
 
 void StatusBarObserver::OnChange(Base::Subject<const char*> &rCaller, const char * sReason)

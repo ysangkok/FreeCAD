@@ -58,7 +58,7 @@ short Item::mustExecute() const
 App::DocumentObjectExecReturn *Item::execute(void)
 {
  
-    Base::Console().Message("Recalculate Assembly::Item\n");
+    printf("Recalculate Assembly::Item\n");
     return App::DocumentObject::StdReturn;
 }
 

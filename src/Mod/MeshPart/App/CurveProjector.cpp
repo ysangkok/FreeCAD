@@ -184,7 +184,7 @@ void CurveProjectorShape::projectCurve( const TopoDS_Edge& aEdge,
         // more the one intersection (@ToDo)
         }else if(Alg.NbPoints() > 1){
           PointOnEdge[i] = Base::Vector3f(FLOAT_MAX,0,0);
-          Base::Console().Log("MeshAlgos::projectCurve(): More then one intersection in Facet %lu, Edge %d\n",uCurFacetIdx,i);
+          printf("MeshAlgos::projectCurve(): More then one intersection in Facet %lu, Edge %d\n",uCurFacetIdx,i);
         }
       }
     }
@@ -202,7 +202,7 @@ void CurveProjectorShape::projectCurve( const TopoDS_Edge& aEdge,
       cResultPoint = cSplitPoint;
       GoOn = true;
     }else{
-      Base::Console().Log("MeshAlgos::projectCurve(): Possible reentry in Facet %lu\n", uCurFacetIdx);
+      printf("MeshAlgos::projectCurve(): Possible reentry in Facet %lu\n", uCurFacetIdx);
     }
 
     if( uCurFacetIdx == uStartFacetIdx )
@@ -335,7 +335,7 @@ void CurveProjectorSimple::projectCurve( const TopoDS_Edge& aEdge,
         str << TempResultPoint.x << " " 
             << TempResultPoint.y << " " 
             << TempResultPoint.z << std::endl;
-        Base::Console().Log("IDX %d\n",It.Position());
+        printf("IDX %d\n",It.Position());
 
         if(bFirst){
           bFirst = false;
@@ -347,7 +347,7 @@ void CurveProjectorSimple::projectCurve( const TopoDS_Edge& aEdge,
   }
 
   str.close();
-  Base::Console().Log("Projection map [%d facets with %d points]\n",FaceProjctMap.size(),PointCount);
+  printf("Projection map [%d facets with %d points]\n",FaceProjctMap.size(),PointCount);
 
   // estimate the first face
 //  gp_Pnt gpPt = hCurve->Value(fBegin);
@@ -356,11 +356,11 @@ void CurveProjectorSimple::projectCurve( const TopoDS_Edge& aEdge,
 
 /*
   do{
-    Base::Console().Log("Grow on %d %d left\n",uCurFacetIdx,FaceProjctMap.size());
+    printf("Grow on %d %d left\n",uCurFacetIdx,FaceProjctMap.size());
 
     if(FaceProjctMap[uCurFacetIdx].size() == 1)
     {
-      Base::Console().Log("Single hit\n");
+      printf("Single hit\n");
     }else{
 
 
@@ -431,7 +431,7 @@ void CurveProjectorSimple::projectCurve( const TopoDS_Edge& aEdge,
 
   if(!GoOn)
   {
-    Base::Console().Log("Starting point not projectable\n");
+    printf("Starting point not projectable\n");
     return;
   }
   {
@@ -637,7 +637,7 @@ void CurveProjectorWithToolMesh::makeToolMesh( const TopoDS_Edge& aEdge,std::vec
     LineSegs.push_back(s);
   }
 
-  Base::Console().Log("Projection map [%d facets with %d points]\n",FaceProjctMap.size(),PointCount);
+  printf("Projection map [%d facets with %d points]\n",FaceProjctMap.size(),PointCount);
 
 
   // build up the new mesh

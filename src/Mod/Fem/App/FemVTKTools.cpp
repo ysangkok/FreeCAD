@@ -117,7 +117,7 @@ void FemVTKTools::importVTKMesh(vtkSmartPointer<vtkDataSet> dataset, FemMesh* me
 {
     const vtkIdType nPoints = dataset->GetNumberOfPoints();
     const vtkIdType nCells = dataset->GetNumberOfCells();
-    Base::Console().Log("%d nodes/points and %d cells/elements found!\n", nPoints, nCells);
+    printf("%d nodes/points and %d cells/elements found!\n", nPoints, nCells);
 
     //vtkSmartPointer<vtkCellArray> cells = dataset->GetCells();  // works only for vtkUnstructuredGrid
     vtkSmartPointer<vtkIdList> idlist= vtkSmartPointer<vtkIdList>::New();
@@ -176,7 +176,7 @@ void FemVTKTools::importVTKMesh(vtkSmartPointer<vtkDataSet> dataset, FemMesh* me
                 break;
             default:
             {
-                Base::Console().Error("Only common 2D and 3D Cells are supported in VTK mesh import\n");
+                printf("Only common 2D and 3D Cells are supported in VTK mesh import\n");
                 break;
             }
         }
@@ -186,7 +186,7 @@ void FemVTKTools::importVTKMesh(vtkSmartPointer<vtkDataSet> dataset, FemMesh* me
 FemMesh* FemVTKTools::readVTKMesh(const char* filename, FemMesh* mesh)
 {
     Base::TimeInfo Start;
-    Base::Console().Log("Start: read FemMesh from VTK unstructuredGrid ======================\n");
+    printf("Start: read FemMesh from VTK unstructuredGrid ======================\n");
     Base::FileInfo f(filename);
 
     if(f.hasExtension("vtu"))
@@ -201,12 +201,12 @@ FemMesh* FemVTKTools::readVTKMesh(const char* filename, FemMesh* mesh)
     }
     else
     {
-        Base::Console().Error("file name extension is not supported\n");
+        printf("file name extension is not supported\n");
         return NULL;
     }
     //Mesh should link to the part feature, in order to set up FemConstraint
 
-    Base::Console().Log("    %f: Done \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
+    printf("    %f: Done \n",Base::TimeInfo::diffTimeF(Start,Base::TimeInfo()));
     return mesh;
 }
 
@@ -415,7 +415,7 @@ void FemVTKTools::writeVTKMesh(const char* filename, const FemMesh* mesh)
 {
 
     Base::TimeInfo Start;
-    Base::Console().Log("Start: write FemMesh from VTK unstructuredGrid ======================\n");
+    printf("Start: write FemMesh from VTK unstructuredGrid ======================\n");
     Base::FileInfo f(filename);
 
     vtkSmartPointer<vtkUnstructuredGrid> grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -428,10 +428,10 @@ void FemVTKTools::writeVTKMesh(const char* filename, const FemMesh* mesh)
         writeVTKFile<vtkDataSetWriter>(filename, grid);
     }
     else{
-        Base::Console().Error("file name extension is not supported to write VTK\n");
+        printf("file name extension is not supported to write VTK\n");
     }
 
-    Base::Console().Log("    %f: Done \n",Base::TimeInfo::diffTimeF(Start, Base::TimeInfo()));
+    printf("    %f: Done \n",Base::TimeInfo::diffTimeF(Start, Base::TimeInfo()));
 }
 
 
@@ -440,7 +440,7 @@ App::DocumentObject* getObjectByType(const Base::Type type)
     App::Document* pcDoc = App::GetApplication().getActiveDocument();
     if(!pcDoc)
     {
-        Base::Console().Message("No active document is found thus created\n");
+        printf("No active document is found thus created\n");
         pcDoc = App::GetApplication().newDocument();
     }
     App::DocumentObject* obj = pcDoc->getActiveObject();
@@ -465,7 +465,7 @@ App::DocumentObject* createObjectByType(const Base::Type type)
     App::Document* pcDoc = App::GetApplication().getActiveDocument();
     if(!pcDoc)
     {
-        Base::Console().Message("No active document is found thus created\n");
+        printf("No active document is found thus created\n");
         pcDoc = App::GetApplication().newDocument();
     }
     App::DocumentObject* obj = pcDoc->getActiveObject();
@@ -489,7 +489,7 @@ App::DocumentObject* createObjectByType(const Base::Type type)
 App::DocumentObject* FemVTKTools::readResult(const char* filename, App::DocumentObject* res)
 {
     Base::TimeInfo Start;
-    Base::Console().Log("Start: read FemResult with FemMesh from VTK file ======================\n");
+    printf("Start: read FemResult with FemMesh from VTK file ======================\n");
     Base::FileInfo f(filename);
 
     auto hGrp = App::GetApplication().GetParameterGroupByPath("User parameter:BaseApp/Preferences/Units");
@@ -511,13 +511,13 @@ App::DocumentObject* FemVTKTools::readResult(const char* filename, App::Document
     }
     else
     {
-        Base::Console().Error("file name extension is not supported\n");
+        printf("file name extension is not supported\n");
     }
 
     App::Document* pcDoc = App::GetApplication().getActiveDocument();
     if(!pcDoc)
     {
-        Base::Console().Message("No active document is found thus created\n");
+        printf("No active document is found thus created\n");
         pcDoc = App::GetApplication().newDocument();
     }
     App::DocumentObject* obj = pcDoc->getActiveObject();
@@ -528,12 +528,12 @@ App::DocumentObject* FemVTKTools::readResult(const char* filename, App::Document
         result = res;
     else
     {
-        Base::Console().Log("FemResultObject pointer is NULL, trying to get the active object\n");
+        printf("FemResultObject pointer is NULL, trying to get the active object\n");
         if(obj->getTypeId() == Base::Type::fromName("Fem::FemResultObjectPython"))
             result = obj;
         else
         {
-            Base::Console().Log("the active object is not the correct type, do nothing\n");
+            printf("the active object is not the correct type, do nothing\n");
             return NULL;
         }
     }
@@ -558,10 +558,10 @@ App::DocumentObject* FemVTKTools::readResult(const char* filename, App::Document
     }
     else
     {
-        Base::Console().Error("FemResult type, fluidic (array name of `U`) or mechanical (array name of `Displacement`) can not be detected\n");
+        printf("FemResult type, fluidic (array name of `U`) or mechanical (array name of `Displacement`) can not be detected\n");
     }
     pcDoc->recompute();
-    Base::Console().Log("    %f: Done \n", Base::TimeInfo::diffTimeF(Start, Base::TimeInfo()));
+    printf("    %f: Done \n", Base::TimeInfo::diffTimeF(Start, Base::TimeInfo()));
 
     return result;
 }
@@ -573,13 +573,13 @@ void FemVTKTools::writeResult(const char* filename, const App::DocumentObject* r
         App::Document* pcDoc = App::GetApplication().getActiveDocument();
         if(!pcDoc)
         {
-            Base::Console().Message("No active document is found thus do nothing and return\n");
+            printf("No active document is found thus do nothing and return\n");
             return;
         }
         res = pcDoc->getActiveObject(); //type checking is done by caller
     }
     if(!res) {
-        Base::Console().Error("Result object pointer is invalid and it is not active oject");
+        printf("Result object pointer is invalid and it is not active oject");
         return;
     }
 
@@ -592,7 +592,7 @@ void FemVTKTools::writeResult(const char* filename, const App::DocumentObject* r
     }
 
     Base::TimeInfo Start;
-    Base::Console().Message("Start: write FemResult or CfdResult to VTK unstructuredGrid dataset =======\n");
+    printf("Start: write FemResult or CfdResult to VTK unstructuredGrid dataset =======\n");
     Base::FileInfo f(filename);
 
     vtkSmartPointer<vtkUnstructuredGrid> grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -607,7 +607,7 @@ void FemVTKTools::writeResult(const char* filename, const App::DocumentObject* r
         FemVTKTools::exportMechanicalResult(res, grid);
     }
     else{
-        Base::Console().Error("Result type can not be detected from unique property name like Velocity or DisplacementVectors\n");
+        printf("Result type can not be detected from unique property name like Velocity or DisplacementVectors\n");
         return;
     }
 
@@ -619,10 +619,10 @@ void FemVTKTools::writeResult(const char* filename, const App::DocumentObject* r
         writeVTKFile<vtkDataSetWriter>(filename, grid);
     }
     else{
-        Base::Console().Error("file name extension is not supported to write VTK\n");
+        printf("file name extension is not supported to write VTK\n");
     }
 
-    Base::Console().Message("    %f: result writing is done \n",Base::TimeInfo::diffTimeF(Start, Base::TimeInfo()));
+    printf("    %f: result writing is done \n",Base::TimeInfo::diffTimeF(Start, Base::TimeInfo()));
 }
 
 // it is an internal utility func to avoid code duplication
@@ -670,7 +670,7 @@ void _importResult(const vtkSmartPointer<vtkDataSet> dataset, App::DocumentObjec
     vtkSmartPointer<vtkPointData> pd = dataset->GetPointData();
     const vtkIdType nPoints = dataset->GetNumberOfPoints();
     if(pd->GetNumberOfArrays() == 0) {
-        Base::Console().Error("No point data array is found in vtk data set, do nothing\n");
+        printf("No point data array is found in vtk data set, do nothing\n");
         // if pointData is empty, data may be in cellDate, cellData -> pointData interpolation is possible in VTK
         return;
     }
@@ -711,10 +711,10 @@ void _importResult(const vtkSmartPointer<vtkDataSet> dataset, App::DocumentObjec
                         _calcStat(vec, stats);
                     //PropertyVectorList will not show up in PropertyEditor
                     vector_list->setValues(vec);
-                    Base::Console().Message("PropertyVectorList %s has been loaded \n", kv.first.c_str());
+                    printf("PropertyVectorList %s has been loaded \n", kv.first.c_str());
                 }
                 else {
-                    Base::Console().Error("static_cast<App::PropertyVectorList*>((res->getPropertyByName(\"%s\")) failed \n", kv.first.c_str());
+                    printf("static_cast<App::PropertyVectorList*>((res->getPropertyByName(\"%s\")) failed \n", kv.first.c_str());
                     continue;
                 }
             }
@@ -727,7 +727,7 @@ void _importResult(const vtkSmartPointer<vtkDataSet> dataset, App::DocumentObjec
         }
     }
     else{
-        Base::Console().Error("essential_property %s corresponding essential array %s in VTK file is not found", essential_property.c_str(), essential_var);
+        printf("essential_property %s corresponding essential array %s in VTK file is not found", essential_property.c_str(), essential_var);
     }
 
     for(auto const& kv: scalers){
@@ -737,7 +737,7 @@ void _importResult(const vtkSmartPointer<vtkDataSet> dataset, App::DocumentObjec
         if(nPoints && vec && vec->GetNumberOfComponents() == 1) {
             App::PropertyFloatList* field = static_cast<App::PropertyFloatList*>(res->getPropertyByName(kv.first.c_str()));
             if (!field) {
-                Base::Console().Error("static_cast<App::PropertyFloatList*>((res->getPropertyByName(\"%s\")) failed \n", kv.first.c_str());
+                printf("static_cast<App::PropertyFloatList*>((res->getPropertyByName(\"%s\")) failed \n", kv.first.c_str());
                 continue;
             }
 
@@ -759,7 +759,7 @@ void _importResult(const vtkSmartPointer<vtkDataSet> dataset, App::DocumentObjec
                 stats[index*3 + 2] = vmax;
             }
 
-            Base::Console().Message("field  \"%s\" has been loaded \n", kv.first.c_str());
+            printf("field  \"%s\" has been loaded \n", kv.first.c_str());
         }
     }
     static_cast<App::PropertyFloatList*>(res->getPropertyByName("Stats"))->setValues(stats);
@@ -787,12 +787,12 @@ void _exportResult(const App::DocumentObject* result, vtkSmartPointer<vtkDataSet
         if (res->getPropertyByName(kv.first.c_str()))
             field = static_cast<App::PropertyVectorList*>(res->getPropertyByName(kv.first.c_str()));
         else
-            Base::Console().Error("PropertyVectorList %s not found \n", kv.first.c_str());
+            printf("PropertyVectorList %s not found \n", kv.first.c_str());
         if(field && field->getValues().size()>1) {  // FreeCAD property list
             const std::vector<Base::Vector3d>& vel = field->getValues();
             vtkSmartPointer<vtkDoubleArray> data = vtkSmartPointer<vtkDoubleArray>::New();
             if(nPoints != field->getSize())
-                Base::Console().Error("PropertyVectorList->getSize() = %d, not equal to mesh point number \n", field->getSize());
+                printf("PropertyVectorList->getSize() = %d, not equal to mesh point number \n", field->getSize());
             data->SetNumberOfComponents(dim);
             data->SetNumberOfTuples(vel.size());
             data->SetName(kv.second.c_str());  // kv.first may be a better name, without space
@@ -815,10 +815,10 @@ void _exportResult(const App::DocumentObject* result, vtkSmartPointer<vtkDataSet
                 }
             }
             grid->GetPointData()->AddArray(data);
-            Base::Console().Message("Info: PropertyVectorList %s exported as  vtk array name '%s'\n", kv.first.c_str(), kv.second.c_str());
+            printf("Info: PropertyVectorList %s exported as  vtk array name '%s'\n", kv.first.c_str(), kv.second.c_str());
         }
         else
-            Base::Console().Error("field = static_cast<App::PropertyVectorList*> failed or empty for field: %s", kv.first.c_str());
+            printf("field = static_cast<App::PropertyVectorList*> failed or empty for field: %s", kv.first.c_str());
     }
 
     for (auto const& kv: scalers) {
@@ -835,7 +835,7 @@ void _exportResult(const App::DocumentObject* result, vtkSmartPointer<vtkDataSet
                 data->SetValue(i, vec[i]);
 
             grid->GetPointData()->AddArray(data);
-            Base::Console().Message("Info: PropertyFloatList %s exported as  vtk array name '%s'\n", kv.first.c_str(), kv.second.c_str());
+            printf("Info: PropertyFloatList %s exported as  vtk array name '%s'\n", kv.first.c_str(), kv.second.c_str());
         }
     }
 
@@ -891,7 +891,7 @@ void FemVTKTools::exportFluidicResult(const App::DocumentObject* res, vtkSmartPo
     std::string essential_property = std::string("Velocity");
 
     if(!res->getPropertyByName("Velocity")){
-        Base::Console().Error("essential field like `velocity` is not found in CfdResult\n");
+        printf("essential field like `velocity` is not found in CfdResult\n");
         return;
     }
     _exportResult(res, grid, cfd_vectors, cfd_scalers, essential_property);
@@ -939,7 +939,7 @@ void FemVTKTools::importMechanicalResult(vtkSmartPointer<vtkDataSet> dataset, Ap
 
 void FemVTKTools::exportMechanicalResult(const App::DocumentObject* res, vtkSmartPointer<vtkDataSet> grid) {
     if(!res->getPropertyByName("DisplacementVectors")){
-        Base::Console().Error("essential field like `DisplacementVectors` is not found in this Result object\n");
+        printf("essential field like `DisplacementVectors` is not found in this Result object\n");
         return;
     }
     std::map<std::string, std::string> vectors;  // property defined in MechanicalResult.py -> variable name in vtk

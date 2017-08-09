@@ -66,7 +66,7 @@ short Product::mustExecute() const {
 
 App::DocumentObjectExecReturn* Product::execute(void) {
 
-    Base::Console().Message("Execute\n");
+    printf("Execute\n");
 
     return App::DocumentObject::StdReturn;
 }

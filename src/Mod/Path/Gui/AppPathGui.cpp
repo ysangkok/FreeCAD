@@ -67,7 +67,7 @@ PyMOD_INIT_FUNC(PathGui)
         PyMOD_Return(0);
     }
     PyObject* mod = PathGui::initModule();
-    Base::Console().Log("Loading GUI of Path module... done\n");
+    printf("Loading GUI of Path module... done\n");
 
     // instantiating the commands
     CreatePathCommands();

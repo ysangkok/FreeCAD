@@ -148,7 +148,7 @@ int Sketch::setUpSketch(const std::vector<Part::Geometry *> &GeoList,
     if (debugMode==GCS::Minimal || debugMode==GCS::IterationLevel) {
         Base::TimeInfo end_time;
 
-        Base::Console().Log("Sketcher::setUpSketch()-T:%s\n",Base::TimeInfo::diffTime(start_time,end_time).c_str());
+        printf("Sketcher::setUpSketch()-T:%s\n",Base::TimeInfo::diffTime(start_time,end_time).c_str());
     }
 
     return GCSsys.dofsNumber();
@@ -1537,7 +1537,7 @@ int Sketch::addPerpendicularConstraint(int geoId1, int geoId2)
         }
     }
 
-    Base::Console().Warning("Perpendicular constraints between %s and %s are not supported.\n",
+    printf("Perpendicular constraints between %s and %s are not supported.\n",
                             nameByType(Geoms[geoId1].type), nameByType(Geoms[geoId2].type));
     return -1;
 }
@@ -1599,7 +1599,7 @@ int Sketch::addTangentConstraint(int geoId1, int geoId2)
             GCSsys.addConstraintTangent(c, c2, tag);
             return ConstraintsCounter;
         } else if (Geoms[geoId2].type == Ellipse) {
-            Base::Console().Error("Direct tangency constraint between circle and ellipse is not supported. Use tangent-via-point instead.");
+            printf("Direct tangency constraint between circle and ellipse is not supported. Use tangent-via-point instead.");
             return -1;
         }
         else if (Geoms[geoId2].type == Arc) {
@@ -1610,10 +1610,10 @@ int Sketch::addTangentConstraint(int geoId1, int geoId2)
         }
     } else if (Geoms[geoId1].type == Ellipse) {
         if (Geoms[geoId2].type == Circle) {
-            Base::Console().Error("Direct tangency constraint between circle and ellipse is not supported. Use tangent-via-point instead.");
+            printf("Direct tangency constraint between circle and ellipse is not supported. Use tangent-via-point instead.");
             return -1;
         } else if (Geoms[geoId2].type == Arc) {
-            Base::Console().Error("Direct tangency constraint between arc and ellipse is not supported. Use tangent-via-point instead.");
+            printf("Direct tangency constraint between arc and ellipse is not supported. Use tangent-via-point instead.");
             return -1;
         }
     } else if (Geoms[geoId1].type == Arc) {
@@ -1624,7 +1624,7 @@ int Sketch::addTangentConstraint(int geoId1, int geoId2)
             GCSsys.addConstraintTangent(c, a, tag);
             return ConstraintsCounter;
         } else if (Geoms[geoId2].type == Ellipse) {
-            Base::Console().Error("Direct tangency constraint between arc and ellipse is not supported. Use tangent-via-point instead.");
+            printf("Direct tangency constraint between arc and ellipse is not supported. Use tangent-via-point instead.");
             return -1;
         } else if (Geoms[geoId2].type == Arc) {
             GCS::Arc &a2 = Arcs[Geoms[geoId2].index];
@@ -1672,14 +1672,14 @@ int Sketch::addAngleAtPointConstraint(
 
     if (Geoms[geoId1].type == Point ||
         Geoms[geoId2].type == Point){
-        Base::Console().Error("addAngleAtPointConstraint: one of the curves is a point!\n");
+        printf("addAngleAtPointConstraint: one of the curves is a point!\n");
         return -1;
     }
 
     GCS::Curve* crv1 =getGCSCurveByGeoId(geoId1);
     GCS::Curve* crv2 =getGCSCurveByGeoId(geoId2);
     if (!crv1 || !crv2) {
-        Base::Console().Error("addAngleAtPointConstraint: getGCSCurveByGeoId returned NULL!\n");
+        printf("addAngleAtPointConstraint: getGCSCurveByGeoId returned NULL!\n");
         return -1;
     }
 
@@ -1690,7 +1690,7 @@ int Sketch::addAngleAtPointConstraint(
         pointId = getPointId(geoId1, pos1);
 
     if (pointId < 0 || pointId >= int(Points.size())){
-        Base::Console().Error("addAngleAtPointConstraint: point index out of range.\n");
+        printf("addAngleAtPointConstraint: point index out of range.\n");
         return -1;
     }
     GCS::Point &p = Points[pointId];
@@ -1698,7 +1698,7 @@ int Sketch::addAngleAtPointConstraint(
     if(e2e){//we need second point
         int pointId = getPointId(geoId2, pos2);
         if (pointId < 0 || pointId >= int(Points.size())){
-            Base::Console().Error("addAngleAtPointConstraint: point index out of range.\n");
+            printf("addAngleAtPointConstraint: point index out of range.\n");
             return -1;
         }
         p2 = &(Points[pointId]);
@@ -2009,7 +2009,7 @@ int Sketch::addEqualConstraint(int geoId1, int geoId2)
         }
     }
 
-    Base::Console().Warning("Equality constraints between %s and %s are not supported.\n",
+    printf("Equality constraints between %s and %s are not supported.\n",
                             nameByType(Geoms[geoId1].type), nameByType(Geoms[geoId2].type));
     return -1;
 }
@@ -2134,7 +2134,7 @@ int Sketch::addSnellsLawConstraint(int geoIdRay1, PointPos posRay1,
 
     if (Geoms[geoIdRay1].type == Point ||
         Geoms[geoIdRay2].type == Point){
-        Base::Console().Error("addSnellsLawConstraint: point is not a curve. Not applicable!\n");
+        printf("addSnellsLawConstraint: point is not a curve. Not applicable!\n");
         return -1;
     }
 
@@ -2142,7 +2142,7 @@ int Sketch::addSnellsLawConstraint(int geoIdRay1, PointPos posRay1,
     GCS::Curve* ray2 =getGCSCurveByGeoId(geoIdRay2);
     GCS::Curve* boundary =getGCSCurveByGeoId(geoIdBnd);
     if (!ray1 || !ray2 || !boundary) {
-        Base::Console().Error("addSnellsLawConstraint: getGCSCurveByGeoId returned NULL!\n");
+        printf("addSnellsLawConstraint: getGCSCurveByGeoId returned NULL!\n");
         return -1;
     }
 
@@ -2150,7 +2150,7 @@ int Sketch::addSnellsLawConstraint(int geoIdRay1, PointPos posRay1,
     int pointId2 = getPointId(geoIdRay2, posRay2);
     if ( pointId1 < 0 || pointId1 >= int(Points.size()) ||
          pointId2 < 0 || pointId2 >= int(Points.size()) ){
-        Base::Console().Error("addSnellsLawConstraint: point index out of range.\n");
+        printf("addSnellsLawConstraint: point index out of range.\n");
         return -1;
     }
     GCS::Point &p1 = Points[pointId1];
@@ -2723,7 +2723,7 @@ bool Sketch::updateGeometry()
 
             }
         } catch (Base::Exception e) {
-            Base::Console().Error("Updating geometry: Error build geometry(%d): %s\n",
+            printf("Updating geometry: Error build geometry(%d): %s\n",
                                   i,e.what());
             return false;
         }
@@ -2799,7 +2799,7 @@ int Sketch::solve(void)
         if (!valid_solution) {
             GCSsys.undoSolution();
             updateGeometry();
-            Base::Console().Warning("Invalid solution from %s solver.\n", solvername.c_str());
+            printf("Invalid solution from %s solver.\n", solvername.c_str());
         }
         else {
             updateNonDrivingConstraints();
@@ -2809,7 +2809,7 @@ int Sketch::solve(void)
         valid_solution = false;
         if(debugMode==GCS::Minimal || debugMode==GCS::IterationLevel){
             
-            Base::Console().Log("Sketcher::Solve()-%s- Failed!! Falling back...\n",solvername.c_str());
+            printf("Sketcher::Solve()-%s- Failed!! Falling back...\n",solvername.c_str());
         }        
     }
 
@@ -2853,7 +2853,7 @@ int Sketch::solve(void)
                 if (!valid_solution) {
                     GCSsys.undoSolution();
                     updateGeometry();
-                    Base::Console().Warning("Invalid solution from %s solver.\n", solvername.c_str());
+                    printf("Invalid solution from %s solver.\n", solvername.c_str());
                     ret = GCS::SuccessfulSolutionInvalid;
                 }else
                 {
@@ -2863,7 +2863,7 @@ int Sketch::solve(void)
                 valid_solution = false;
                 if(debugMode==GCS::Minimal || debugMode==GCS::IterationLevel){
                     
-                    Base::Console().Log("Sketcher::Solve()-%s- Failed!! Falling back...\n",solvername.c_str());
+                    printf("Sketcher::Solve()-%s- Failed!! Falling back...\n",solvername.c_str());
                 }
             }
 
@@ -2872,15 +2872,15 @@ int Sketch::solve(void)
 
             if (valid_solution) {
                 if (soltype == 1)
-                    Base::Console().Log("Important: the LevenbergMarquardt solver succeeded where the DogLeg solver had failed.\n");
+                    printf("Important: the LevenbergMarquardt solver succeeded where the DogLeg solver had failed.\n");
                 else if (soltype == 2)
-                    Base::Console().Log("Important: the BFGS solver succeeded where the DogLeg and LevenbergMarquardt solvers have failed.\n");
+                    printf("Important: the BFGS solver succeeded where the DogLeg and LevenbergMarquardt solvers have failed.\n");
                 else if (soltype == 3)
-                    Base::Console().Log("Important: the SQP solver succeeded where all single subsystem solvers have failed.\n");
+                    printf("Important: the SQP solver succeeded where all single subsystem solvers have failed.\n");
 
                 if (soltype > 0) {
-                    Base::Console().Log("If you see this message please report a way of reproducing this result at\n");
-                    Base::Console().Log("http://www.freecadweb.org/tracker/main_page.php\n");
+                    printf("If you see this message please report a way of reproducing this result at\n");
+                    printf("http://www.freecadweb.org/tracker/main_page.php\n");
                 }
 
                 break;
@@ -2892,7 +2892,7 @@ int Sketch::solve(void)
 
     if(debugMode==GCS::Minimal || debugMode==GCS::IterationLevel){
         
-        Base::Console().Log("Sketcher::Solve()-%s-T:%s\n",solvername.c_str(),Base::TimeInfo::diffTime(start_time,end_time).c_str());
+        printf("Sketcher::Solve()-%s-T:%s\n",solvername.c_str(),Base::TimeInfo::diffTime(start_time,end_time).c_str());
     }
 
     SolveTime = Base::TimeInfo::diffTimeF(start_time,end_time);
@@ -3395,7 +3395,7 @@ TopoShape Sketch::toShape(void) const
     // create a compound with the closed structures and let the
     // features decide what to do with it...
     if (edge_list.size() > 0)
-        Base::Console().Warning("Left over edges in Sketch. Only closed structures will be propagated at the moment!\n");
+        printf("Left over edges in Sketch. Only closed structures will be propagated at the moment!\n");
 
 #endif
 

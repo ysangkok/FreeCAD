@@ -317,7 +317,7 @@ bool ViewProviderMeshNode::handleEvent(const SoEvent * const ev,Gui::View3DInven
     Viewer.render();
     if ( !ok ) // note: the mouse grabbing needs to be released
       //QMessageBox::warning(Viewer.getWidget(),"Invalid polygon","The picked polygon seems to have self-overlappings.\n\nThis could lead to strange rersults.");
-      Base::Console().Message("The picked polygon seems to have self-overlappings. This could lead to strange results.");
+      printf("The picked polygon seems to have self-overlappings. This could lead to strange results.");
   }
 
   return false;

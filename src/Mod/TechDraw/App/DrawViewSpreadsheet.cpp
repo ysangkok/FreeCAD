@@ -200,7 +200,7 @@ std::string DrawViewSpreadsheet::getSheetImage(void)
             }
         }
     } catch (std::exception) {
-        Base::Console().Error("Invalid cell range for %s\n",getNameInDocument());
+        printf("Invalid cell range for %s\n",getNameInDocument());
         return result.str();
     }
 

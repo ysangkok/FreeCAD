@@ -83,6 +83,6 @@ PyMOD_INIT_FUNC(SurfaceGui)
 //    SurfaceGui::ViewProviderCut::init();
 
     PyObject* mod = SurfaceGui::initModule();
-    Base::Console().Log("Loading GUI of Surface module... done\n");
+    printf("Loading GUI of Surface module... done\n");
     PyMOD_Return(mod);
 }

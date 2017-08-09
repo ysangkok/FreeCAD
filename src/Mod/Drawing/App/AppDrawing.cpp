@@ -46,7 +46,7 @@ PyMOD_INIT_FUNC(Drawing)
         PyMOD_Return(0);
     }
     PyObject* mod = Drawing::initModule();
-    Base::Console().Log("Loading Drawing module... done\n");
+    printf("Loading Drawing module... done\n");
 
 
     // NOTE: To finish the initialization of our own type objects we must

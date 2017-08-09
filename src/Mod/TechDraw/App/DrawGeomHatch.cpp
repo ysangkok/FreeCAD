@@ -184,7 +184,7 @@ std::vector<PATLineSpec> DrawGeomHatch::getDecodedSpecsFromFile(std::string file
     std::vector<PATLineSpec> result;
     Base::FileInfo fi(fileSpec);
     if (!fi.isReadable()) {
-        Base::Console().Error("DrawGeomHatch::getDecodedSpecsFromFile not able to open %s!\n",fileSpec.c_str());
+        printf("DrawGeomHatch::getDecodedSpecsFromFile not able to open %s!\n",fileSpec.c_str());
         return result;
     }
     result = PATLineSpec::getSpecsForPattern(fileSpec,myPattern);
@@ -198,7 +198,7 @@ std::vector<LineSet>  DrawGeomHatch::getTrimmedLines(int i)   //get the trimmed 
     DrawViewPart* source = getSourceView();
     if (!source ||
         !source->hasGeometry()) {
-        Base::Console().Message("TRACE - DGH::getTrimmedLines - no source geometry\n");
+        printf("TRACE - DGH::getTrimmedLines - no source geometry\n");
         return result;
     }
     return getTrimmedLines(source, m_lineSets,i, ScalePattern.getValue());
@@ -211,7 +211,7 @@ std::vector<LineSet> DrawGeomHatch::getTrimmedLines(DrawViewPart* source, std::v
     std::vector<LineSet> result;
 
     if (lineSets.empty()) {
-        Base::Console().Log("INFO - DGH::getTrimmedLines - no LineSets!\n");
+        printf("INFO - DGH::getTrimmedLines - no LineSets!\n");
         return result;
     }
 
@@ -238,7 +238,7 @@ std::vector<LineSet> DrawGeomHatch::getTrimmedLines(DrawViewPart* source, std::v
         BRepAlgoAPI_Common mkCommon(face, Comp);
         if ((!mkCommon.IsDone())  ||
             (mkCommon.Shape().IsNull()) ) {
-            Base::Console().Log("INFO - DGH::getTrimmedLines - Common creation failed\n");
+            printf("INFO - DGH::getTrimmedLines - Common creation failed\n");
             return result;
         }
         TopoDS_Shape common = mkCommon.Shape();
@@ -255,7 +255,7 @@ std::vector<LineSet> DrawGeomHatch::getTrimmedLines(DrawViewPart* source, std::v
         for ( int i = 1 ; i <= mapOfEdges.Extent() ; i++ ) {           //remember, TopExp makes no promises about the order it finds edges
             const TopoDS_Edge& edge = TopoDS::Edge(mapOfEdges(i));
             if (edge.IsNull()) {
-                Base::Console().Log("INFO - DGH::getTrimmedLines - edge: %d is NULL\n",i);
+                printf("INFO - DGH::getTrimmedLines - edge: %d is NULL\n",i);
                 continue;
             }
             resultEdges.push_back(edge);
@@ -266,7 +266,7 @@ std::vector<LineSet> DrawGeomHatch::getTrimmedLines(DrawViewPart* source, std::v
         for (auto& e: resultEdges) {
             TechDrawGeometry::BaseGeom* base = BaseGeom::baseFactory(e);
             if (base == nullptr) {
-                Base::Console().Log("FAIL - DGH::getTrimmedLines - baseFactory failed for edge: %d\n",i);
+                printf("FAIL - DGH::getTrimmedLines - baseFactory failed for edge: %d\n",i);
                 throw Base::Exception("DGH::getTrimmedLines - baseFactory failed");
             }
             resultGeoms.push_back(base);
@@ -334,7 +334,7 @@ std::vector<TopoDS_Edge> DrawGeomHatch::makeEdgeOverlay(PATLineSpec hl, Bnd_Box 
 //TODO: check if this makes 2-3 extra lines.  might be some "left" lines on "right" side of vv
     } else if (angle > 0) {      //oblique  (bottom left -> top right)
         //ex: 60,0,0,0,4.0,25,-25
-//        Base::Console().Message("TRACE - DGH-makeEdgeOverlay - making angle > 0\n");
+//        printf("TRACE - DGH-makeEdgeOverlay - making angle > 0\n");
         double xLeftAtom = origin.x + (minY - origin.y)/slope;                  //the "atom" is the fill line that passes through the 
                                                                                 //pattern-origin (not necc. R2 origin)
         double xRightAtom = origin.x + (maxY - origin.y)/slope;
@@ -354,7 +354,7 @@ std::vector<TopoDS_Edge> DrawGeomHatch::makeEdgeOverlay(PATLineSpec hl, Bnd_Box 
         }
     } else {    //oblique (bottom right -> top left)
         // ex: -60,0,0,0,4.0,25.0,-12.5,12.5,-6
-//        Base::Console().Message("TRACE - DGH-makeEdgeOverlay - making angle < 0\n");
+//        printf("TRACE - DGH-makeEdgeOverlay - making angle < 0\n");
         double xRightAtom = origin.x + ((minY - origin.y)/slope);         //x-coord of left end of Atom line
         double xLeftAtom = origin.x + ((maxY - origin.y)/slope);          //x-coord of right end of Atom line
         int repeatRight = (int) fabs((maxX - xLeftAtom)/interval);        //number of lines to Right of Atom
@@ -391,12 +391,12 @@ TopoDS_Edge DrawGeomHatch::makeLine(Base::Vector3d s, Base::Vector3d e)
 //! these will be clipped to shape on the gui side
 std::vector<LineSet> DrawGeomHatch::getFaceOverlay(int fdx)
 {
-//    Base::Console().Message("TRACE - DGH::getFaceOverlay(%d)\n",fdx);
+//    printf("TRACE - DGH::getFaceOverlay(%d)\n",fdx);
     std::vector<LineSet> result;
     DrawViewPart* source = getSourceView();
     if (!source ||
         !source->hasGeometry()) {
-        Base::Console().Message("TRACE - DGH::getFaceOverlay - no source geometry\n");
+        printf("TRACE - DGH::getFaceOverlay - no source geometry\n");
         return result;
     }
 
@@ -414,7 +414,7 @@ std::vector<LineSet> DrawGeomHatch::getFaceOverlay(int fdx)
         for (auto& e: candidates) {
             TechDrawGeometry::BaseGeom* base = BaseGeom::baseFactory(e);
             if (base == nullptr) {
-                Base::Console().Log("FAIL - DGH::getFaceOverlay - baseFactory failed for edge: %d\n",i);
+                printf("FAIL - DGH::getFaceOverlay - baseFactory failed for edge: %d\n",i);
                 throw Base::Exception("DGH::getFaceOverlay - baseFactory failed");
             }
             resultGeoms.push_back(base);
@@ -459,7 +459,7 @@ TopoDS_Face DrawGeomHatch::extractFace(DrawViewPart* source, int iface )
         mkFace.Add(*itWire);
     }
     if (!mkFace.IsDone()) {
-         Base::Console().Log("INFO - DGH::extractFace - face creation failed\n");
+         printf("INFO - DGH::extractFace - face creation failed\n");
          return result;
     }
     result = mkFace.Face();
@@ -480,7 +480,7 @@ void DrawGeomHatch::getParameters(void)
         if (tfi.isReadable()) {
             FilePattern.setValue(patternFileName.toUtf8().constData());
         } else {
-            Base::Console().Error("DrawGeomHatch: PAT file: %s Not Found\n",patternFileName.toUtf8().constData());
+            printf("DrawGeomHatch: PAT file: %s Not Found\n",patternFileName.toUtf8().constData());
         }
     hGrp = App::GetApplication().GetUserParameter()
         .GetGroup("BaseApp")->GetGroup("Preferences")->GetGroup("Mod/TechDraw/PAT");

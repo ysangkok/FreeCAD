@@ -162,17 +162,17 @@ void Transformed::Restore(Base::XMLReader &reader)
             throw; // re-throw
         }
         catch (const Base::Exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const std::exception &e) {
-            Base::Console().Error("%s\n", e.what());
+            printf("%s\n", e.what());
         }
         catch (const char* e) {
-            Base::Console().Error("%s\n", e);
+            printf("%s\n", e);
         }
 #ifndef FC_DEBUG
         catch (...) {
-            Base::Console().Error("Primitive::Restore: Unknown C++ exception thrown");
+            printf("Primitive::Restore: Unknown C++ exception thrown");
         }
 #endif
 
@@ -279,7 +279,7 @@ App::DocumentObjectExecReturn *Transformed::execute(void)
 
                 if (!Part::checkIntersection(support, mkTrf.Shape(), false, true)) {
 #ifdef FC_DEBUG // do not write this in release mode because a message appears already in the task view
-                    Base::Console().Warning("Transformed shape does not intersect support %s: Removed\n", (*o)->getNameInDocument());
+                    printf("Transformed shape does not intersect support %s: Removed\n", (*o)->getNameInDocument());
 #endif
                     nointersect_trsfms[*o].insert(t);
                 } else {

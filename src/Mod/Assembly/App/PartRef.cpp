@@ -193,7 +193,7 @@ boost::shared_ptr< Geometry3D > PartRef::getGeometry3D(const char* Type) {
                 break;
             }
             default:
-                Base::Console().Message("Unsuported Surface Geometrie Type at selection\n");
+                printf("Unsuported Surface Geometrie Type at selection\n");
                 return boost::shared_ptr< Geometry3D >();
             }
 
@@ -209,7 +209,7 @@ boost::shared_ptr< Geometry3D > PartRef::getGeometry3D(const char* Type) {
                     break;
                 }
                 default:
-                    Base::Console().Message("Unsuported Curve Geometrie Type at selection \n");
+                    printf("Unsuported Curve Geometrie Type at selection \n");
                     return boost::shared_ptr< Geometry3D >();
                 }
 
@@ -222,7 +222,7 @@ boost::shared_ptr< Geometry3D > PartRef::getGeometry3D(const char* Type) {
 
                 }
                 else {
-                    Base::Console().Message("Unsuported Topologie Type at selection\n");
+                    printf("Unsuported Topologie Type at selection\n");
                     return boost::shared_ptr< Geometry3D >();
                 }
     };

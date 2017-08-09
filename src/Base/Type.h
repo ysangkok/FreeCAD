@@ -64,7 +64,7 @@ struct TypeData;
       // do something..
     }
     else {
-      Base::Console().Warning("getRightFeature", "Unknown feature type %s!\n",
+      printf("getRightFeature", "Unknown feature type %s!\n",
                                 anode->getTypeId().getName());
     }
   }

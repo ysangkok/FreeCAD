@@ -344,7 +344,7 @@ void ViewProviderTransformed::recomputeFeature(void)
             pcRejectedRoot->addChild(sep);
         }
         catch (...) {
-            Base::Console().Error("Cannot compute Inventor representation for the rejected transformations of shape of %s.\n",
+            printf("Cannot compute Inventor representation for the rejected transformations of shape of %s.\n",
                                   pcTransformed->getNameInDocument());
         }
     }

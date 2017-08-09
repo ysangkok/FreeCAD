@@ -358,7 +358,7 @@ bool Tessellation::accept()
         activeDoc->commitTransaction();
     }
     catch (const Base::Exception& e) {
-        Base::Console().Error(e.what());
+        printf(e.what());
     }
 
     return true;

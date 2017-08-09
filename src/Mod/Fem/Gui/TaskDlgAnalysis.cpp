@@ -90,7 +90,7 @@ bool TaskDlgAnalysis::accept()
     //    return true;
     //}
     //catch (const Base::Exception& e) {
-    //    Base::Console().Warning("TaskDlgAnalysis::accept(): %s\n", e.what());
+    //    printf("TaskDlgAnalysis::accept(): %s\n", e.what());
     //}
 
     return false;

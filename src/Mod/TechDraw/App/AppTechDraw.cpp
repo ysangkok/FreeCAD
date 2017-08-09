@@ -57,7 +57,7 @@ PyMOD_INIT_FUNC(TechDraw)
         PyMOD_Return(0);
     }
     PyObject* mod = TechDraw::initModule();
-    Base::Console().Log("Loading TechDraw module... done\n");
+    printf("Loading TechDraw module... done\n");
 
 
     // NOTE: To finish the initialization of our own type objects we must

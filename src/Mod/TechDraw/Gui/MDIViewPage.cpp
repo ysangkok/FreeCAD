@@ -323,7 +323,7 @@ bool MDIViewPage::attachView(App::DocumentObject *obj)
     //DrawGeomHatch??
 
     } else {
-        Base::Console().Log("Logic Error - Unknown view type in MDIViewPage::attachView\n");
+        printf("Logic Error - Unknown view type in MDIViewPage::attachView\n");
     }
 
     return (qview != nullptr);
@@ -347,7 +347,7 @@ void MDIViewPage::updateTemplate(bool forceUpdate)
     App::DocumentObject *templObj = m_vpPage->getDrawPage()->Template.getValue();
     // TODO: what if template has been deleted? templObj will be NULL. segfault?
     if (!templObj) {
-        Base::Console().Log("INFO - MDIViewPage::updateTemplate - Page: %s has NO template!!\n",m_vpPage->getDrawPage()->getNameInDocument());
+        printf("INFO - MDIViewPage::updateTemplate - Page: %s has NO template!!\n",m_vpPage->getDrawPage()->getNameInDocument());
         return;
     }
 
@@ -572,7 +572,7 @@ void MDIViewPage::printPdf()
 void MDIViewPage::printPdf(std::string file)
 {
     if (file.empty()) {
-        Base::Console().Warning("MDIViewPage - no file specified\n");
+        printf("MDIViewPage - no file specified\n");
         return;
     }
     QString filename = QString::fromUtf8(file.data(),file.size());
@@ -815,7 +815,7 @@ void MDIViewPage::saveSVG()
 void MDIViewPage::saveSVG(std::string file)
 {
     if (file.empty()) {
-        Base::Console().Warning("MDIViewPage - no file specified\n");
+        printf("MDIViewPage - no file specified\n");
         return;
     }
     QString filename = QString::fromUtf8(file.data(),file.size());
@@ -1049,7 +1049,7 @@ void MDIViewPage::selectionChanged()
                 }
                 const char* name = dimObj->getNameInDocument();
                 if (!name) {                                   //can happen during undo/redo if Dim is selected???
-                    //Base::Console().Log("INFO - MDIVP::selectionChanged - dimObj name is null!\n");
+                    //printf("INFO - MDIVP::selectionChanged - dimObj name is null!\n");
                     continue;
                 }
 

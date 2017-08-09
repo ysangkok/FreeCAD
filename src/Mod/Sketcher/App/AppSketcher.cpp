@@ -72,7 +72,7 @@ PyMOD_INIT_FUNC(Sketcher)
     Sketcher::Constraint            ::init();
     Sketcher::PropertyConstraintList::init();
 
-    Base::Console().Log("Loading Sketcher module... done\n");
+    printf("Loading Sketcher module... done\n");
 
     PyMOD_Return(sketcherModule);
 }
