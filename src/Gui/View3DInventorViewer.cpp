@@ -1250,7 +1250,8 @@ void View3DInventorViewer::interactionFinishCB(void*, SoQTQuarterAdaptor* viewer
  */
 void View3DInventorViewer::interactionLoggerCB(void*, SoAction* action)
 {
-    printf("%s\n", action->getTypeId().getName().getString());
+    //JANUS
+    //printf("%s\n", action->getTypeId().getName().getString());
 }
 
 void View3DInventorViewer::addGraphicsItem(GLGraphicsItem* item)

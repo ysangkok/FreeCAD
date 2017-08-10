@@ -1471,7 +1471,9 @@ void Document::redo(int iSteps)
 //}
 
 void Document::handleChildren3D(ViewProvider* viewProvider)
-{
+{ 
+    bool handled = false;
+
     // check for children
     if (viewProvider && viewProvider->getChildRoot()) {
         std::vector<App::DocumentObject*> children = viewProvider->claimChildren3D();
@@ -1487,6 +1489,7 @@ void Document::handleChildren3D(ViewProvider* viewProvider)
                 if (ChildViewProvider) {
                     SoSeparator* childRootNode =  ChildViewProvider->getRoot();
                     childGroup->addChild(childRootNode);
+                    handled = true;
 
                     // cycling to all views of the document to remove the viewprovider from the viewer itself
                     for (std::list<Gui::BaseView*>::iterator vIt = d->baseViews.begin();vIt != d->baseViews.end();++vIt) {
@@ -1516,10 +1519,15 @@ void Document::handleChildren3D(ViewProvider* viewProvider)
                         View3DInventor *activeView = dynamic_cast<View3DInventor *>(view);
                         if (activeView && !activeView->getViewer()->hasViewProvider(ChildViewProvider)) {
                             activeView->getViewer()->addViewProvider(ChildViewProvider);
+                            handled = true;
                         }
                     }
                 }
             }
         }
+    }
+    if (viewProvider->isDerivedFrom(ViewProviderDocumentObjectGroup::getClassTypeId())) {
+        auto li = viewProvider->getChildRoot();
+        //std::cerr << li->size() << std::endl;
     }
 }

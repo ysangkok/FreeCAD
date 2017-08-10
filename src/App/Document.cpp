@@ -222,7 +222,9 @@ void Document::exportGraphviz(std::ostream& out) const
          */
 
         std::string getId(const DocumentObject * docObj) {
-            return std::string((docObj)->getDocument()->getName()) + "#" + docObj->getNameInDocument();
+            auto p1 = (docObj)->getDocument()->getName();
+            auto p2 = docObj->getNameInDocument();
+            return std::string(p1 ? p1 : "Doc Name Not Set") + "#" + (p2 ? p2 : "Name in Doc Not Set");
         }
 
         /**

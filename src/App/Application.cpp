@@ -361,7 +361,7 @@ const char * Application::getDocumentName(const App::Document* doc) const
         if (it->second == doc)
             return it->first.c_str();
 
-    return 0;
+    return "No Doc Name";
 }
 
 std::vector<App::Document*> Application::getDocuments() const

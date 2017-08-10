@@ -134,7 +134,7 @@ const char *DocumentObject::getNameInDocument(void) const
     // to an object that has been removed from the document. In this case we should rather
     // return 0.
     //assert(pcNameInDocument);
-    if (!pcNameInDocument) return 0;
+    if (!pcNameInDocument) return "Name not set";
     return pcNameInDocument->c_str();
 }
 

@@ -172,6 +172,46 @@
 #include "../Mod/Part/Gui/Workbench.h"
 
 
+//#include "OCCError.h"
+#include "TopoShape.h"
+#include "FeaturePartBox.h"
+#include "FeaturePartBoolean.h"
+#include "FeaturePartCommon.h"
+#include "FeaturePartCut.h"
+#include "FeaturePartFuse.h"
+#include "FeaturePartSection.h"
+#include "FeaturePartImportStep.h"
+#include "FeaturePartImportIges.h"
+#include "FeaturePartImportBrep.h"
+#include "FeaturePartCurveNet.h"
+#include "FeaturePartCircle.h"
+#include "FeaturePartPolygon.h"
+#include "FeaturePartSpline.h"
+#include "FeatureGeometrySet.h"
+#include "FeatureChamfer.h"
+#include "FeatureCompound.h"
+#include "FeatureFace.h"
+#include "FeatureExtrusion.h"
+#include "FeatureFillet.h"
+#include "FeatureMirroring.h"
+#include "FeatureRevolution.h"
+#include "FeatureOffset.h"
+#include "PartFeatures.h"
+#include "BodyBase.h"
+#include "PrimitiveFeature.h"
+#include "Part2DObject.h"
+#include "CustomFeature.h"
+#include "Geometry.h"
+#include "Geometry2d.h"
+#include "PropertyGeometryList.h"
+#include "DatumFeature.h"
+#include "Attacher.h"
+#include "AttachExtension.h"
+#include "FaceMaker.h"
+#include "FaceMakerCheese.h"
+#include "FaceMakerBullseye.h"
+
+
 // End Part MOD (JANUS
 
 #if defined(Q_OS_WIN32)
@@ -1046,7 +1086,144 @@ void MainWindow::processMessages(const QList<QByteArray> & msg)
             FileDialog::setWorkingDirectory(filename);
         }
 }
-void initAll() {
+void initTypes() {
+
+        Part::TopoShape             ::init();
+        Part::PropertyPartShape     ::init();
+        Part::PropertyGeometryList  ::init();
+        Part::PropertyShapeHistory  ::init();
+        Part::PropertyFilletEdges   ::init();
+
+        Part::FaceMaker             ::init();
+        Part::FaceMakerPublic       ::init();
+        Part::FaceMakerSimple       ::init();
+        Part::FaceMakerCheese       ::init();
+        Part::FaceMakerExtrusion    ::init();
+        Part::FaceMakerBullseye     ::init();
+
+        Attacher::AttachEngine        ::init();
+        Attacher::AttachEngine3D      ::init();
+        Attacher::AttachEnginePlane   ::init();
+        Attacher::AttachEngineLine    ::init();
+        Attacher::AttachEnginePoint   ::init();
+
+        Part::AttachExtension       ::init();
+        //Part::AttachExtensionPython ::init();
+
+        Part::Feature               ::init();
+        Part::FeatureExt            ::init();
+        Part::BodyBase              ::init();
+        //Part::FeaturePython         ::init();
+        Part::FeatureGeometrySet    ::init();
+        Part::CustomFeature         ::init();
+        //Part::CustomFeaturePython   ::init();
+        Part::Primitive             ::init();
+        Part::Box                   ::init();
+        Part::Spline                ::init();
+        Part::Boolean               ::init();
+        Part::Common                ::init();
+        Part::MultiCommon           ::init();
+        Part::Cut                   ::init();
+        Part::Fuse                  ::init();
+        Part::MultiFuse             ::init();
+        Part::Section               ::init();
+        Part::FilletBase            ::init();
+        Part::Fillet                ::init();
+        Part::Chamfer               ::init();
+        Part::Compound              ::init();
+        Part::Extrusion             ::init();
+        Part::Revolution            ::init();
+        Part::Mirroring             ::init();
+        Part::ImportStep            ::init();
+        Part::ImportIges            ::init();
+        Part::ImportBrep            ::init();
+        Part::CurveNet              ::init();
+        Part::Polygon               ::init();
+        Part::Circle                ::init();
+        Part::Ellipse               ::init();
+        Part::Vertex                ::init();
+        Part::Line                  ::init();
+        Part::Ellipsoid             ::init();
+        Part::Plane                 ::init();
+        Part::Sphere                ::init();
+        Part::Cylinder              ::init();
+        Part::Prism                 ::init();
+        Part::RegularPolygon        ::init();
+        Part::Cone                  ::init();
+        Part::Torus                 ::init();
+        Part::Helix                 ::init();
+        Part::Spiral                ::init();
+        Part::Wedge                 ::init();
+
+        Part::Part2DObject          ::init();
+        //Part::Part2DObjectPython    ::init();
+        Part::Face                  ::init();
+        Part::RuledSurface          ::init();
+        Part::Loft                  ::init();
+        Part::Sweep                 ::init();
+        Part::Offset                ::init();
+        Part::Offset2D              ::init();
+        Part::Thickness             ::init();
+
+        // Geometry types
+        Part::Geometry                ::init();
+        Part::GeomPoint               ::init();
+        Part::GeomCurve               ::init();
+        Part::GeomBoundedCurve        ::init();
+        Part::GeomBezierCurve         ::init();
+        Part::GeomBSplineCurve        ::init();
+        Part::GeomConic               ::init();
+        Part::GeomArcOfConic          ::init();
+        Part::GeomCircle              ::init();
+        Part::GeomArcOfCircle         ::init();
+        Part::GeomArcOfEllipse        ::init();
+        Part::GeomArcOfParabola       ::init();
+        Part::GeomArcOfHyperbola      ::init();
+        Part::GeomEllipse             ::init();
+        Part::GeomHyperbola           ::init();
+        Part::GeomParabola            ::init();
+        Part::GeomLine                ::init();
+        Part::GeomLineSegment         ::init();
+        Part::GeomOffsetCurve         ::init();
+        Part::GeomTrimmedCurve        ::init();
+        Part::GeomSurface             ::init();
+        Part::GeomBezierSurface       ::init();
+        Part::GeomBSplineSurface      ::init();
+        Part::GeomCylinder            ::init();
+        Part::GeomCone                ::init();
+        Part::GeomSphere              ::init();
+        Part::GeomToroid              ::init();
+        Part::GeomPlane               ::init();
+        Part::GeomOffsetSurface       ::init();
+        Part::GeomPlateSurface        ::init();
+        Part::GeomTrimmedSurface      ::init();
+        Part::GeomSurfaceOfRevolution ::init();
+        Part::GeomSurfaceOfExtrusion  ::init();
+        Part::Datum                   ::init();
+
+        // Geometry2d types
+        Part::Geometry2d              ::init();
+        Part::Geom2dPoint             ::init();
+        Part::Geom2dCurve             ::init();
+        Part::Geom2dBezierCurve       ::init();
+        Part::Geom2dBSplineCurve      ::init();
+        Part::Geom2dConic             ::init();
+        Part::Geom2dArcOfConic        ::init();
+        Part::Geom2dCircle            ::init();
+        Part::Geom2dArcOfCircle       ::init();
+        Part::Geom2dEllipse           ::init();
+        Part::Geom2dArcOfEllipse      ::init();
+        Part::Geom2dHyperbola         ::init();
+        Part::Geom2dArcOfHyperbola    ::init();
+        Part::Geom2dParabola          ::init();
+        Part::Geom2dArcOfParabola     ::init();
+        Part::Geom2dLine              ::init();
+        Part::Geom2dLineSegment       ::init();
+        Part::Geom2dOffsetCurve       ::init();
+        Part::Geom2dTrimmedCurve      ::init();
+
+
+
     PartGui::SoBrepFaceSet                  ::initClass();
     PartGui::SoBrepEdgeSet                  ::initClass();
     PartGui::SoBrepPointSet                 ::initClass();
@@ -1097,6 +1274,9 @@ void initAll() {
     PartGui::DimensionAngular               ::initClass();
     PartGui::ArcEngine                      ::initClass();
 
+        Gui::ViewProviderBuilder::add(
+            Part::PropertyPartShape::getClassTypeId(),
+            PartGui::ViewProviderPart::getClassTypeId());
     //PartGui::Workbench                      ::init();
 }
 
@@ -1264,7 +1444,11 @@ Part::TopoShape PartCircle(Base::Vector3d v1, Base::Vector3d v2, double dist) {
   return build;
 }
 
-void makeBoreHole(App::DocumentObjectGroup* group) {
+void makeBoreHole(App::Document* doc) {
+
+    //Part::Feature::init();
+
+    const auto group = new App::DocumentObjectGroup();
 	Base::Vector3d V1(0,10,0);
 	auto V2 = Base::Vector3d(30,10,0);
 	auto V3 = Base::Vector3d(30,-10,0);
@@ -1296,10 +1480,10 @@ void makeBoreHole(App::DocumentObjectGroup* group) {
 	auto P2 = cut(P, p);
 
 	////# add first borer
-  auto Bore1 = newObjectWithShape(group, "Borer_1", p);
+  newObjectWithShape(group, "Borer_1", p);
 	//Bore1=group->addObject("Part::Feature","Borer_1");
 	//Bore1.Shape=p;
-  auto Hole1 = newObjectWithShape(group, "Borer_Hole1", P2);
+  newObjectWithShape(group, "Borer_Hole1", P2);
 	//Hole1=group->addObject("Part::Feature","Borer_Hole1");
 	//Hole1.Shape=P;
 
@@ -1310,12 +1494,13 @@ void makeBoreHole(App::DocumentObjectGroup* group) {
 	auto P3 = cut(P2, p5);
 
 	////# add second borer
-  auto Bore2 = newObjectWithShape(group, "Borer_2", p5);
+  newObjectWithShape(group, "Borer_2", p5);
 	//Bore2=group->addObject("Part::Feature","Borer_2");
 	//Bore2.Shape=p;
-  auto Hole2 = newObjectWithShape(group, "Borer_Hole2", P3);
+  doc->addObject(newObjectWithShape(group, "Borer_Hole2", P3));
 	//Hole2=group->addObject("Part::Feature","Borer_Hole2");
 	//Hole2.Shape=P;
+    doc->addObject(group);
 
   //auto li = group->claimChildren();
   //for (auto i : li) {
@@ -1341,7 +1526,7 @@ void MainWindow::delayedStartup()
         return;
     }
 
-    initAll();
+    initTypes();
 
     // Create new document?
     //ParameterGrp::handle hGrp = WindowParameter::getDefaultParameter()->GetGroup("Document");
@@ -1352,9 +1537,9 @@ void MainWindow::delayedStartup()
     //Base::Vector3d a(1.0, 2.0, 3.0);
 
     const auto doc = App::GetApplication().newDocument();
-    const auto group = new App::DocumentObjectGroup();
-    doc->addObject(group);
-    makeBoreHole(group);
+
+
+    makeBoreHole(doc);
     try {
         doc->exportGraphviz(std::cout);
     } catch (const std::exception & t) {
