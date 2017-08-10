@@ -495,7 +495,8 @@ void Document::exportGraphviz(std::ostream& out) const
                 std::vector<DocumentObject*> OutList = It->second->getOutList();
                 for (std::vector<DocumentObject*>::const_iterator It2=OutList.begin();It2!=OutList.end();++It2) {
                     if (*It2) {
-                        std::map<std::string,Vertex>::const_iterator item = GlobalVertexList.find(getId(*It2));
+                        const auto& lol = getId(*It2);
+                        std::map<std::string,Vertex>::const_iterator item = GlobalVertexList.find(lol);
 
                         if (item == GlobalVertexList.end())
                             addExpressionSubgraphIfNeeded(*It2, CSSubgraphs);

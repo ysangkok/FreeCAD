@@ -1317,6 +1317,11 @@ void makeBoreHole(App::DocumentObjectGroup* group) {
 	//Hole2=group->addObject("Part::Feature","Borer_Hole2");
 	//Hole2.Shape=P;
 
+  //auto li = group->claimChildren();
+  //for (auto i : li) {
+  //    std::cerr << i << std::endl;
+  //}
+
 }
 
 void MainWindow::delayedStartup()
@@ -1350,6 +1355,12 @@ void MainWindow::delayedStartup()
     const auto group = new App::DocumentObjectGroup();
     doc->addObject(group);
     makeBoreHole(group);
+    try {
+        doc->exportGraphviz(std::cout);
+    } catch (const std::exception & t) {
+        std::cout << "exception" << std::endl;
+    }
+
     doc->recompute();
 
     //} else {

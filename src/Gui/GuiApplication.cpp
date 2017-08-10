@@ -56,6 +56,7 @@
 #include <Base/Exception.h>
 
 #include <App/Application.h>
+#include <iostream>
 
 using namespace Gui;
 
@@ -84,6 +85,11 @@ bool GUIApplication::notify (QObject * receiver, QEvent * event)
         return false;
     }
     try {
+        static int i;
+        i++;
+        if (i == 2072) {
+            std::cerr << i << std::endl;
+        }
         if (event->type() == Spaceball::ButtonEvent::ButtonEventType || 
             event->type() == Spaceball::MotionEvent::MotionEventType)
             return processSpaceballEvent(receiver, event);
@@ -102,6 +108,7 @@ bool GUIApplication::notify (QObject * receiver, QEvent * event)
     catch (const std::exception& e) {
         printf("Unhandled std::exception caught in GUIApplication::notify.\n"
                               "The error message is: %s\n", e.what());
+        abort();
     }
     catch (...) {
         printf("Unhandled unknown exception caught in GUIApplication::notify.\n");
