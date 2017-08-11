@@ -33,6 +33,7 @@ namespace Part
 
 class PartExport Primitive : public Part::Feature, public Part::AttachExtension
 {
+    PROPERTY_HEADER_WITH_EXTENSIONS(Part::Primitive);
 
 public:
     Primitive();

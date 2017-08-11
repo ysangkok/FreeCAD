@@ -152,6 +152,44 @@ const char* PropertyContainer::getPropertyName(const Property* prop)const
 const PropertyData * PropertyContainer::getPropertyDataPtr(void){return &propertyData;} 
 const PropertyData & PropertyContainer::getPropertyData(void) const{return propertyData;} 
 
+/**
+ * @brief PropertyContainer::handleChangedPropertyName is called during restore to possibly
+ * fix reading of older versions of this property container. This method is typically called
+ * if the property on file has changed its name in more recent versions.
+ *
+ * The default implementation does nothing.
+ *
+ * @param reader The XML stream to read from.
+ * @param TypeName Name of property type on file.
+ * @param PropName Name of property on file that does not exist in the container anymore.
+ */
+
+void PropertyContainer::handleChangedPropertyName(Base::XMLReader &reader, const char * TypeName, const char *PropName)
+{
+    (void)reader;
+    (void)TypeName;
+    (void)PropName;
+}
+
+/**
+ * @brief PropertyContainer::handleChangedPropertyType is called during restore to possibly
+ * fix reading of older versions of the property container. This method is typically called
+ * if the property on file has changed its type in more recent versions.
+ *
+ * The default implementation does nothing.
+ *
+ * @param reader The XML stream to read from.
+ * @param TypeName Name of property type on file.
+ * @param prop Pointer to property to restore. Its type differs from TypeName.
+ */
+
+void PropertyContainer::handleChangedPropertyType(XMLReader &reader, const char *TypeName, Property *prop)
+{
+    (void)reader;
+    (void)TypeName;
+    (void)prop;
+}
+
 PropertyData PropertyContainer::propertyData;
 
 /**
@@ -190,26 +228,26 @@ void PropertyContainer::Save (Base::Writer &writer) const
             writer.Stream() << writer.ind() << "<Property name=\"" << it->first << "\" type=\"" 
                             << it->second->getTypeId().getName() << "\">" << endl;;
             writer.incInd(); // indentation for the actual property
-//            try {
-//                // We must make sure to handle all exceptions accordingly so that
-//                // the project file doesn't get invalidated. In the error case this
-//                // means to proceed instead of aborting the write operation.
-//                it->second->Save(writer);
-//            }
-//            catch (const Base::Exception &e) {
-//                printf("%s\n", e.what());
-//            }
-//            catch (const std::exception &e) {
-//                printf("%s\n", e.what());
-//            }
-//            catch (const char* e) {
-//                printf("%s\n", e);
-//            }
-//#ifndef FC_DEBUG
-//            catch (...) {
-//                printf("PropertyContainer::Save: Unknown C++ exception thrown. Try to continue...\n");
-//            }
-//#endif
+            try {
+                // We must make sure to handle all exceptions accordingly so that
+                // the project file doesn't get invalidated. In the error case this
+                // means to proceed instead of aborting the write operation.
+                //it->second->Save(writer);
+            }
+            catch (const Base::Exception &e) {
+                printf("%s\n", e.what());
+            }
+            catch (const std::exception &e) {
+                printf("%s\n", e.what());
+            }
+            catch (const char* e) {
+                printf("%s\n", e);
+            }
+#ifndef FC_DEBUG
+            catch (...) {
+                printf("PropertyContainer::Save: Unknown C++ exception thrown. Try to continue...\n");
+            }
+#endif
             writer.decInd(); // indentation for the actual property
             writer.Stream() << writer.ind() << "</Property>" << endl;    
             writer.decInd(); // indentation for 'Property name'
@@ -233,27 +271,38 @@ void PropertyContainer::Restore(Base::XMLReader &reader)
         // subclass of PropertyContainer might change the type of a property but
         // not its name. In this case we would force to read-in a wrong property
         // type and the behaviour would be undefined.
-//        try {
-//            if (prop && strcmp(prop->getTypeId().getName(), TypeName) == 0)
-//                prop->Restore(reader);
-//        }
-//        catch (const Base::XMLParseException&) {
-//            throw; // re-throw
-//        }
-//        catch (const Base::Exception &e) {
-//            printf("%s\n", e.what());
-//        }
-//        catch (const std::exception &e) {
-//            printf("%s\n", e.what());
-//        }
-//        catch (const char* e) {
-//            printf("%s\n", e);
-//        }
-//#ifndef FC_DEBUG
-//        catch (...) {
-//            printf("PropertyContainer::Restore: Unknown C++ exception thrown");
-//        }
-//#endif
+        try {
+            // name and type match
+            if (prop && strcmp(prop->getTypeId().getName(), TypeName) == 0) {
+                //prop->Restore(reader);
+            }
+            // name matches but not the type
+            else if (prop) {
+                handleChangedPropertyType(reader, TypeName, prop);
+            }
+            // name doesn't match, the sub-class then has to know
+            // if the property has been renamed or removed
+            else {
+                handleChangedPropertyName(reader, TypeName, PropName);
+            }
+        }
+        catch (const Base::XMLParseException&) {
+            throw; // re-throw
+        }
+        catch (const Base::Exception &e) {
+            printf("%s\n", e.what());
+        }
+        catch (const std::exception &e) {
+            printf("%s\n", e.what());
+        }
+        catch (const char* e) {
+            printf("%s\n", e);
+        }
+#ifndef FC_DEBUG
+        catch (...) {
+            printf("PropertyContainer::Restore: Unknown C++ exception thrown");
+        }
+#endif
 
         reader.readEndElement("Property");
     }

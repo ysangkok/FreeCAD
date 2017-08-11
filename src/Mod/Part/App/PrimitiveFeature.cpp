@@ -82,6 +82,7 @@ namespace Part {
 
 using namespace Part;
 
+PROPERTY_SOURCE_ABSTRACT_WITH_EXTENSIONS(Part::Primitive, Part::Feature)
 
 Primitive::Primitive(void) 
 {

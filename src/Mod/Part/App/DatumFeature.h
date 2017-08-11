@@ -38,6 +38,7 @@ namespace Part
 
 class PartExport Datum : public Part::Feature, public Part::AttachExtension
 {
+    PROPERTY_HEADER_WITH_EXTENSIONS(Part::Datum);
 
 public:
     Datum();
