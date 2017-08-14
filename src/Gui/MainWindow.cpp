@@ -333,6 +333,169 @@ protected:
 
 } // namespace Gui
 
+#include <boost/variant.hpp>
+#include <ifcgeom/IfcGeom.h>
+#include <ifcparse/IfcLogger.h>
+#include <ifcgeom/IfcGeomIteratorSettings.h>
+#include <ifcgeom/IfcGeomElement.h>
+#include <ifcgeom/IfcGeomMaterial.h>
+#include <ifcgeom/IfcGeomRepresentation.h>
+#include <ifcgeom/IfcGeomIterator.h>
+
+boost::variant<IfcGeom::Element<double>*, IfcGeom::Representation::Representation*> create_shape(IfcGeom::IteratorSettings& settings, IfcUtil::IfcBaseClass* instance, IfcUtil::IfcBaseClass* representation = 0) {
+	IfcParse::IfcFile* file = instance->entity->file;
+	IfcSchema::IfcProject::list::ptr projects = file->entitiesByType<IfcSchema::IfcProject>();
+	if (projects->size() != 1) {
+		throw IfcParse::IfcException("Not a single IfcProject instance");
+	}
+	IfcSchema::IfcProject* project = *projects->begin();
+		
+	IfcGeom::Kernel kernel;
+	kernel.setValue(IfcGeom::Kernel::GV_MAX_FACES_TO_SEW, settings.get(IfcGeom::IteratorSettings::SEW_SHELLS) ? 1000 : -1);
+	kernel.setValue(IfcGeom::Kernel::GV_DIMENSIONALITY, (settings.get(IfcGeom::IteratorSettings::INCLUDE_CURVES) ? (settings.get(IfcGeom::IteratorSettings::EXCLUDE_SOLIDS_AND_SURFACES) ? -1. : 0.) : +1.));
+	std::pair<std::string, double> length_unit = kernel.initializeUnits(project->UnitsInContext());
+		
+	if (instance->is(IfcSchema::Type::IfcProduct)) {
+		if (representation) {
+			if (!representation->is(IfcSchema::Type::IfcRepresentation)) {
+				throw IfcParse::IfcException("Supplied representation not of type IfcRepresentation");
+			}
+		}
+	
+		IfcSchema::IfcProduct* product = (IfcSchema::IfcProduct*) instance;
+
+		if (!representation && !product->hasRepresentation()) {
+			throw IfcParse::IfcException("Representation is NULL");
+		}
+		
+		IfcSchema::IfcProductRepresentation* prodrep = product->Representation();
+		IfcSchema::IfcRepresentation::list::ptr reps = prodrep->Representations();
+		IfcSchema::IfcRepresentation* ifc_representation = (IfcSchema::IfcRepresentation*) representation;
+		
+		if (!ifc_representation) {
+			// First, try to find a representation based on the settings
+			for (IfcSchema::IfcRepresentation::list::it it = reps->begin(); it != reps->end(); ++it) {
+				IfcSchema::IfcRepresentation* rep = *it;
+				if (!rep->hasRepresentationIdentifier()) {
+					continue;
+				}
+				if (!settings.get(IfcGeom::IteratorSettings::EXCLUDE_SOLIDS_AND_SURFACES)) {
+					if (rep->RepresentationIdentifier() == "Body") {
+						ifc_representation = rep;
+						break;
+					}
+				}
+				if (settings.get(IfcGeom::IteratorSettings::INCLUDE_CURVES)) {
+					if (rep->RepresentationIdentifier() == "Plan" || rep->RepresentationIdentifier() == "Axis") {
+						ifc_representation = rep;
+						break;
+					}
+				}
+			}
+		}
+
+		// Otherwise, find a representation within the 'Model' or 'Plan' context
+		if (!ifc_representation) {
+			for (IfcSchema::IfcRepresentation::list::it it = reps->begin(); it != reps->end(); ++it) {
+				IfcSchema::IfcRepresentation* rep = *it;
+				IfcSchema::IfcRepresentationContext* context = rep->ContextOfItems();
+				
+				// TODO: Remove redundancy with IfcGeomIterator.h
+				if (context->hasContextType()) {
+					std::set<std::string> context_types;
+					if (!settings.get(IfcGeom::IteratorSettings::EXCLUDE_SOLIDS_AND_SURFACES)) {
+						context_types.insert("model");
+						context_types.insert("design");
+						context_types.insert("model view");
+						context_types.insert("detail view");
+					}
+					if (settings.get(IfcGeom::IteratorSettings::INCLUDE_CURVES)) {
+						context_types.insert("plan");
+					}			
+
+					std::string context_type_lc = context->ContextType();
+					for (std::string::iterator c = context_type_lc.begin(); c != context_type_lc.end(); ++c) {
+						*c = tolower(*c);
+					}
+					if (context_types.find(context_type_lc) != context_types.end()) {
+						ifc_representation = rep;
+					}
+				}
+			}
+		}
+
+		if (!ifc_representation) {
+			if (reps->size()) {
+				// Return a random representation
+				ifc_representation = *reps->begin();
+			} else {
+				throw IfcParse::IfcException("No suitable IfcRepresentation found");
+			}
+		}
+
+		IfcSchema::IfcRepresentationContext* ctx = ifc_representation->ContextOfItems();
+		if (!ctx->is(IfcSchema::Type::IfcGeometricRepresentationContext)) {
+			throw IfcParse::IfcException("Context not of type IfcGeometricRepresentationContext");
+		}
+		IfcSchema::IfcGeometricRepresentationContext* context = (IfcSchema::IfcGeometricRepresentationContext*) ctx;
+		if (context->is(IfcSchema::Type::IfcGeometricRepresentationSubContext)) {
+			IfcSchema::IfcGeometricRepresentationSubContext* subcontext = (IfcSchema::IfcGeometricRepresentationSubContext*) context;
+			context = subcontext->ParentContext();
+		}
+
+		double precision = 1.e-6;
+		if (context->hasPrecision()) {
+			precision = context->Precision();
+		}
+		precision *= length_unit.second;
+
+		// Some arbitrary factor that has proven to work better for the models in the set of test files.
+		precision *= 10.;
+
+		kernel.setValue(IfcGeom::Kernel::GV_PRECISION, precision);
+		
+		IfcGeom::BRepElement<double>* brep = kernel.create_brep_for_representation_and_product<double>(settings, ifc_representation, product);
+		if (!brep) {
+			throw IfcParse::IfcException("Failed to process shape");
+		}
+		if (settings.get(IfcGeom::IteratorSettings::USE_BREP_DATA)) {
+			IfcGeom::SerializedElement<double>* serialization = new IfcGeom::SerializedElement<double>(*brep);
+			delete brep;
+			return serialization;
+		} else if (!settings.get(IfcGeom::IteratorSettings::DISABLE_TRIANGULATION)) {
+			IfcGeom::TriangulationElement<double>* triangulation = new IfcGeom::TriangulationElement<double>(*brep);
+			delete brep;
+			return triangulation;
+		} else {
+			throw IfcParse::IfcException("No element to return based on provided settings");
+		}
+	} else {
+		if (!representation) {
+			if (instance->is(IfcSchema::Type::IfcRepresentationItem) || instance->is(IfcSchema::Type::IfcRepresentation)) {
+				IfcGeom::IfcRepresentationShapeItems shapes;
+				if (kernel.convert_shapes(instance, shapes)) {
+					IfcGeom::ElementSettings element_settings(settings, kernel.getValue(IfcGeom::Kernel::GV_LENGTH_UNIT), IfcSchema::Type::ToString(instance->type()));
+					IfcGeom::Representation::BRep brep(element_settings, boost::lexical_cast<std::string>(instance->entity->id()), shapes);
+					try {
+						if (settings.get(IfcGeom::IteratorSettings::USE_BREP_DATA)) {
+							return new IfcGeom::Representation::Serialization(brep);
+						} else if (!settings.get(IfcGeom::IteratorSettings::DISABLE_TRIANGULATION)) {
+							return new IfcGeom::Representation::Triangulation<double>(brep);
+						}
+					} catch (...) {
+						throw IfcParse::IfcException("Error during shape serialization");
+					}
+				} else {
+					throw IfcParse::IfcException("Geometrical element not understood");
+				}
+			}
+		} else {
+			throw IfcParse::IfcException("Invalid additional representation specified");
+		}
+	}
+	return boost::variant<IfcGeom::Element<double>*, IfcGeom::Representation::Representation*>();
+}
+
 
 /* TRANSLATOR Gui::MainWindow */
 
