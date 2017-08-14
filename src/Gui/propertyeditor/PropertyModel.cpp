@@ -241,7 +241,7 @@ void PropertyModel::buildUp(const PropertyModel::PropertyList& props)
             if (!editor.isEmpty()) {
                 PropertyItem* item = PropertyItemFactory::instance().createPropertyItem(prop->getEditorName());
                 if (!item) {
-                    qWarning("No property item for type %s found\n", prop->getEditorName());
+                    //qWarning("No property item for type %s found\n", prop->getEditorName());
                     continue;
                 }
                 else {

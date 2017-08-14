@@ -90,6 +90,12 @@
 #include "ViewProviderDocumentObject.h"
 #include "ViewProviderGeometryObject.h"
 
+#include "../Mod/Part/Gui/ViewProviderExt.h"
+#include "../Mod/Part/App/TopoShape.h"
+#include "../Mod/Part/App/PartFeature.h"
+#include "../Mod/Part/App/PartFeature.h"
+#include <TopoDS_Edge.hxx>
+
 using namespace Gui;
 
 SoFullPath * Gui::SoFCUnifiedSelection::currenthighlight = NULL;
@@ -461,6 +467,31 @@ SoFCUnifiedSelection::handleEvent(SoHandleEventAction * action)
                 std::string documentName = vpd->getObject()->getDocument()->getName();
                 std::string objectName = vpd->getObject()->getNameInDocument();
                 std::string subElementName = vpd->getElement(pp ? pp->getDetail() : 0);
+                auto feat = dynamic_cast<Part::Feature*>(vpd->getObject());
+                if (feat) {
+                  const Part::TopoShape& shape = feat->Shape.getValue();
+                  TopoDS_Shape subshape = shape.getSubShape(subElementName.c_str());
+                  if (subshape.ShapeType() != TopAbs_WIRE) {
+                    std::vector<Base::Vector3d> points;
+                    std::vector<Base::Vector3d> normals;
+                    float accuracy = 0.01;
+                    uint16_t flags = 0;
+                    Part::TopoShape toposhape;
+                    toposhape.setShape(subshape);
+                    toposhape.getPoints(points, normals, accuracy, flags);
+                    auto currentPoint = points[0];
+                    double distance = 0;
+                    for (int i=1; i<points.size(); i++) {
+                      distance += Base::Distance(currentPoint, points[i]);
+                      currentPoint = points[i];
+                    }
+                    std::cerr << distance << std::endl;
+                  } else {
+                    std::cerr << "not edge" << std::endl;
+                  }
+                } else {
+                  std::cerr << "not feat" << std::endl;
+                }
                 if (event->wasCtrlDown()) {
                     if (Gui::Selection().isSelected(documentName.c_str()
                                          ,objectName.c_str()

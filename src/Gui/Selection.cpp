@@ -546,7 +546,7 @@ bool SelectionSingleton::addSelection(const char* pDocName, const char* pObjectN
         signalSelectionChanged(Chng);
 
 #ifdef FC_DEBUG
-        printf("Sel : Add Selection \"%s.%s.%s(%f,%f,%f)\"\n",pDocName,pObjectName,pSubName,x,y,z);
+        printf("Sel : Add Selection \"%s.%s.%s(%f,%f,%f)\", %s\n",pDocName,pObjectName,pSubName,x,y,z, Chng.pTypeName);
 #endif
 
         // allow selection

@@ -79,9 +79,7 @@ void PropertyItemFactory::destruct ()
 
 PropertyItem* PropertyItemFactory::createPropertyItem (const char* sName) const
 {
-    //PropertyItem* w = static_cast<PropertyItem*>(Produce(sName));
-    //return w;
-    abort();
+    return nullptr;
 }
 
 // ----------------------------------------------------
