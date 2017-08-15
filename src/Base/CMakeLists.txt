@@ -86,6 +86,11 @@ else(MSVC)
         ${ZLIB_LIBRARIES}
         ${OCC_LIBRARIES}
         ${OCC_DEBUG_LIBRARIES}
+        IfcParse
+        IfcGeom
+        icui18n
+        icuuc
+        icudata
     )
 endif(MSVC)
 

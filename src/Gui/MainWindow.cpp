@@ -1608,10 +1608,8 @@ Part::TopoShape PartCircle(Base::Vector3d v1, Base::Vector3d v2, double dist) {
 }
 
 void makeBoreHole(App::Document* doc) {
-
-    //Part::Feature::init();
-
     const auto group = new App::DocumentObjectGroup();
+#if 0
 	Base::Vector3d V1(0,10,0);
 	auto V2 = Base::Vector3d(30,10,0);
 	auto V3 = Base::Vector3d(30,-10,0);
@@ -1641,34 +1639,58 @@ void makeBoreHole(App::Document* doc) {
 	auto f=PartFace(w);
 	auto p=extrude(f, Base::Vector3d(0,0,7));
 	auto P2 = cut(P, p);
-
 	////# add first borer
   newObjectWithShape(group, "Borer_1", p);
-	//Bore1=group->addObject("Part::Feature","Borer_1");
-	//Bore1.Shape=p;
   newObjectWithShape(group, "Borer_Hole1", P2);
-	//Hole1=group->addObject("Part::Feature","Borer_Hole1");
-	//Hole1.Shape=P;
-
 	auto c5=PartCircle(Base::Vector3d(0,-11,2.5),Base::Vector3d(0,1,0),1.0);
 	auto w5=PartWire(std::vector<Part::TopoShape>{c5});
 	auto f5=PartFace(w5);
 	auto p5=extrude(f5, Base::Vector3d(0,22,0));
 	auto P3 = cut(P2, p5);
-
 	////# add second borer
   newObjectWithShape(group, "Borer_2", p5);
-	//Bore2=group->addObject("Part::Feature","Borer_2");
-	//Bore2.Shape=p;
   doc->addObject(newObjectWithShape(group, "Borer_Hole2", P3));
-	//Hole2=group->addObject("Part::Feature","Borer_Hole2");
-	//Hole2.Shape=P;
-    doc->addObject(group);
+#endif
+    IfcGeom::IteratorSettings settings;
+    settings.set(IfcGeom::IteratorSettings::USE_BREP_DATA, true);
+    settings.set(IfcGeom::IteratorSettings::SEW_SHELLS, true);
+    settings.set(IfcGeom::IteratorSettings::USE_WORLD_COORDS, true);
+    IfcParse::IfcFile file;
+    assert(file.Init("/home/janus/build-FreeCAD-Desktop-Debug/Project1.ifc"));
+    auto products = file.entitiesByType<Ifc2x3::IfcProduct>();
+    int idx = -1;
+    for (auto it = products->begin(); it != products->end(); ++it) {
+        idx++;
+        auto& product = **it;
+        boost::variant<IfcGeom::Element<double>*, IfcGeom::Representation::Representation*> res;
+        try {
+            res = ::create_shape(settings, &product);
+        } catch (const IfcParse::IfcException& e) {
+            std::cerr << e.what() << std::endl;
+            continue;
+        }
+        std::string brep;
+        if (res.which() == 1) {
+            IfcGeom::Representation::Representation* val = boost::get<IfcGeom::Representation::Representation*>(res);
+            assert(val != nullptr);
+            brep = dynamic_cast<IfcGeom::Representation::Serialization*>(val)->brep_data();
+        } else if (res.which() == 0) {
+            IfcGeom::Element<double>* val = boost::get<IfcGeom::Element<double>* >(res);
+            assert(val != nullptr);
+            IfcGeom::SerializedElement<double>* brepel = dynamic_cast<IfcGeom::SerializedElement<double>*>(val);
+            brep = brepel->geometry().brep_data();
+        } else {
+            assert(false);
+        }
+        Part::TopoShape shape;
+        std::istringstream istr(brep);
+        shape.importBrep(istr);
+        std::string name = Ifc2x3::Type::ToString(product.type()) + std::to_string(idx);
+        std::cerr << name << std::endl;
+        doc->addObject(newObjectWithShape(group, (name).c_str() , shape));
+    }
 
-  //auto li = group->claimChildren();
-  //for (auto i : li) {
-  //    std::cerr << i << std::endl;
-  //}
+    doc->addObject(group);
 
 }
 
